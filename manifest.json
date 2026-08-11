@@ -1,0 +1,9 @@
+{
+  "name": "Flip 7 Score",
+  "short_name": "Flip7 Score",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050714",
+  "theme_color": "#080816",
+  "icons": []
+}

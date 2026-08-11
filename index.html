@@ -1,0 +1,1054 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080816">
+<title>Flip 7 Score</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<section id="homeScreen" class="home-screen">
+  <div class="home-glow home-glow-a"></div>
+  <div class="home-glow home-glow-b"></div>
+
+  <div class="home-top">
+    <div class="brand-mark">
+      <span class="brand-card brand-card-a">7</span>
+      <span class="brand-card brand-card-b">★</span>
+    </div>
+    <div class="brand-copy">
+      <div class="brand-title">GAME <span>SCORE</span></div>
+      <div class="brand-tagline">IL TUO SEGNAPUNTI DA TAVOLO</div>
+    </div>
+    <button id="homeHallBtn" class="home-trophy" aria-label="Trofei Flip 7">
+      <span>🏆</span><small>TROFEI</small>
+    </button>
+  </div>
+
+  <div class="home-hero-copy">
+    <div class="home-kicker">PRONTO A GIOCARE?</div>
+    <h1>Scegli il tuo<br><span>gioco.</span></h1>
+    <p>Un solo posto per tenere punteggi, classifiche e vittorie del tuo gruppo.</p>
+  </div>
+
+  <section id="resumeCenter" class="resume-center hidden" aria-live="polite">
+    <div class="resume-kicker">PARTITA IN CORSO</div>
+    <button id="resumeMainBtn" class="resume-main-card">
+      <div class="resume-game-icon" id="resumeGameIcon">▶</div>
+      <div class="resume-copy">
+        <strong id="resumeGameName">Riprendi partita</strong>
+        <span id="resumeGameMeta">Partita salvata automaticamente</span>
+      </div>
+      <div class="resume-action">RIPRENDI <b>›</b></div>
+    </button>
+    <div class="resume-safe">✓ Salvataggio automatico attivo</div>
+  </section>
+
+  <div class="home-section-head">
+    <strong>I TUOI GIOCHI</strong>
+    <span>3 giochi</span>
+  </div>
+
+  <div class="home-games home-games-v35">
+    <button class="home-game-card home-card-v35" data-home-game="flip7">
+      <div class="home-card-art home-card-art-flip">
+        <img src="assets/home-flip7-approved.jpg" alt="Flip 7">
+      </div>
+      <div class="home-card-info">
+        <div class="home-card-copy">
+          <span class="available-dot"></span>
+          <strong>Flip 7</strong>
+          <small>Segnapunti completo</small>
+        </div>
+        <span class="home-play-btn flip-play">GIOCA <b>›</b></span>
+      </div>
+    </button>
+
+    <button class="home-game-card home-card-v35" data-home-game="seasalt">
+      <div class="home-card-art home-card-art-sea">
+        <img src="assets/home-seasalt-approved.jpg" alt="Sea Salt & Paper">
+      </div>
+      <div class="home-card-info">
+        <div class="home-card-copy">
+          <span class="available-dot"></span>
+          <strong>Sea Salt &amp; Paper</strong>
+          <small>Segnapunti completo</small>
+        </div>
+        <span class="home-play-btn sea-play">GIOCA <b>›</b></span>
+      </div>
+    </button>
+
+    <button class="home-game-card home-card-v35" data-home-game="sixnimmt">
+      <div class="home-card-art home-card-art-six">
+        <img src="assets/home-sixnimmt-approved.jpg" alt="6... Le prendi!">
+      </div>
+      <div class="home-card-info">
+        <div class="home-card-copy">
+          <span class="available-dot"></span>
+          <strong>6... Le prendi!</strong>
+          <small>Segnapunti completo</small>
+        </div>
+        <span class="home-play-btn six-play">GIOCA <b>›</b></span>
+      </div>
+    </button>
+  </div></div>
+
+  <div class="home-footer">
+    <span>🎲</span>
+    <p>Altri giochi potranno essere aggiunti senza cambiare la tua app.</p>
+  </div>
+</section>
+
+
+
+
+
+<section id="sixNimmtWorld" class="hidden six39-world">
+  <div class="six39-app">
+
+    <header class="six39-hero">
+      <img class="six42-bull-brand" src="assets/sixnimmt-bull-player.jpg" alt="6... Le prendi!">
+      <button id="six39GamesBtn" class="six39-corner left">
+        <span class="six39-top-icon">🎴</span>
+        <span class="six39-top-label">GIOCHI</span>
+      </button>
+      <button id="six39HallBtn" class="six39-corner right">
+        <span class="six39-top-icon">🏆</span>
+        <span class="six39-top-label">TROFEI</span>
+      </button>
+    </header>
+
+    <section id="six39SetupView" class="six39-setup-wrap">
+      <div class="six39-setup-card">
+        <div class="six39-kicker">NUOVA PARTITA</div>
+        <h1>Crea la partita</h1>
+        <p>Prima scegli quanti giocatori parteciperanno. Poi inserisci tu tutti i nomi.</p>
+
+        <div class="six39-count-box">
+          <div>
+            <div class="six39-label">NUMERO GIOCATORI</div>
+            <div class="six39-help">6... Le prendi!: da 2 a 10 giocatori</div>
+          </div>
+          <div class="six39-count-control">
+            <button id="six39Minus">−</button>
+            <strong id="six39Count">3</strong>
+            <button id="six39Plus">＋</button>
+          </div>
+        </div>
+
+        <div class="six39-label six39-names-title">NOMI DEI GIOCATORI</div>
+        <div id="six39NameRows"></div>
+
+        <button id="six39Create" class="six39-primary">CREA PARTITA</button>
+      </div>
+    </section>
+
+    <main id="six39GameView" class="six39-main hidden">
+
+      <section class="six39-round-panel">
+        <div class="six39-round-icon">🐂</div>
+        <div class="six39-round-copy">
+          <div class="six39-round-title">ROUND <span id="six39RoundNo">1</span></div>
+          <div class="six39-round-sub">Soglia: quando qualcuno supera <b>66</b> teste di bue</div>
+          <div class="six39-progress"><i id="six39Progress"></i></div>
+          <div id="six39ProgressText" class="six39-progress-text">Partita appena iniziata</div>
+        </div>
+        <div class="six39-target">🐂 <strong>66</strong></div>
+      </section>
+
+      <button id="six39EditPlayers" class="six39-edit-players">
+        <span class="six39-edit-icon">👥</span>
+        <span><b>Modifica giocatori</b><small>Numero partecipanti e nomi</small></span>
+        <span class="six39-edit-arrow">›</span>
+      </button>
+
+      <div class="six39-section-title">
+        <span>🐂</span>
+        <strong>CLASSIFICA ATTUALE</strong>
+        <i></i>
+      </div>
+
+      <div id="six39Ranking" class="six39-ranking"></div>
+
+      <button id="six39OpenRound" class="six39-score-cta">
+        <span class="six39-plus-ring">＋</span>
+        <span class="six39-cta-copy">
+          <b>INSERISCI TESTE DI BUE DEL ROUND</b>
+          <small>Segna solo i punti di penalità appena ottenuti</small>
+        </span>
+        <span class="six39-chevron">›</span>
+      </button>
+
+      <div class="six39-bottom-actions">
+        <button id="six39Undo">↶ Annulla ultimo round</button>
+        <button id="six39HistoryBtn">▥ Storico round</button>
+      </div>
+
+      <button id="six39DeleteGame" class="six39-delete">🗑 Elimina partita</button>
+    </main>
+  </div>
+</section>
+
+<div id="six39RoundModal" class="modal hidden">
+  <div class="sheet six39-sheet">
+    <div class="sheet-head">
+      <div><div class="six39-kicker">6... LE PRENDI!</div><h2 id="six39RoundModalTitle">Round 1</h2></div>
+      <button class="close" data-close="six39RoundModal">×</button>
+    </div>
+    <p class="helper">Inserisci solo le teste di bue ottenute in questo round.</p>
+    <div id="six39RoundInputs"></div>
+    <button id="six39SaveRound" class="six39-primary">✓ CONFERMA ROUND</button>
+  </div>
+</div>
+
+<div id="six39HistoryModal" class="modal hidden">
+  <div class="sheet six39-sheet">
+    <div class="sheet-head">
+      <div><div class="six39-kicker">6... LE PRENDI!</div><h2>Storico round</h2></div>
+      <button class="close" data-close="six39HistoryModal">×</button>
+    </div>
+    <div id="six39HistoryList"></div>
+  </div>
+</div>
+
+<div id="six39EditModal" class="modal hidden">
+  <div class="sheet six39-sheet">
+    <div class="sheet-head">
+      <div><div class="six39-kicker">6... LE PRENDI!</div><h2>Modifica giocatori</h2></div>
+      <button class="close" data-close="six39EditModal">×</button>
+    </div>
+    <div id="six39EditRows"></div>
+    <button id="six39AddPlayer" class="six39-add-player">＋ AGGIUNGI GIOCATORE</button>
+    <button id="six39SavePlayers" class="six39-primary">SALVA MODIFICHE</button>
+  </div>
+</div>
+
+<div id="six39HallModal" class="modal hidden">
+  <div class="sheet six39-sheet six39-hall-sheet">
+    <div class="sheet-head">
+      <div><div class="six39-kicker">6... LE PRENDI!</div><h2>🏆 Hall of Fame</h2></div>
+      <button class="close" data-close="six39HallModal">×</button>
+    </div>
+    <p class="helper">La classifica storica del gruppo: vittorie, partite giocate e percentuale di successo.</p>
+    <div id="six39HallSummary" class="hall-summary"></div>
+    <div id="six39HallPodium" class="hall-podium"></div>
+    <div id="six39HallList" class="hall-list"></div>
+    <button id="six39ResetHall" class="btn six39-clear-hall">Azzera classifica generale</button>
+  </div>
+</div>
+
+<div id="six39WinScreen" class="win-screen hidden six39-win">
+  <div class="confetti-layer"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="win-card">
+    <div class="win-trophy-wrap"><div class="win-trophy">🏆</div></div>
+    <div class="win-kicker">FINE PARTITA</div>
+    <h1 id="six39WinTitle">VINCE!</h1>
+    <div class="win-score"><span id="six39WinScore">0</span><small>TESTE DI BUE</small></div>
+    <div class="win-divider"></div>
+    <div class="final-title">CLASSIFICA FINALE</div>
+    <div id="six39FinalRanking" class="final-ranking"></div>
+    <div class="win-hall-confirm six-win-confirm">
+      <span>✓</span>
+      <div><strong>Risultato salvato</strong><small>Hall of Fame aggiornata automaticamente</small></div>
+    </div>
+    <div class="win-actions win-actions-final">
+      <button id="six39NewGame" class="btn six39-primary win-main-btn"><strong>＋ NUOVA PARTITA</strong><small>Scegli di nuovo giocatori e nomi</small></button>
+      <button id="sixHomeAfterWin" class="btn dark win-secondary-btn"><strong>🎴 TORNA AI GIOCHI</strong></button>
+    </div>
+    <button id="sixHallAfterWin" class="win-close">🏆 Apri Hall of Fame</button>
+  </div>
+</div>
+
+<div id="six39Toast" class="round-save-toast" aria-live="polite"></div>
+
+
+    <section id="six35Game" class="hidden">
+      <div class="six35-game-meta six35-panel">
+        <div><span>Partita:</span> <b id="six35GameName">Partita</b></div>
+        <div><span>Round:</span> <b id="six35RoundMeta">0/10</b></div>
+        <div><span>Giocatori:</span> <b id="six35PlayersMeta">0</b></div>
+      </div>
+
+      <div id="six35PlayerSummary" class="six35-player-summary"></div>
+
+      <section class="six35-panel six35-round-entry">
+        <div class="six35-round-entry-title">INSERISCI TESTE DI BUE DI QUESTO ROUND <span>?</span></div>
+        <div id="six35RoundCards" class="six35-round-cards"></div>
+        <button id="six35ConfirmRound" class="six35-primary">CONFERMA ROUND</button>
+      </section>
+
+      <div class="six35-action-row">
+        <button id="six35Undo" class="six35-secondary">↶ ANNULLA ULTIMO ROUND</button>
+        <button id="six35HistoryBtn" class="six35-secondary">☷ STORICO PARTITA</button>
+      </div>
+    </section>
+  </div>
+</section>
+
+<div id="six35MenuModal" class="modal hidden">
+  <div class="sheet six35-modal-sheet">
+    <div class="sheet-head">
+      <div><div class="six35-kicker">6... LE PRENDI!</div><h2>Menu partita</h2></div>
+      <button class="close" data-close="six35MenuModal">×</button>
+    </div>
+    <div class="six35-menu-list">
+      <button id="six35EditBtn">✎ Modifica giocatori</button>
+      <button id="six35HallBtn">🏆 Hall of Fame</button>
+      <button id="six35DeleteBtn" class="danger">🗑 Elimina partita</button>
+    </div>
+  </div>
+</div>
+
+<div id="six35HistoryModal" class="modal hidden">
+  <div class="sheet six35-modal-sheet six35-wide-sheet">
+    <div class="sheet-head">
+      <div><div class="six35-kicker">6... LE PRENDI!</div><h2>STORICO PARTITA</h2></div>
+      <button class="close" data-close="six35HistoryModal">×</button>
+    </div>
+    <div class="six35-muted">Round giocati: <b id="six35HistoryCount">0/10</b></div>
+    <div id="six35HistoryTableWrap" class="six35-history-wrap"></div>
+    <button id="six35DeleteFromHistory" class="six35-danger">🗑 ELIMINA PARTITA</button>
+  </div>
+</div>
+
+<div id="six35EditModal" class="modal hidden">
+  <div class="sheet six35-modal-sheet">
+    <div class="sheet-head">
+      <div><div class="six35-kicker">6... LE PRENDI!</div><h2>MODIFICA GIOCATORI</h2></div>
+      <button class="close" data-close="six35EditModal">×</button>
+    </div>
+    <p class="six35-muted">Puoi modificare i nomi, aggiungere o rimuovere giocatori.</p>
+    <div id="six35EditRows"></div>
+    <button id="six35AddPlayer" class="six35-add-player">＋ AGGIUNGI GIOCATORE</button>
+    <div class="six35-muted small six35-limit-note">Minimo 2 giocatori, massimo 10.</div>
+    <button id="six35SaveEdit" class="six35-primary">SALVA MODIFICHE</button>
+  </div>
+</div>
+
+<div id="six35HallModal" class="modal hidden">
+  <div class="sheet six35-modal-sheet six35-wide-sheet">
+    <div class="sheet-head">
+      <div><div class="six35-kicker">6... LE PRENDI!</div><h2>🏆 Hall of Fame</h2></div>
+      <button class="close" data-close="six35HallModal">×</button>
+    </div>
+    <p class="six35-muted">La classifica storica del gruppo: vittorie, partite giocate e percentuale di successo.</p>
+    <div id="six35HallSummary" class="six35-hall-summary"></div>
+    <div id="six35HallPodium" class="six35-hall-podium"></div>
+    <div id="six35HallList"></div>
+    <button id="six35ResetHall" class="six35-danger">🗑 AZZERA CLASSIFICA GENERALE</button>
+  </div>
+</div>
+
+<div id="six35WinModal" class="modal hidden">
+  <div class="sheet six35-modal-sheet six35-win-sheet">
+    <div class="six35-win-icon">🏆</div>
+    <div class="six35-kicker">6... LE PRENDI!</div>
+    <h2 id="six35WinnerTitle">VINCE!</h2>
+    <p id="six35WinnerText" class="six35-muted"></p>
+    <button id="six35RecordWin" class="six35-primary">REGISTRA VITTORIA</button>
+    <button id="six35NewGame" class="six35-secondary full">NUOVA PARTITA</button>
+  </div>
+</div>
+
+
+    <main id="sixGameView" class="six-main hidden">
+      <section class="six-round-panel">
+        <div class="six-round-symbol">🐂</div>
+        <div class="six-round-center">
+          <div class="six-round-title">ROUND <span id="sixRoundNo">1</span></div>
+          <div class="six-sub">Soglia partita: <b>oltre 66</b> teste di bue</div>
+          <div class="six-progress"><i id="sixProgress"></i></div>
+          <div id="sixStatus" class="six-progress-text">Partita appena iniziata</div>
+        </div>
+        <div class="six-target">🐂 <b>66</b></div>
+      </section>
+
+      <button id="sixEditPlayers" class="six-edit">
+        <span class="six-edit-icon">👥</span>
+        <span><strong>Modifica giocatori</strong><small>Numero partecipanti e nomi</small></span>
+        <span class="six-edit-arrow">›</span>
+      </button>
+
+      <div class="six-section-title">
+        <span>🐂</span>
+        <strong>CLASSIFICA ATTUALE</strong>
+        <i></i>
+      </div>
+
+      <section id="sixRanking" class="six-ranking"></section>
+
+      <button id="sixAddRound" class="six-score-cta">
+        <span class="six-plus-ring">＋</span>
+        <span class="six-cta-copy">
+          <strong>INSERISCI TESTE DI BUE DEL ROUND</strong>
+          <small>Segna solo i punti di penalità appena ottenuti</small>
+        </span>
+        <span class="six-chevron">›</span>
+      </button>
+
+      <div class="six-bottom-actions">
+        <button id="sixUndo">↶ Annulla ultimo round</button>
+        <button id="sixHistory">▥ Storico round</button>
+      </div>
+
+      <button id="sixDelete" class="six-delete">🗑 Elimina partita</button>
+    </main>
+  </div>
+</section>
+
+
+    <main id="legacy-sixGameView-2" class="six-main hidden">
+      <section class="six-round-panel">
+        <div><div class="six-round-title">ROUND <span id="legacy-sixRoundNo-2">1</span></div>
+          <div class="six-sub">Fine partita: quando qualcuno supera <b>66</b> teste di bue</div>
+          <div class="six-progress"><i id="legacy-sixProgress-2"></i></div><small id="legacy-sixStatus-2">Partita appena iniziata</small>
+        </div>
+        <div class="six-target">🐂 <b>66</b></div>
+      </section>
+
+      <button id="legacy-sixEditPlayers-2" class="six-edit">👥 <span><b>Modifica giocatori</b><small>Numero partecipanti e nomi</small></span><em>›</em></button>
+
+      <h2 class="six-ranking-title">🐂 CLASSIFICA ATTUALE</h2>
+      <div id="legacy-sixRanking-2"></div>
+
+      <button id="legacy-sixAddRound-2" class="six-primary six-add">⊕ <span><b>INSERISCI TESTE DI BUE DEL ROUND</b><small>Segna solo i punti di penalità appena ottenuti</small></span><em>›</em></button>
+      <div class="six-actions"><button id="legacy-sixUndo-2">↶ Annulla ultimo round</button><button id="legacy-sixHistory-2">▥ Storico round</button></div>
+      <button id="legacy-sixDelete-2" class="six-delete">🗑 Elimina partita</button>
+    </main>
+  </div>
+</section>
+
+<div id="sixRoundModal" class="modal hidden"><div class="sheet six-sheet">
+  <div class="sheet-head"><div><div class="six-kicker">6... LE PRENDI!</div><h2>🐂 Punti del round</h2></div><button class="close" data-close="sixRoundModal">×</button></div>
+  <p class="helper">Inserisci per ogni giocatore le teste di bue raccolte in questa manche.</p>
+  <div id="sixRoundInputs"></div><button id="sixConfirmRound" class="six-primary">Conferma round</button>
+</div></div>
+
+<div id="sixHistoryModal" class="modal hidden"><div class="sheet six-sheet">
+  <div class="sheet-head"><div><div class="six-kicker">6... LE PRENDI!</div><h2>▥ Storico round</h2></div><button class="close" data-close="sixHistoryModal">×</button></div>
+  <div id="sixHistoryList"></div>
+</div></div>
+
+<div id="sixHallModal" class="modal hidden">
+  <div class="sheet six-hall-sheet">
+    <div class="sheet-head">
+      <div>
+        <div class="six-kicker">6... LE PRENDI!</div>
+        <h2>🏆 Hall of Fame</h2>
+      </div>
+      <button class="close" data-close="sixHallModal">×</button>
+    </div>
+
+    <p class="helper">La classifica storica del gruppo: vittorie, partite giocate e percentuale di successo.</p>
+
+    <div id="sixHallSummary" class="hall-summary six-hall-summary"></div>
+    <div id="sixHallPodium" class="hall-podium six-hall-podium"></div>
+    <div id="sixHallList" class="hall-list six-hall-list"></div>
+
+    <button id="sixResetHall" class="btn six-clear-hall">Azzera classifica generale</button>
+  </div>
+</div>
+
+<div id="sixWinScreen" class="win-screen hidden six-win"><div class="win-card">
+  <div class="win-trophy">🏆</div><div class="six-kicker">6... LE PRENDI!</div>
+  <h1 id="sixWinnerName">VINCE!</h1><p id="sixWinnerText"></p>
+  <button id="sixSaveWin" class="six-primary">Registra vittoria</button>
+  <button id="sixNewGame" class="secondary">Nuova partita</button>
+</div></div>
+
+
+
+<section id="seaSaltWorld" class="game-world sea-world sea-app hidden">
+  <div class="sea-shell">
+
+    <header class="sea-brand-hero">
+      <img src="assets/sea-salt-paper-logo.jpg" alt="Sea Salt & Paper">
+      <button class="sea-corner left" data-world-back aria-label="Giochi">
+        <span class="sea-top-icon">🎴</span>
+        <span class="sea-top-label">GIOCHI</span>
+      </button>
+      <button id="seaTrophyBtn" class="sea-corner right" aria-label="Trofei">
+        <span class="sea-top-icon">🏆</span>
+        <span class="sea-top-label">TROFEI</span>
+      </button>
+    </header>
+
+    <section id="seaSetupView" class="sea-setup-view hidden">
+
+        <div class="sea-setup-card">
+        <div class="sea-setup-kicker">NUOVA PARTITA</div>
+        <h1>Crea la partita</h1>
+        <p>Prima scegli quanti giocatori parteciperanno. Poi inserisci tu tutti i nomi.</p>
+
+        <div class="sea-player-count-box">
+          <div>
+            <div class="sea-count-label">NUMERO GIOCATORI</div>
+            <div class="sea-count-help">Sea Salt &amp; Paper: da 2 a 4 giocatori</div>
+          </div>
+          <div class="sea-count-control">
+            <button id="seaMinusInline" class="sea-count-btn" aria-label="Diminuisci">−</button>
+            <strong id="seaPlayerCountInline">2</strong>
+            <button id="seaPlusInline" class="sea-count-btn" aria-label="Aumenta">＋</button>
+          </div>
+        </div>
+
+        <div class="sea-names-title">NOMI DEI GIOCATORI</div>
+        <div id="seaNameInputsInline"></div>
+
+        <button id="seaStartInline" class="sea-create-game-btn">Crea partita</button>
+      </div>
+    </section>
+
+    <main id="seaGameView" class="sea-main hidden">
+      <section class="sea-round-panel">
+        <div class="sea-round-symbol">🌊</div>
+        <div class="sea-round-center">
+          <div class="sea-round-title">ROUND <span id="seaRoundNo">1</span></div>
+          <div class="sea-target-label">Primo traguardo: <strong id="seaTarget">40</strong> punti</div>
+          <div class="sea-progress"><i id="seaProgress"></i></div>
+          <div id="seaProgressText" class="sea-progress-text">Partita appena iniziata</div>
+        </div>
+        <div class="sea-target-box">🏆 <strong id="seaTargetBox">40</strong></div>
+      </section>
+
+      <button id="seaEditPlayers" class="sea-edit-players">
+        <span class="sea-edit-icon">👥</span>
+        <span><strong>Modifica giocatori</strong><small>Numero partecipanti e nomi</small></span>
+        <span class="sea-edit-arrow">›</span>
+      </button>
+
+      <div class="sea-section-title">
+        <span>🏆</span>
+        <strong>CLASSIFICA ATTUALE</strong>
+        <i></i>
+      </div>
+
+      <section id="seaRanking" class="sea-ranking"></section>
+
+      <button id="seaOpenRound" class="sea-score-cta">
+        <span class="sea-plus-ring">＋</span>
+        <span class="sea-cta-copy">
+          <strong>INSERISCI PUNTEGGI DEL ROUND</strong>
+          <small>Segna solo i punti appena ottenuti</small>
+        </span>
+        <span class="sea-chevron">›</span>
+      </button>
+
+      <button id="seaMermaids" class="sea-mermaids">
+        <span>🧜‍♀️</span>
+        <span><strong>VITTORIA CON 4 SIRENE</strong><small>Vittoria immediata prevista dal regolamento</small></span>
+        <span>›</span>
+      </button>
+
+      <div class="sea-bottom-actions">
+        <button id="seaUndo">↶ Annulla ultimo round</button>
+        <button id="seaHistory">▥ Storico round</button>
+      </div>
+
+      <button id="seaDeleteGame" class="sea-delete">🗑 Elimina partita</button>
+    </main>
+  </div>
+</section>
+
+
+<div id="seaSetupModal" class="modal hidden sea-legacy-setup">
+  <div class="sheet sea-sheet">
+    <div class="sheet-head"><div><div class="kicker">SEA SALT & PAPER</div><h2>Nuova partita</h2></div><button class="close" data-close="seaSetupModal">×</button></div>
+    <p class="helper">Scegli da 2 a 4 giocatori. Il traguardo sarà impostato automaticamente.</p>
+    <div class="setup-count">
+      <button id="seaMinus">−</button><strong id="seaPlayerCount">2</strong><button id="seaPlus">＋</button>
+    </div>
+    <div id="seaNameInputs"></div>
+    <button id="seaStart" class="btn sea-primary">INIZIA PARTITA</button>
+  </div>
+</div>
+
+<div id="seaRoundModal" class="modal hidden">
+  <div class="sheet sea-sheet">
+    <div class="sheet-head"><div><div class="kicker">PUNTEGGI</div><h2 id="seaRoundModalTitle">Round 1</h2></div><button class="close" data-close="seaRoundModal">×</button></div>
+    <p class="helper">Inserisci solo i punti ottenuti in questo round.</p>
+    <div id="seaRoundInputs"></div>
+    <button id="seaSaveRound" class="btn sea-primary">✓ CONFERMA ROUND</button>
+  </div>
+</div>
+
+<div id="seaHistoryModal" class="modal hidden">
+  <div class="sheet sea-sheet">
+    <div class="sheet-head"><div><div class="kicker">SEA SALT & PAPER</div><h2>Storico round</h2></div><button class="close" data-close="seaHistoryModal">×</button></div>
+    <div id="seaHistoryList"></div>
+  </div>
+</div>
+
+<div id="seaHallModal" class="modal hidden">
+  <div class="sheet sea-sheet sea-hall-sheet">
+    <div class="sheet-head">
+      <div>
+        <div class="kicker">SEA SALT & PAPER</div>
+        <h2>🏆 Hall of Fame</h2>
+      </div>
+      <button class="close" data-close="seaHallModal">×</button>
+    </div>
+
+    <p class="helper">La classifica storica del gruppo: vittorie, partite giocate e percentuale di successo.</p>
+
+    <div id="seaHallSummary" class="hall-summary sea-hall-summary"></div>
+    <div id="seaHallPodium" class="hall-podium sea-hall-podium"></div>
+    <div id="seaHallList" class="hall-list sea-hall-list"></div>
+
+    <button id="seaClearHall" class="btn sea-clear-hall">Azzera classifica generale</button>
+  </div>
+</div>
+
+<div id="seaMermaidModal" class="modal hidden">
+  <div class="sheet sea-sheet">
+    <div class="sheet-head"><div><div class="kicker">4 SIRENE</div><h2>Vittoria immediata</h2></div><button class="close" data-close="seaMermaidModal">×</button></div>
+    <p class="helper">Chi ha collezionato le quattro Sirene?</p>
+    <div id="seaMermaidPlayers" class="sea-mermaid-players"></div>
+  </div>
+</div>
+
+<div id="seaWinScreen" class="win-screen sea-win hidden">
+  <div class="confetti-layer"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="win-card">
+    <div class="win-trophy-wrap"><div class="win-trophy">🏆</div></div>
+    <div class="win-kicker">FINE PARTITA</div>
+    <h1 id="seaWinTitle">VINCE!</h1>
+    <div class="win-score"><span id="seaWinScore">0</span><small>PUNTI</small></div>
+    <div class="win-divider"></div>
+    <div class="final-title">CLASSIFICA FINALE</div>
+    <div id="seaFinalRanking" class="final-ranking"></div>
+    <div class="win-hall-confirm sea-win-confirm">
+      <span>✓</span>
+      <div><strong>Risultato salvato</strong><small>Hall of Fame aggiornata automaticamente</small></div>
+    </div>
+    <div class="win-actions win-actions-final">
+      <button id="seaNewGame" class="btn sea-primary win-main-btn"><strong>＋ NUOVA PARTITA</strong><small>Scegli di nuovo giocatori e nomi</small></button>
+      <button id="seaHomeAfterWin" class="btn dark win-secondary-btn"><strong>🎴 TORNA AI GIOCHI</strong></button>
+    </div>
+    <button id="seaHallAfterWin" class="win-close">🏆 Apri Hall of Fame</button>
+  </div>
+</div>
+
+<div id="seaToast" class="round-save-toast" aria-live="polite"></div>
+
+
+<div id="flip7App" class="app hidden">
+  <header class="hero">
+    <img src="assets/flip7-header.jpg" alt="Flip 7">
+    <button id="gameSelectorBtn" class="corner left top-game-btn" aria-label="Torna ai giochi">
+      <span class="top-icon">♠</span>
+      <span class="top-label">GIOCHI</span>
+    </button>
+    <button id="hallBtn" class="corner right top-hall-btn" aria-label="Classifica generale">
+      <span class="top-icon">🏆</span>
+      <span class="top-label">TROFEI</span>
+    </button>
+  </header>
+
+  <section id="setup" class="setup-shell">
+    <div class="panel setup-card">
+      <div class="kicker">NUOVA PARTITA</div>
+      <h1>Crea la partita</h1>
+      <p>Prima scegli quanti giocatori parteciperanno. Poi inserisci tu tutti i nomi.</p>
+
+      <div class="player-count-box">
+        <div>
+          <div class="count-label">NUMERO GIOCATORI</div>
+          <div class="count-help">Flip 7: da 3 giocatori in su</div>
+        </div>
+        <div class="count-control">
+          <button id="minusPlayer" class="count-btn" aria-label="Diminuisci">−</button>
+          <strong id="playerCount">3</strong>
+          <button id="plusPlayer" class="count-btn" aria-label="Aumenta">＋</button>
+        </div>
+      </div>
+
+      <div class="names-title">NOMI DEI GIOCATORI</div>
+      <div id="setupPlayers"></div>
+      <button id="startGame" class="btn yellow full">Crea partita</button>
+    </div>
+  </section>
+
+  <main id="game" class="hidden">
+    <section class="round-panel panel">
+      <div class="round-symbol">🃏</div>
+      <div class="round-center">
+        <div class="round-title">ROUND <span id="roundNumber">1</span></div>
+        <div class="round-sub">Primo traguardo: <b>200</b> punti</div>
+        <div class="game-progress">
+          <div class="game-progress-fill" id="gameProgressFill"></div>
+        </div>
+        <div class="game-progress-label" id="gameProgressLabel">Partita appena iniziata</div>
+      </div>
+      <div class="target">🏆 <b>200</b></div>
+    </section>
+
+    <button id="editPlayers" class="edit-players-btn">
+      <span class="edit-icon">👥</span>
+      <span><strong>Modifica giocatori</strong><small>Numero partecipanti e nomi</small></span>
+      <span class="edit-arrow">›</span>
+    </button>
+
+    <section id="winner" class="winner hidden"></section>
+
+    <div class="section-title">
+      <span>🏆</span><strong>CLASSIFICA ATTUALE</strong><i></i>
+    </div>
+
+    <section id="leaderboard" class="leaderboard"></section>
+
+    <button id="openRound" class="btn yellow score-cta">
+      <span class="plus">＋</span>
+      <span class="cta-copy"><strong>INSERISCI PUNTEGGI DEL ROUND</strong><small>Segna solo i punti appena ottenuti</small></span>
+      <span class="arrow">›</span>
+    </button>
+
+    <div class="actions">
+      <button id="undo" class="btn dark">↶ Annulla ultimo round</button>
+      <button id="history" class="btn dark">▥ Storico round</button>
+      <button id="deleteGameBtn" class="btn delete-game-btn">🗑 Elimina partita</button>
+    </div>
+  </main>
+</div>
+
+<div id="roundModal" class="modal hidden">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div>
+        <div class="kicker">ROUND <span id="modalRound">1</span></div>
+        <h2>Punteggi del round</h2>
+      </div>
+      <button class="close" data-close="roundModal">×</button>
+    </div>
+    <p class="helper">Inserisci solo i punti ottenuti nel round. Per chi sballa, lascia 0.</p>
+    <div id="roundInputs" class="round-inputs-premium"></div>
+    <div class="round-confirm-box">
+      <div><span>Totale punti inseriti</span><strong id="roundEnteredTotal">0</strong></div>
+      <button id="saveRound" class="btn yellow confirm-round-btn">CONFERMA ROUND</button>
+    </div>
+  </div>
+</div>
+
+<div id="historyModal" class="modal hidden">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div><div class="kicker">PARTITA</div><h2>Storico round</h2></div>
+      <button class="close" data-close="historyModal">×</button>
+    </div>
+    <div id="historyList" class="history-cards"></div>
+  </div>
+</div>
+
+
+
+<div id="gameSelectorModal" class="modal hidden">
+  <div class="sheet game-sheet">
+    <div class="sheet-head">
+      <div>
+        <div class="kicker">GAME SCORE</div>
+        <h2>Scegli il gioco</h2>
+      </div>
+      <button class="close" data-close="gameSelectorModal">×</button>
+    </div>
+    <p class="helper">Ogni gioco avrà il suo segnapunti personalizzato.</p>
+
+    <div class="game-picker game-picker-covers">
+      <button class="game-choice game-cover active" data-game="flip7">
+        <div class="cover-art cover-flip7">
+          <div class="cover-logo">FLIP <b>7</b></div>
+          <div class="cover-sub">PRESS YOUR LUCK</div>
+        </div>
+        <div class="game-choice-copy">
+          <strong>Flip 7</strong>
+          <span>Modulo completo</span>
+        </div>
+        <div class="game-state ready">ATTIVO</div>
+      </button>
+
+      <button class="game-choice game-cover coming" data-game="6nimmt">
+        <div class="cover-art cover-six">
+          <div class="cover-logo">6...</div>
+          <div class="cover-sub">LE PRENDI!</div>
+        </div>
+        <div class="game-choice-copy">
+          <strong>6... Le prendi!</strong>
+          <span>Segnapunti da configurare</span>
+        </div>
+        <div class="game-state soon">PRESTO</div>
+      </button>
+
+      <button class="game-choice game-cover coming" data-game="seasalt">
+        <div class="cover-art cover-sea">
+          <div class="cover-logo">SEA SALT</div>
+          <div class="cover-sub">&amp; PAPER</div>
+        </div>
+        <div class="game-choice-copy">
+          <strong>Sea Salt &amp; Paper</strong>
+          <span>Segnapunti da configurare</span>
+        </div>
+        <div class="game-state soon">PRESTO</div>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<div id="hallGameSelectorModal" class="modal hidden">
+  <div class="sheet hall-game-selector-sheet">
+    <div class="sheet-head">
+      <div>
+        <div class="kicker">GAME SCORE</div>
+        <h2>🏆 Scegli la classifica</h2>
+      </div>
+      <button class="close" data-close="hallGameSelectorModal">×</button>
+    </div>
+    <p class="helper">Scegli il gioco di cui vuoi vedere la Hall of Fame.</p>
+
+    <div class="hall-game-picker">
+      <button class="hall-game-choice hall-flip-choice" data-hall-game="flip7">
+        <div class="hall-game-art flip-hall-art">
+          <span>FLIP</span><b>7</b>
+        </div>
+        <div class="hall-game-copy">
+          <strong>Flip 7</strong>
+          <span>Vittorie, partite e statistiche</span>
+        </div>
+        <span class="hall-game-arrow">›</span>
+      </button>
+
+      <button class="hall-game-choice hall-sea-choice" data-hall-game="seasalt">
+        <div class="hall-game-art sea-hall-art">
+          <span>SEA</span><b>≈</b>
+        </div>
+        <div class="hall-game-copy">
+          <strong>Sea Salt &amp; Paper</strong>
+          <span>Vittorie, partite e statistiche</span>
+        </div>
+        <span class="hall-game-arrow">›</span>
+      </button>
+
+      <button class="hall-game-choice hall-six-choice" data-hall-game="sixnimmt">
+        <div class="hall-game-art six-hall-art">
+          <span>6...</span><b>🐂</b>
+        </div>
+        <div class="hall-game-copy">
+          <strong>6... Le prendi!</strong>
+          <span>Vittorie, partite e statistiche</span>
+        </div>
+        <span class="hall-game-arrow">›</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="hallModal" class="modal hidden">
+  <div class="sheet hall-sheet">
+    <div class="sheet-head">
+      <div>
+        <div class="kicker">FLIP 7</div>
+        <h2>🏆 Hall of Fame</h2>
+      </div>
+      <button class="close" data-close="hallModal">×</button>
+    </div>
+    <p class="helper">La classifica storica del gruppo: vittorie, partite giocate e percentuale di successo.</p>
+
+    <div id="hallSummary" class="hall-summary"></div>
+    <div id="hallPodium" class="hall-podium"></div>
+    <div id="hallList" class="hall-list"></div>
+
+    <button id="clearHall" class="btn dark full hall-clear">Azzera classifica generale</button>
+  </div>
+</div>
+
+
+<div id="winScreen" class="win-screen hidden" aria-live="polite">
+  <div class="confetti-layer">
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  </div>
+
+  <div class="win-card">
+    <div class="win-top-glow"></div>
+
+    <div class="win-trophy-wrap">
+      <div class="win-trophy">🏆</div>
+    </div>
+
+    <div class="win-kicker">FINE PARTITA</div>
+    <h1 id="winTitle">GIULIA VINCE!</h1>
+    <div class="win-score">
+      <span id="winScore">237</span>
+      <small>PUNTI</small>
+    </div>
+
+    <div class="win-divider"></div>
+
+    <div class="final-title">CLASSIFICA FINALE</div>
+    <div id="finalRanking" class="final-ranking"></div>
+
+    <div class="win-hall-confirm">
+      <span>✓</span>
+      <div><strong>Risultato salvato</strong><small>Hall of Fame aggiornata automaticamente</small></div>
+    </div>
+
+    <div class="win-actions win-actions-final">
+      <button id="newGameBtn" class="btn yellow win-main-btn">
+        <span>＋</span>
+        <strong>NUOVA PARTITA</strong>
+        <small>Scegli di nuovo giocatori e nomi</small>
+      </button>
+      <button id="flipHomeAfterWin" class="btn dark win-secondary-btn">
+        <span>🎴</span>
+        <strong>TORNA AI GIOCHI</strong>
+      </button>
+    </div>
+
+    <button id="flipHallAfterWin" class="win-close">🏆 Apri Hall of Fame</button>
+  </div>
+</div>
+
+
+<div id="playerProfileModal" class="modal hidden">
+  <div class="sheet profile-sheet">
+    <div class="sheet-head">
+      <div>
+        <div class="kicker">HALL OF FAME</div>
+        <h2 id="profileName">Giocatore</h2>
+      </div>
+      <button class="close" data-close="playerProfileModal">×</button>
+    </div>
+
+    <div class="profile-hero">
+      <div id="profileMedal" class="profile-medal">🏆</div>
+      <div class="profile-title-wrap">
+        <div id="profileRank" class="profile-rank">#1</div>
+        <div id="profileSubtitle" class="profile-subtitle">Statistiche personali</div>
+      </div>
+    </div>
+
+    <div class="profile-stats-grid">
+      <div class="profile-stat">
+        <span>VITTORIE</span>
+        <b id="profileWins">0</b>
+      </div>
+      <div class="profile-stat">
+        <span>PARTITE</span>
+        <b id="profileGames">0</b>
+      </div>
+      <div class="profile-stat">
+        <span>% VITTORIE</span>
+        <b id="profileRate">0%</b>
+      </div>
+      <div class="profile-stat highlight">
+        <span>MIGLIOR PUNTEGGIO</span>
+        <b id="profileBest">—</b>
+      </div>
+    </div>
+
+    <div class="profile-last-win">
+      <span>ULTIMA VITTORIA</span>
+      <strong id="profileLastWin">Nessuna vittoria registrata</strong>
+    </div>
+  </div>
+</div>
+
+<div id="rankToast" class="rank-toast" aria-live="polite"></div>
+<div id="roundSaveToast" class="round-save-toast" aria-live="polite">✓ Round registrato</div>
+
+
+<!-- ======================================================
+     v59 — ONLINE / QR
+     ====================================================== -->
+<button id="gsShareRoomBtn" class="gs-share-room hidden" type="button" aria-label="Condividi partita con QR">
+  <span>▦</span><b>QR GIOCATORI</b>
+</button>
+
+<div id="gsShareModal" class="modal hidden">
+  <div class="sheet gs-online-sheet">
+    <div class="sheet-head">
+      <div>
+        <div class="kicker">GAME SCORE ONLINE</div>
+        <h2>📲 Condividi partita</h2>
+      </div>
+      <button class="close" data-online-close="gsShareModal">×</button>
+    </div>
+
+    <div id="gsOnlineNotConfigured" class="gs-online-empty hidden">
+      <div class="gs-online-empty-icon">☁</div>
+      <strong>Online non ancora collegato</strong>
+      <p>Inserisci URL e Publishable Key di Supabase nel file <b>online-config.js</b>, poi pubblica il progetto.</p>
+    </div>
+
+    <div id="gsOnlineShareReady" class="hidden">
+      <p class="helper">Gli altri giocatori scansionano il QR e vedono la classifica in diretta. Solo l'host può modificare i punteggi.</p>
+
+      <div class="gs-room-code-wrap">
+        <span>CODICE PARTITA</span>
+        <strong id="gsRoomCode">------</strong>
+      </div>
+
+      <div id="gsQrBox" class="gs-qr-box"></div>
+
+      <div class="gs-share-url">
+        <span>LINK GIOCATORI</span>
+        <input id="gsSpectatorUrl" readonly>
+      </div>
+
+      <div class="gs-share-actions">
+        <button id="gsCopyLinkBtn" class="btn yellow">Copia link</button>
+        <button id="gsRefreshQrBtn" class="btn dark">Rigenera QR</button>
+      </div>
+
+      <div class="gs-online-status">
+        <i id="gsOnlineStatusDot"></i>
+        <span id="gsOnlineStatusText">Pronto</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="gsSpectatorApp" class="gs-spectator hidden">
+  <header class="gs-spectator-hero">
+    <div class="gs-live-pill"><i></i> LIVE</div>
+    <div class="gs-spectator-brand">GAME SCORE</div>
+    <h1 id="gsSpectatorGameTitle">Partita</h1>
+    <p id="gsSpectatorMeta">Connessione alla partita…</p>
+  </header>
+
+  <main class="gs-spectator-main">
+    <section class="gs-spectator-round">
+      <div>
+        <span>ROUND</span>
+        <strong id="gsSpectatorRound">1</strong>
+      </div>
+      <div class="gs-spectator-goal">
+        <span>TRAGUARDO</span>
+        <strong id="gsSpectatorGoal">—</strong>
+      </div>
+    </section>
+
+    <div class="gs-spectator-title">CLASSIFICA IN DIRETTA</div>
+    <section id="gsSpectatorRanking" class="gs-spectator-ranking"></section>
+
+    <div class="gs-spectator-foot">
+      <span>👁️ Modalità giocatore</span>
+      <small>I punteggi vengono aggiornati dall'host.</small>
+    </div>
+  </main>
+
+  <div id="gsSpectatorOffline" class="gs-spectator-offline hidden">
+    <strong>Partita non disponibile</strong>
+    <span id="gsSpectatorOfflineText">Controlla il link o chiedi un nuovo QR all'host.</span>
+  </div>
+</section>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="online-config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
