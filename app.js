@@ -88,6 +88,91 @@ function gsTouchGame(game,data,active){
 
 
 const KEY="flip7-score-v5";
+
+/* =========================================================
+   V99 — SUONI DISCRETI
+   Generati via Web Audio: nessun file esterno.
+   ========================================================= */
+const GS_SOUND_KEY="gs:sounds-enabled-v1";
+let gsAudioCtx=null;
+
+function gsSoundsEnabled(){
+  try{
+    const v=localStorage.getItem(GS_SOUND_KEY);
+    return v===null ? true : v==="1";
+  }catch(e){return true}
+}
+function gsSetSoundsEnabled(enabled){
+  try{localStorage.setItem(GS_SOUND_KEY,enabled?"1":"0")}catch(e){}
+  gsUpdateSoundToggle();
+  if(enabled){
+    gsUnlockAudio();
+    setTimeout(()=>gsPlaySound("toggle"),40);
+  }
+}
+function gsUpdateSoundToggle(){
+  const btn=document.getElementById("gsSoundToggle");
+  const icon=document.getElementById("gsSoundToggleIcon");
+  if(!btn||!icon)return;
+  const on=gsSoundsEnabled();
+  icon.textContent=on?"🔊":"🔇";
+  btn.classList.toggle("muted",!on);
+  btn.setAttribute("aria-label",on?"Disattiva i suoni":"Attiva i suoni");
+  const label=btn.querySelector("small");
+  if(label)label.textContent=on?"SUONI":"MUTO";
+}
+function gsUnlockAudio(){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC)return null;
+    if(!gsAudioCtx)gsAudioCtx=new AC();
+    if(gsAudioCtx.state==="suspended")gsAudioCtx.resume().catch(()=>{});
+    return gsAudioCtx;
+  }catch(e){return null}
+}
+function gsTone(ctx,freq,start,duration,gain=.035,type="sine"){
+  const osc=ctx.createOscillator();
+  const vol=ctx.createGain();
+  osc.type=type;
+  osc.frequency.setValueAtTime(freq,start);
+  vol.gain.setValueAtTime(0.0001,start);
+  vol.gain.exponentialRampToValueAtTime(Math.max(.0002,gain),start+.018);
+  vol.gain.exponentialRampToValueAtTime(.0001,start+duration);
+  osc.connect(vol); vol.connect(ctx.destination);
+  osc.start(start); osc.stop(start+duration+.02);
+}
+function gsPlaySound(kind){
+  if(!gsSoundsEnabled())return;
+  const ctx=gsUnlockAudio();
+  if(!ctx||ctx.state==="suspended")return;
+  const t=ctx.currentTime+.01;
+  try{
+    if(kind==="round"){
+      gsTone(ctx,520,t,.16,.028,"sine");
+      gsTone(ctx,660,t+.08,.19,.026,"sine");
+    }else if(kind==="rank"){
+      gsTone(ctx,440,t,.16,.022,"triangle");
+      gsTone(ctx,590,t+.10,.18,.026,"triangle");
+      gsTone(ctx,740,t+.20,.20,.022,"triangle");
+    }else if(kind==="win"){
+      gsTone(ctx,523.25,t,.32,.032,"triangle");
+      gsTone(ctx,659.25,t+.16,.35,.034,"triangle");
+      gsTone(ctx,783.99,t+.32,.42,.037,"triangle");
+      gsTone(ctx,1046.5,t+.56,.52,.025,"sine");
+    }else if(kind==="toggle"){
+      gsTone(ctx,620,t,.12,.018,"sine");
+    }
+  }catch(e){}
+}
+
+document.addEventListener("pointerdown",()=>gsUnlockAudio(),{passive:true});
+setTimeout(()=>{
+  gsUpdateSoundToggle();
+  document.getElementById("gsSoundToggle")?.addEventListener("click",()=>{
+    gsSetSoundsEnabled(!gsSoundsEnabled());
+  });
+},80);
+
 const HALL_KEY="flip7-score-hall-v1";
 
 const themes=[
@@ -272,7 +357,7 @@ function recordResultIfNeeded(winner){
   state.players.forEach(name=>{
     const key=normalizeName(name);
     if(!hall.players[key]){
-      hall.players[key]={name:name.trim(),wins:0,games:0,lastWin:null,bestScore:0};
+      hall.players[key]={name:name.trim(),wins:0,games:0,lastWin:null,bestScore:0,podiums:0};
     }else{
       hall.players[key].name=name.trim();
     }
@@ -287,6 +372,16 @@ function recordResultIfNeeded(winner){
     hall.players[key].wins=(hall.players[key].wins||0)+1;
     hall.players[key].lastWin=new Date().toISOString();
   });
+
+  // Podi: per i dati storici precedenti almeno ogni vittoria vale già un podio.
+  const flipFinalTotals=totals();
+  const flipFinalOrder=state.players.map((name,i)=>({name,i,total:flipFinalTotals[i]||0}))
+    .sort((a,b)=>b.total-a.total || a.i-b.i);
+  flipFinalOrder.slice(0,3).forEach(x=>{
+    const key=normalizeName(x.name),p=hall.players[key];
+    p.podiums=Math.max(Number(p.podiums||0),Number(p.wins||0)-(winner.names.some(n=>normalizeName(n)===key)?1:0))+1;
+  });
+  Object.values(hall.players).forEach(p=>{p.podiums=Math.max(Number(p.podiums||0),Number(p.wins||0))});
 
   saveHall(hall);
   state.resultRecorded=true;
@@ -322,6 +417,7 @@ function showWinScreen(w){
   }).join("");
 
   gsShowPerfectWin("winScreen","flip");
+  gsPlaySound("win");
   // V89: Trofeo salvato, partita attiva azzerata subito.
   gsAutoArchiveCompletedGame("flip");
 }
@@ -404,6 +500,7 @@ function animateRankingTransition(beforeRects,beforeSnapshot){
     });
 
     if(climbers.length){
+      gsPlaySound("rank");
       const best=climbers.sort((a,b)=>(beforePos.get(a.i)-afterPos.get(a.i))-(beforePos.get(b.i)-afterPos.get(b.i)))[climbers.length-1];
       const oldPos=beforePos.get(best.i)+1;
       const newPos=afterPos.get(best.i)+1;
@@ -631,6 +728,7 @@ function saveRound(){
   }
 
   save();
+  gsPlaySound("round");
 
   closeRoundModalAnimated(()=>{
     animateNextRanking=true;
@@ -766,6 +864,39 @@ function formatItalianDate(iso){
   }
 }
 
+
+/* =========================================================
+   V99 — STATISTICHE AVANZATE HALL OF FAME
+   ========================================================= */
+function gsPodiums(p){
+  return Math.max(Number(p?.podiums||0),Number(p?.wins||0));
+}
+function gsTopGameForPlayer(name){
+  const key=String(name||"").trim().toLocaleLowerCase("it");
+  const games=[];
+  try{
+    const p=(loadHall()?.players||{})[key];
+    if(p)games.push({name:"Flip 7",wins:Number(p.wins||0),games:Number(p.games||0)});
+  }catch(e){}
+  try{
+    const p=(seaHallLoad()?.players||{})[key];
+    if(p)games.push({name:"Sea Salt & Paper",wins:Number(p.wins||0),games:Number(p.games||0)});
+  }catch(e){}
+  try{
+    const p=(six39HallLoad()?.players||{})[key];
+    if(p)games.push({name:"6… Le prendi!",wins:Number(p.wins||0),games:Number(p.games||0)});
+  }catch(e){}
+  if(!games.length)return "—";
+  games.sort((a,b)=>b.wins-a.wins || b.games-a.games || a.name.localeCompare(b.name,"it"));
+  if(games[0].wins<=0)return "—";
+  const tied=games.filter(g=>g.wins===games[0].wins);
+  return tied.length>1?tied.map(g=>g.name).join(" / "):games[0].name;
+}
+function gsAdvancedMeta(p,bestLabel="—"){
+  const rate=p.games?Math.round((Number(p.wins||0)/Number(p.games||1))*100):0;
+  return `${Number(p.games||0)} partite · ${rate}% vittorie · ${gsPodiums(p)} podi · miglior punteggio ${bestLabel} · gioco top ${gsTopGameForPlayer(p.name)}`;
+}
+
 function openPlayerProfile(playerKey){
   const hall=loadHall();
   const rows=Object.entries(hall.players||{})
@@ -790,6 +921,8 @@ function openPlayerProfile(playerKey){
   $("#profileGames").textContent=p.games||0;
   $("#profileRate").textContent=`${p.rate.toFixed(0)}%`;
   $("#profileBest").textContent=p.bestScore?`${p.bestScore}`:"—";
+  $("#profilePodiums").textContent=gsPodiums(p);
+  $("#profileTopGame").textContent=gsTopGameForPlayer(p.name);
   $("#profileLastWin").textContent=formatItalianDate(p.lastWin);
 
   openModal("playerProfileModal");
@@ -831,7 +964,7 @@ function renderHall(){
       <div class="podium-medal">${medal}</div>
       <div class="podium-name">${esc(p.name)}</div>
       <div class="podium-wins">${p.wins||0}</div>
-      <div class="podium-meta">${p.games||0} partite · ${p.rate.toFixed(0)}%</div>
+      <div class="podium-meta">${p.games||0} partite · ${p.rate.toFixed(0)}% · ${gsPodiums(p)} podi</div>
     </button>`;
   }).join("");
 
@@ -843,7 +976,7 @@ function renderHall(){
       <div class="hall-pos">${medal}</div>
       <div>
         <div class="hall-name">${esc(p.name)}</div>
-        <div class="hall-meta">${p.games||0} partite · ${p.rate.toFixed(0)}% vittorie</div>
+        <div class="hall-meta">${gsAdvancedMeta(p,p.bestScore||"—")}</div>
       </div>
       <div class="hall-wins"><b>${p.wins||0}</b><span>Vittorie</span></div>
     </button>`;
@@ -1154,7 +1287,7 @@ function seaSaveRound(){
   const e=$("#seaSaveRound").dataset.edit;
   let rn;
   if(e!==""){rn=Number(e)+1;seaState.rounds[Number(e)]=vals}else{seaState.rounds.push(vals);rn=seaState.rounds.length}
-  seaSave();closeModal("seaRoundModal");seaRender();seaToast(`✓ Round ${rn} ${e!==""?"aggiornato":"registrato"}`);
+  seaSave();gsPlaySound("round");closeModal("seaRoundModal");seaRender();seaToast(`✓ Round ${rn} ${e!==""?"aggiornato":"registrato"}`);
   setTimeout(seaCheckWinner,250);
 }
 function seaCheckWinner(){
@@ -1180,7 +1313,7 @@ function seaFinish(i,mermaids=false){
     hall.games=(hall.games||0)+1;
     seaState.players.forEach((n,pi)=>{
       const k=seaKey(n);
-      hall.players[k]=hall.players[k]||{name:n,wins:0,games:0,best:0,lastWin:null};
+      hall.players[k]=hall.players[k]||{name:n,wins:0,games:0,best:0,lastWin:null,podiums:0};
       hall.players[k].name=n;
       hall.players[k].games=(hall.players[k].games||0)+1;
       hall.players[k].best=Math.max(hall.players[k].best||0,totals[pi]||0);
@@ -1188,6 +1321,18 @@ function seaFinish(i,mermaids=false){
     const k=seaKey(name);
     hall.players[k].wins=(hall.players[k].wins||0)+1;
     hall.players[k].lastWin=new Date().toISOString();
+
+    const seaOrder=[
+      {n:name,i,t:totals[i]||0},
+      ...seaState.players.map((n,j)=>({n,j,t:totals[j]||0})).filter(x=>x.j!==i)
+        .sort((a,b)=>b.t-a.t || a.j-b.j)
+    ];
+    seaOrder.slice(0,3).forEach(x=>{
+      const pk=seaKey(x.n),p=hall.players[pk];
+      p.podiums=Math.max(Number(p.podiums||0),Number(p.wins||0)-(x.j===i?1:0))+1;
+    });
+    Object.values(hall.players).forEach(p=>{p.podiums=Math.max(Number(p.podiums||0),Number(p.wins||0))});
+
     seaHallSave(hall);
     seaState.recorded=true;
   }
@@ -1198,6 +1343,7 @@ function seaFinish(i,mermaids=false){
   const order=seaState.players.map((n,j)=>({n,j,t:totals[j]})).sort((a,b)=>b.t-a.t);
   $("#seaFinalRanking").innerHTML=order.map((x,r)=>`<div class="final-row ${x.j===i?"winner-row":""}" style="--fc:#79e2dc"><div class="final-pos">${r===0?"🥇":r===1?"🥈":r===2?"🥉":r+1+"°"}</div><div class="final-name">${esc(x.n)}</div><div class="final-points"><b>${x.t}</b><span>punti</span></div></div>`).join("");
   gsShowPerfectWin("seaWinScreen","sea");
+  gsPlaySound("win");
   // V89: Trofeo salvato, partita attiva azzerata subito.
   gsAutoArchiveCompletedGame("sea");
 }
@@ -1238,7 +1384,7 @@ function seaRenderHall(){
       <div class="podium-medal">${medal}</div>
       <div class="podium-name">${esc(p.name)}</div>
       <div class="podium-wins">${p.wins||0}</div>
-      <div class="podium-meta">${p.games||0} partite · ${p.rate.toFixed(0)}%</div>
+      <div class="podium-meta">${p.games||0} partite · ${p.rate.toFixed(0)}% · ${gsPodiums(p)} podi</div>
     </div>`;
   }).join("");
 
@@ -1429,7 +1575,7 @@ function six39SaveRound(){
   let rn;
   if(e!==""){rn=Number(e)+1;six39State.rounds[Number(e)]=vals}else{six39State.rounds.push(vals);rn=six39State.rounds.length}
   six39State.finished=false;six39State.winner=null;six39State.recorded=false;
-  six39Save();closeModal("six39RoundModal");six39Render();
+  six39Save();gsPlaySound("round");closeModal("six39RoundModal");six39Render();
   const t=$("#six39Toast");t.textContent=`✓ Round ${rn} ${e!==""?"aggiornato":"registrato"}`;t.classList.remove("show");void t.offsetWidth;t.classList.add("show");
   try{navigator.vibrate?.([30,20,45])}catch(e){}
 }
@@ -1497,6 +1643,7 @@ function six39ShowWin(i){
     </div>`).join("");
   if(!six39State.recorded)six39RecordWin();
   gsShowPerfectWin("six39WinScreen","six");
+  gsPlaySound("win");
   // V89: la partita è già nei Trofei; ora sparisce subito dalle partite attive.
   gsAutoArchiveCompletedGame("six");
 }
@@ -1505,11 +1652,20 @@ function six39RecordWin(){
   const hall=six39HallLoad(),totals=six39Totals();
   hall.games=(hall.games||0)+1;
   six39State.players.forEach((n,i)=>{
-    const k=six39Key(n),p=hall.players[k]||{name:n,wins:0,games:0,best:null,lastWin:null};
-    p.games++;p.best=p.best===null?totals[i]:Math.min(p.best,totals[i]);
-    if(i===six39State.winner){p.wins++;p.lastWin=new Date().toISOString()}
+    const k=six39Key(n),p=hall.players[k]||{name:n,wins:0,games:0,best:null,lastWin:null,podiums:0};
+    p.name=n;
+    p.games=(p.games||0)+1;
+    p.best=p.best===null||p.best===undefined?totals[i]:Math.min(p.best,totals[i]);
+    if(i===six39State.winner){p.wins=(p.wins||0)+1;p.lastWin=new Date().toISOString()}
     hall.players[k]=p;
   });
+  const order=six39State.players.map((n,i)=>({n,i,t:totals[i]||0}))
+    .sort((a,b)=>a.t-b.t || a.i-b.i);
+  order.slice(0,3).forEach(x=>{
+    const k=six39Key(x.n),p=hall.players[k];
+    p.podiums=Math.max(Number(p.podiums||0),Number(p.wins||0)-(x.i===six39State.winner?1:0))+1;
+  });
+  Object.values(hall.players).forEach(p=>{p.podiums=Math.max(Number(p.podiums||0),Number(p.wins||0))});
   six39HallSave(hall);six39State.recorded=true;six39Save();
 }
 function six39RenderHall(){
@@ -1522,8 +1678,8 @@ function six39RenderHall(){
     <div class="summary-card"><b>${rows.reduce((s,p)=>s+(p.wins||0),0)}</b><span>Vittorie</span></div>`;
   if(!rows.length){$("#six39HallPodium").innerHTML="";$("#six39HallList").innerHTML='<div class="empty-state">Nessuna partita conclusa ancora.</div>';return}
   const pc=["#ffd20a","#c7d0df","#d88942"],first3=rows.slice(0,3),po=[first3[1],first3[0],first3[2]].filter(Boolean);
-  $("#six39HallPodium").innerHTML=po.map(p=>{const idx=rows.indexOf(p);return `<div class="podium-card ${idx===0?"first":""}" style="--pc:${pc[idx]}">${idx===0?'<div class="podium-crown">👑</div>':""}<div class="podium-medal">${idx===0?"🥇":idx===1?"🥈":"🥉"}</div><div class="podium-name">${esc(p.name)}</div><div class="podium-wins">${p.wins||0}</div><div class="podium-meta">${p.games||0} partite · ${p.rate.toFixed(0)}%</div></div>`}).join("");
-  $("#six39HallList").innerHTML=rows.map((p,i)=>`<div class="hall-row" style="--hc:${six39Colors[i%six39Colors.length]}"><div class="hall-pos">${i===0?"🥇":i===1?"🥈":i===2?"🥉":i+1+"°"}</div><div><div class="hall-name">${esc(p.name)}</div><div class="hall-meta">${p.games||0} partite · ${p.rate.toFixed(0)}% vittorie · miglior punteggio ${p.best??"—"}</div></div><div class="hall-wins"><b>${p.wins||0}</b><span>Vittorie</span></div></div>`).join("");
+  $("#six39HallPodium").innerHTML=po.map(p=>{const idx=rows.indexOf(p);return `<div class="podium-card ${idx===0?"first":""}" style="--pc:${pc[idx]}">${idx===0?'<div class="podium-crown">👑</div>':""}<div class="podium-medal">${idx===0?"🥇":idx===1?"🥈":"🥉"}</div><div class="podium-name">${esc(p.name)}</div><div class="podium-wins">${p.wins||0}</div><div class="podium-meta">${p.games||0} partite · ${p.rate.toFixed(0)}% · ${gsPodiums(p)} podi</div></div>`}).join("");
+  $("#six39HallList").innerHTML=rows.map((p,i)=>`<div class="hall-row" style="--hc:${six39Colors[i%six39Colors.length]}"><div class="hall-pos">${i===0?"🥇":i===1?"🥈":i===2?"🥉":i+1+"°"}</div><div><div class="hall-name">${esc(p.name)}</div><div class="hall-meta">${gsAdvancedMeta(p,p.best??"—")}</div></div><div class="hall-wins"><b>${p.wins||0}</b><span>Vittorie</span></div></div>`).join("");
 }
 function six39ResetHall(){if(confirm("Azzerare tutta la classifica generale?")){six39HallSave({games:0,players:{}});six39RenderHall()}}
 function six39Rematch(){six39State.rounds=[];six39State.finished=false;six39State.winner=null;six39State.recorded=false;six39Save();$("#six39WinScreen").classList.add("hidden");six39Render()}
@@ -2443,6 +2599,7 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
       overlay.classList.remove("hidden","soft-exit");
       void overlay.offsetWidth;
       overlay.classList.add("play");
+      gsPlaySound("win");
       try{navigator.vibrate?.([100,50,140,50,190])}catch(e){}
 
       // Finale più importante: resta visibile 10 secondi.
@@ -2716,6 +2873,7 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     // This is the FLIP technique (First, Last, Invert, Play).
     if(gsOldRankRects.size){
       requestAnimationFrame(()=>{
+        let gsRankMoved=false;
         [...ranking.querySelectorAll("[data-gs-player-key]")].forEach((el,newIndex)=>{
           const prev=gsOldRankRects.get(el.dataset.gsPlayerKey);
           if(!prev)return;
@@ -2725,6 +2883,7 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
           const newRank=Number(el.dataset.gsRank||0);
 
           if(Math.abs(dx)>1 || Math.abs(dy)>1){
+            if(prev.rank!==newRank)gsRankMoved=true;
             el.classList.add("gs-rank-moving");
             el.animate(
               [
@@ -2741,6 +2900,7 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
             }
           }
         });
+        if(gsRankMoved)gsPlaySound("rank");
       });
     }
 
