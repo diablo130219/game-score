@@ -8033,3 +8033,133 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     inset:3px 5px;
   }
 }
+
+
+/* =========================================================
+   v69 — HOME HERO WOW
+   Rimosso il sottotitolo descrittivo: resta solo il titolo.
+   ========================================================= */
+
+.home-hero p,
+.home-hero .hero-subtitle,
+.home-hero .hero-description,
+.home-hero .home-subtitle,
+.home-hero .home-description,
+.hero-home p,
+.hero-home .hero-subtitle,
+.hero-home .hero-description{
+  display:none !important;
+}
+
+/* Compact, high-impact hero: no broken descriptive line */
+.home-hero,
+.hero-home{
+  min-height:auto !important;
+  padding-bottom:34px !important;
+}
+
+/* "Pronto a giocare?" badge */
+.home-hero .eyebrow,
+.home-hero .hero-kicker,
+.home-hero .ready-badge,
+.hero-home .eyebrow,
+.hero-home .hero-kicker{
+  display:inline-flex !important;
+  align-items:center;
+  gap:10px;
+  width:max-content;
+  padding:10px 18px !important;
+  border:1px solid rgba(190,79,255,.72);
+  border-radius:999px;
+  background:
+    linear-gradient(90deg,rgba(101,28,185,.88),rgba(145,44,236,.58));
+  box-shadow:
+    0 0 18px rgba(173,55,255,.42),
+    inset 0 0 15px rgba(255,255,255,.06);
+  color:#fff !important;
+  font-weight:950 !important;
+  font-style:italic;
+  letter-spacing:.035em !important;
+  text-shadow:0 2px 12px rgba(255,255,255,.15);
+}
+
+/* Main headline */
+.home-hero h1,
+.hero-home h1,
+.home-title,
+.hero-title{
+  max-width:720px;
+  margin-top:18px !important;
+  margin-bottom:8px !important;
+  font-size:clamp(58px,7.2vw,112px) !important;
+  line-height:.82 !important;
+  letter-spacing:-.065em !important;
+  font-weight:1000 !important;
+  text-transform:uppercase;
+  color:#fff;
+  text-shadow:
+    0 4px 0 rgba(44,13,73,.85),
+    0 10px 28px rgba(0,0,0,.38),
+    0 0 34px rgba(151,54,255,.14);
+  position:relative;
+  z-index:2;
+}
+
+/* If the last words are already wrapped/spanned, give them the gold finish */
+.home-hero h1 span:last-child,
+.hero-home h1 span:last-child,
+.home-title span:last-child,
+.hero-title span:last-child{
+  background:linear-gradient(180deg,#fff35b 0%,#ffd51f 36%,#ff9f0a 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent !important;
+  filter:drop-shadow(0 7px 8px rgba(255,153,0,.17));
+}
+
+/* Neon energy behind title, but no extra text */
+.home-hero::after,
+.hero-home::after{
+  content:"";
+  position:absolute;
+  left:25px;
+  top:105px;
+  width:min(820px,72vw);
+  height:360px;
+  pointer-events:none;
+  opacity:.88;
+  background:
+    linear-gradient(155deg,transparent 44%,rgba(255,190,0,.92) 44.5%,rgba(255,190,0,.92) 45.2%,transparent 45.7%),
+    linear-gradient(166deg,transparent 58%,rgba(176,40,255,.88) 58.4%,rgba(176,40,255,.88) 59.1%,transparent 59.6%),
+    radial-gradient(ellipse at 28% 76%,rgba(174,37,255,.17),transparent 53%);
+  filter:blur(.15px) drop-shadow(0 0 8px rgba(154,38,255,.28));
+  z-index:0;
+}
+
+/* Keep game cards section close to hero */
+.games-section,
+.game-grid-section,
+#gamesSection{
+  margin-top:12px !important;
+}
+
+@media(max-width:700px){
+  .home-hero h1,
+  .hero-home h1,
+  .home-title,
+  .hero-title{
+    font-size:clamp(50px,15vw,76px) !important;
+    line-height:.86 !important;
+    max-width:95vw;
+  }
+  .home-hero,
+  .hero-home{
+    padding-bottom:22px !important;
+  }
+  .home-hero::after,
+  .hero-home::after{
+    top:100px;
+    width:92vw;
+    height:280px;
+  }
+}
