@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#080816">
-<meta name="game-score-version" content="95">
+<meta name="game-score-version" content="96">
 <title>Flip 7 Score</title>
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="styles.css?v=95">
+<link rel="stylesheet" href="styles.css?v=96">
 </head>
 <body>
 
@@ -1068,26 +1068,25 @@
 
 <section id="gsSpectatorApp" class="gs-spectator hidden">
   <header class="gs-spectator-hero">
-    <div class="gs-spectator-logo" aria-label="Game Score">
-      <div class="gs-logo-cards">
-        <span class="gs-logo-card gs-logo-card-a">★</span>
-        <span class="gs-logo-card gs-logo-card-b">7</span>
-        <span class="gs-logo-card gs-logo-card-c">♠</span>
+    <div class="gs-mobile-hero-top">
+      <div class="gs-spectator-logo">
+        <img src="assets/game-score-logo.png" alt="GAME SCORE">
       </div>
-      <div class="gs-logo-copy">
-        <strong>GAME <b>SCORE</b></strong>
-        <small>IL TUO SEGNAPUNTI DA TAVOLO</small>
+
+      <div class="gs-live-pill">
+        <span class="gs-live-dot"></span>
+        <strong>LIVE</strong>
       </div>
+
+      <button id="gsSpectatorHallBtn" class="gs-spectator-hall-btn gs-trophy-smart" type="button" aria-label="Hall of Fame">
+        <span class="gs-trophy-smart-icon">🏆</span>
+        <span id="gsSpectatorHallLeaderWins" class="gs-trophy-smart-count">0</span>
+        <small>HALL</small>
+      </button>
     </div>
-    <button id="gsSpectatorHallBtn" class="gs-spectator-hall-btn gs-trophy-smart" type="button" aria-label="Hall of Fame">
-      <span class="gs-trophy-smart-icon">🏆</span>
-      <span id="gsSpectatorHallLeaderWins" class="gs-trophy-smart-count">0</span>
-      <small>HALL</small>
-    </button>
-    <div class="gs-live-pill"><i></i> LIVE</div>
-    <div class="gs-spectator-brand">GAME SCORE</div>
-    <h1 id="gsSpectatorGameTitle">Partita</h1>
-    <p id="gsSpectatorMeta">Connessione alla partita…</p>
+
+    <div id="gsSpectatorGameTitle" class="gs-spectator-game-title">Flip 7</div>
+    <div id="gsSpectatorMeta" class="gs-spectator-meta">3 giocatori · Aggiornamento in tempo reale</div>
   </header>
 
   <main class="gs-spectator-main">
@@ -1162,7 +1161,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="online-config.js?v=95"></script>
-<script src="app.js?v=95"></script>
+<script src="online-config.js?v=96"></script>
+<script src="app.js?v=96"></script>
 </body>
 </html>
