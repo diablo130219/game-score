@@ -2500,12 +2500,12 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
                 {transform:"translate(0,0) scale(1.018)",offset:.72,filter:"brightness(1.13)"},
                 {transform:"translate(0,0) scale(1)",filter:"brightness(1)"}
               ],
-              {duration:720,easing:"cubic-bezier(.2,.78,.22,1)",fill:"both"}
+              {duration:1800,easing:"cubic-bezier(.18,.72,.18,1)",fill:"both"}
             ).finished.finally(()=>el.classList.remove("gs-rank-moving"));
 
             if(prev.rank!==newRank){
               el.classList.add(newRank<prev.rank?"gs-rank-up":"gs-rank-down");
-              setTimeout(()=>el.classList.remove("gs-rank-up","gs-rank-down"),1100);
+              setTimeout(()=>el.classList.remove("gs-rank-up","gs-rank-down"),2800);
             }
           }
         });

@@ -9948,3 +9948,85 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     font-size:5.5px;
   }
 }
+
+
+/* =========================================================
+   V88 — ANIMAZIONI CLASSIFICA RALLENTATE
+   Base: V87.
+   Movimento classifica, SALE/SCENDE, corona e bagliore
+   molto più lenti e leggibili.
+   ========================================================= */
+
+/* Leader glow: da ~2.7s a 6s */
+.gs-premium-live-ranking:not(.gs-ranking-tied)
+.gs-premium-player[data-gs-rank="1"]{
+  animation-duration:6s !important;
+  animation-timing-function:ease-in-out !important;
+}
+
+/* Corona: movimento più lento e meno nervoso */
+.gs-live-rank-1 .gs-live-crown{
+  animation-duration:5s !important;
+  animation-timing-function:ease-in-out !important;
+}
+
+/* Badge SALE / SCENDE: resta visibile più a lungo */
+.gs-premium-player.gs-rank-up:after,
+.gs-premium-player.gs-rank-down:after{
+  animation-duration:2.6s !important;
+  animation-timing-function:cubic-bezier(.2,.72,.2,1) !important;
+}
+
+/* La variazione visiva di bordo/luminosità è più morbida */
+.gs-premium-live-ranking .gs-premium-player{
+  transition:
+    border-color .8s ease,
+    box-shadow .8s ease,
+    background .8s ease,
+    filter .8s ease !important;
+}
+
+/* Nuovo ritmo per l'etichetta SALE/SCENDE:
+   comparsa morbida, permanenza, uscita lenta. */
+@keyframes gsRankChangePop{
+  0%{
+    opacity:0;
+    transform:translateY(-5px) scale(.9);
+  }
+  14%{
+    opacity:1;
+    transform:translateY(0) scale(1.03);
+  }
+  72%{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+  100%{
+    opacity:0;
+    transform:translateY(-3px) scale(.98);
+  }
+}
+
+/* Glow più lento e meno lampeggiante */
+@keyframes gsLeaderGlow{
+  0%,100%{
+    box-shadow:
+      inset 4px 0 0 #ffd20a,
+      inset 0 0 24px rgba(255,210,10,.045),
+      0 0 0 1px rgba(255,210,10,.10),
+      0 0 17px rgba(255,210,10,.10);
+  }
+  50%{
+    box-shadow:
+      inset 4px 0 0 #ffd20a,
+      inset 0 0 30px rgba(255,210,10,.075),
+      0 0 0 1px rgba(255,210,10,.16),
+      0 0 27px rgba(255,210,10,.19);
+  }
+}
+
+/* Corona: oscillazione più lenta e contenuta */
+@keyframes gsCrownFloat{
+  0%,100%{transform:translateY(0) rotate(-1deg)}
+  50%{transform:translateY(-2px) rotate(1deg)}
+}
