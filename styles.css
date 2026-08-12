@@ -9502,3 +9502,111 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     margin-top:8px !important;
   }
 }
+
+
+/* ==========================================================
+   V80 — TESTATE OSPITI DEFINITIVE, TUTTI E TRE I GIOCHI
+   Base V79. Solo area sopra la linea/hero.
+   ========================================================== */
+
+/* GAME SCORE diventa firma secondaria su tutti i giochi */
+.gs-spectator .gs-spectator-logo{
+  width:72px !important;
+  max-width:72px !important;
+  opacity:.72 !important;
+}
+.gs-spectator .gs-spectator-logo img{
+  width:72px !important;
+  max-width:72px !important;
+  max-height:30px !important;
+  object-fit:contain !important;
+}
+
+/* Titolo del gioco più protagonista */
+.gs-spectator .gs-spectator-game-title{
+  font-size:clamp(58px,7vw,96px) !important;
+  font-weight:1000 !important;
+  line-height:.88 !important;
+}
+
+/* FLIP 7 */
+.gs-spectator[data-spectator-game="flip7"] .gs-spectator-game-title{
+  transform:scale(1.08);
+  color:#fff !important;
+  text-shadow:
+    3px 4px 0 rgba(62,14,105,.9),
+    0 0 18px rgba(193,77,255,.78),
+    0 0 48px rgba(111,37,255,.48),
+    0 17px 34px rgba(0,0,0,.5) !important;
+}
+
+/* SEA SALT & PAPER */
+.gs-spectator[data-spectator-game="seasalt"] .gs-spectator-game-title{
+  transform:scale(1.05);
+  color:#f1ffff !important;
+  text-shadow:
+    0 4px 0 rgba(5,79,96,.95),
+    0 0 19px rgba(104,244,239,.72),
+    0 16px 34px rgba(0,0,0,.45) !important;
+}
+
+/* 6... LE PRENDI! */
+.gs-spectator[data-spectator-game="sixnimmt"] .gs-spectator-game-title{
+  transform:scale(1.06);
+  color:#fff6d5 !important;
+  text-shadow:
+    0 5px 0 rgba(129,37,0,.95),
+    0 0 20px rgba(255,191,38,.78),
+    0 17px 34px rgba(0,0,0,.45) !important;
+}
+
+/* Mobile: stesso layout per tutti, ma identità grafica propria */
+@media(max-width:700px){
+  .gs-spectator .gs-spectator-logo{
+    top:10px !important;
+    left:10px !important;
+    width:46px !important;
+    max-width:46px !important;
+    opacity:.72 !important;
+  }
+  .gs-spectator .gs-spectator-logo img{
+    width:46px !important;
+    max-width:46px !important;
+    max-height:23px !important;
+  }
+
+  .gs-spectator .gs-live-pill{
+    left:50% !important;
+    transform:translateX(-50%) !important;
+  }
+
+  .gs-spectator .gs-spectator-game-title{
+    font-size:clamp(48px,14vw,66px) !important;
+    width:94vw !important;
+    margin-top:5px !important;
+  }
+
+  .gs-spectator[data-spectator-game="flip7"] .gs-spectator-game-title{
+    transform:scale(1.08);
+  }
+  .gs-spectator[data-spectator-game="seasalt"] .gs-spectator-game-title{
+    transform:scale(1.01);
+    font-size:clamp(37px,10.5vw,51px) !important;
+    line-height:.96 !important;
+  }
+  .gs-spectator[data-spectator-game="sixnimmt"] .gs-spectator-game-title{
+    transform:scale(1.01);
+    font-size:clamp(39px,11vw,53px) !important;
+    line-height:.94 !important;
+  }
+}
+
+/* Telefoni stretti: preserva leggibilità dei nomi lunghi */
+@media(max-width:390px){
+  .gs-spectator[data-spectator-game="seasalt"] .gs-spectator-game-title{
+    font-size:35px !important;
+  }
+  .gs-spectator[data-spectator-game="sixnimmt"] .gs-spectator-game-title{
+    font-size:37px !important;
+  }
+}
