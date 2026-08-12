@@ -11352,3 +11352,155 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     font-size:29px !important;
   }
 }
+
+
+/* =========================================================
+   V97 — FIX MIRATO
+   1) Logo GAME SCORE ospite mobile senza immagine esterna.
+   2) HALL/TROFEI host sempre in alto a destra della copertina.
+   ========================================================= */
+
+/* ---------- LOGO GAME SCORE OSPITE MOBILE ---------- */
+@media(max-width:700px){
+  #gsSpectatorApp .gs-spectator-logo.gs-spectator-brand-lockup{
+    position:relative !important;
+    inset:auto !important;
+    transform:none !important;
+    justify-self:start !important;
+    align-self:start !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:6px !important;
+    width:118px !important;
+    max-width:118px !important;
+    height:40px !important;
+    max-height:40px !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:visible !important;
+    opacity:1 !important;
+  }
+
+  #gsSpectatorApp .gs-spectator-brand-mark{
+    position:relative;
+    flex:0 0 34px;
+    width:34px;
+    height:34px;
+  }
+  #gsSpectatorApp .gs-spectator-brand-card{
+    position:absolute;
+    top:3px;
+    width:25px;
+    height:30px;
+    display:grid;
+    place-items:center;
+    border:1px solid rgba(255,255,255,.52);
+    border-radius:7px;
+    color:#fff;
+    font-size:7px;
+    font-weight:1000;
+    box-shadow:0 4px 10px rgba(0,0,0,.25);
+  }
+  #gsSpectatorApp .gs-spectator-brand-card.card-a{
+    left:1px;
+    transform:rotate(-8deg);
+    background:linear-gradient(160deg,#f5c51b,#bd8912);
+  }
+  #gsSpectatorApp .gs-spectator-brand-card.card-b{
+    left:10px;
+    transform:rotate(7deg);
+    background:linear-gradient(160deg,#7e3fd9,#3e1f8e);
+  }
+  #gsSpectatorApp .gs-spectator-brand-copy{
+    display:grid;
+    align-content:center;
+    min-width:0;
+    line-height:1;
+  }
+  #gsSpectatorApp .gs-spectator-brand-copy strong{
+    display:block;
+    white-space:nowrap;
+    color:#fff;
+    font-size:14px;
+    line-height:.9;
+    font-weight:1000;
+    letter-spacing:-.04em;
+    text-shadow:0 2px 4px rgba(0,0,0,.26);
+  }
+  #gsSpectatorApp .gs-spectator-brand-copy strong span{
+    color:#ffd21a;
+  }
+  #gsSpectatorApp .gs-spectator-brand-copy small{
+    display:block;
+    margin-top:4px;
+    color:#e2deeb;
+    font-size:3.9px;
+    line-height:1.1;
+    font-weight:900;
+    letter-spacing:.11em;
+    white-space:nowrap;
+  }
+}
+
+/* ---------- HOST DESKTOP / TABLET: TROFEO IN ALTO A DESTRA ---------- */
+/* Flip 7 */
+#flip7App > .hero{
+  position:relative !important;
+}
+#flip7App > .hero #hallBtn{
+  position:absolute !important;
+  top:18px !important;
+  right:18px !important;
+  left:auto !important;
+  bottom:auto !important;
+  margin:0 !important;
+  transform:none !important;
+  z-index:80 !important;
+}
+
+/* Sea Salt & Paper */
+#seaSaltWorld .sea-brand-hero{
+  position:relative !important;
+}
+#seaSaltWorld .sea-brand-hero #seaTrophyBtn{
+  position:absolute !important;
+  top:18px !important;
+  right:18px !important;
+  left:auto !important;
+  bottom:auto !important;
+  margin:0 !important;
+  transform:none !important;
+  z-index:80 !important;
+}
+
+/* 6... Le prendi! */
+#sixNimmtWorld .six39-hero{
+  position:relative !important;
+}
+#sixNimmtWorld .six39-hero #six39HallBtn{
+  position:absolute !important;
+  top:18px !important;
+  right:18px !important;
+  left:auto !important;
+  bottom:auto !important;
+  margin:0 !important;
+  transform:none !important;
+  z-index:80 !important;
+}
+
+/* Evita che la posizione venga alterata dalle regole smart trophy */
+#flip7App #hallBtn.gs-trophy-smart,
+#seaSaltWorld #seaTrophyBtn.gs-trophy-smart,
+#sixNimmtWorld #six39HallBtn.gs-trophy-smart{
+  overflow:visible !important;
+}
+
+/* Mobile host: mantieni comunque il trofeo nell'angolo alto destro */
+@media(max-width:700px){
+  #flip7App > .hero #hallBtn,
+  #seaSaltWorld .sea-brand-hero #seaTrophyBtn,
+  #sixNimmtWorld .six39-hero #six39HallBtn{
+    top:10px !important;
+    right:10px !important;
+  }
+}
