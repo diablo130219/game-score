@@ -9688,3 +9688,57 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     transform-origin: top left !important;
   }
 }
+
+
+/* ==========================================================
+   V83 — FIX DEFINITIVO LOGO GAME SCORE NELLA HERO OSPITI
+   Riduce il VERO elemento .gs-spectator-logo, cioè:
+   carte + GAME SCORE + payoff.
+   LIVE e TROFEI invariati.
+   ========================================================== */
+
+.gs-spectator .gs-spectator-logo{
+  /* Ripristina una base coerente, poi scala tutto il lockup realmente */
+  width:188px !important;
+  max-width:188px !important;
+  margin:0 !important;
+  transform:scale(.58) !important;
+  transform-origin:top left !important;
+  opacity:.82 !important;
+  overflow:visible !important;
+}
+
+/* Le parti interne tornano alle proporzioni native: è il wrapper a ridurre tutto */
+.gs-spectator .gs-logo-cards{
+  width:72px !important;
+  height:62px !important;
+  flex:0 0 72px !important;
+}
+.gs-spectator .gs-logo-copy strong{
+  font-size:32px !important;
+  line-height:.9 !important;
+}
+.gs-spectator .gs-logo-copy small{
+  margin-top:7px !important;
+  padding:4px 9px !important;
+  font-size:7px !important;
+}
+
+/* Mobile: stessa resa visiva, senza modificare LIVE e TROFEI */
+@media(max-width:700px){
+  .gs-spectator .gs-spectator-logo{
+    top:9px !important;
+    left:10px !important;
+    width:188px !important;
+    max-width:188px !important;
+    transform:scale(.58) !important;
+    transform-origin:top left !important;
+  }
+}
+
+/* Telefoni molto stretti: leggermente più piccolo per mantenere spazio al LIVE */
+@media(max-width:390px){
+  .gs-spectator .gs-spectator-logo{
+    transform:scale(.53) !important;
+  }
+}
