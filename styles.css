@@ -7684,3 +7684,229 @@ button,
   .gs-spectator[data-spectator-game="seasalt"] .gs-sea-medallion>span{font-size:29px}
   .gs-sea-foam{font-size:7px;right:0;bottom:7px;letter-spacing:2px}
 }
+
+
+/* =========================================================
+   HOST UNIFORMITY — FLIP 7 / SEA SALT & PAPER / 6... LE PRENDI!
+   Same geometry, controls and visual weight. Game identity stays unique.
+   ========================================================= */
+
+/* 1. Identical host canvas width */
+#flip7App,
+.sea-shell,
+.six39-app{
+  width:min(100%,780px) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+/* 2. Identical hero geometry: 780 x 300 desktop */
+#flip7App > .hero,
+.sea-brand-hero,
+.six39-hero{
+  position:relative !important;
+  height:300px !important;
+  min-height:300px !important;
+  max-height:300px !important;
+  border-radius:0 !important;
+  overflow:hidden !important;
+  box-shadow:none !important;
+}
+
+/* Sea Salt previously had an 18px inset around the logo.
+   Pull only the hero to the edges so all three games have the same width. */
+.sea-brand-hero{
+  width:calc(100% + 36px) !important;
+  margin-left:-18px !important;
+  margin-right:-18px !important;
+  margin-top:-12px !important;
+  background:#8fd8df !important;
+}
+
+/* 3. Equal visual size of the game artwork/logo.
+   Flip 7 and 6... fill their 300px stage; Sea Salt is deliberately reduced
+   because the lettering occupies more of its source artwork. */
+#flip7App > .hero > img,
+.six39-hero > img{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  transform:none !important;
+}
+
+#flip7App > .hero > img{
+  object-position:center 50% !important;
+}
+
+.six39-hero > img{
+  object-position:center 48% !important;
+}
+
+.sea-brand-hero > img{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:center 50% !important;
+  transform:scale(.88) !important;
+  transform-origin:center !important;
+}
+
+/* Fill the small breathing space around the reduced Sea Salt artwork
+   without changing its logo scale. */
+.sea-brand-hero:before{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:0 !important;
+  background:
+    linear-gradient(180deg,rgba(143,216,223,.18),rgba(64,141,154,.12)),
+    #8fd8df !important;
+}
+.sea-brand-hero > img{
+  position:relative !important;
+  z-index:1 !important;
+}
+
+/* Preserve each game's lower fade, on the same 58px geometry */
+#flip7App > .hero:after,
+.sea-brand-hero:after,
+.six39-hero:after{
+  content:"" !important;
+  position:absolute !important;
+  z-index:2 !important;
+  left:0 !important;
+  right:0 !important;
+  bottom:0 !important;
+  height:58px !important;
+  pointer-events:none !important;
+}
+#flip7App > .hero:after{
+  background:linear-gradient(transparent,#08091b) !important;
+}
+.sea-brand-hero:after{
+  background:linear-gradient(transparent,#071e2d) !important;
+}
+.six39-hero:after{
+  background:linear-gradient(transparent,#170b11) !important;
+}
+
+/* 4. Same top buttons on all three host pages */
+#flip7App .corner,
+.sea-corner,
+.six39-corner{
+  position:absolute !important;
+  top:max(15px,env(safe-area-inset-top)) !important;
+  z-index:6 !important;
+  width:64px !important;
+  height:64px !important;
+  border-radius:19px !important;
+  padding:7px 5px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:3px !important;
+  color:#fff !important;
+  backdrop-filter:blur(14px) saturate(125%) !important;
+  -webkit-backdrop-filter:blur(14px) saturate(125%) !important;
+  box-shadow:0 10px 28px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+#flip7App .corner.left,
+.sea-corner.left,
+.six39-corner.left{left:20px !important}
+#flip7App .corner.right,
+.sea-corner.right,
+.six39-corner.right{right:20px !important}
+
+/* Flip's old single-glyph buttons now use the same icon + label proportions. */
+#flip7App .top-icon,
+.sea-top-icon,
+.six39-top-icon{
+  width:30px !important;
+  height:30px !important;
+  border-radius:10px !important;
+  display:grid !important;
+  place-items:center !important;
+  font-size:20px !important;
+  line-height:1 !important;
+}
+#flip7App .top-label,
+.sea-top-label,
+.six39-top-label{
+  display:block !important;
+  font-size:7px !important;
+  line-height:1 !important;
+  font-weight:1000 !important;
+  letter-spacing:.09em !important;
+}
+
+/* Keep button identity but equal visual weight */
+#flip7App .corner{
+  border:1px solid rgba(195,164,255,.40) !important;
+  background:linear-gradient(180deg,rgba(29,17,64,.68),rgba(8,8,28,.80)) !important;
+}
+#flip7App .top-icon{
+  background:rgba(137,76,255,.14) !important;
+  border:1px solid rgba(211,190,255,.20) !important;
+}
+.sea-corner{
+  border:1px solid rgba(222,255,254,.42) !important;
+  background:linear-gradient(180deg,rgba(10,57,71,.68),rgba(5,29,42,.78)) !important;
+}
+.six39-corner{
+  border:1px solid rgba(255,218,177,.40) !important;
+  background:linear-gradient(180deg,rgba(70,26,30,.65),rgba(28,11,18,.78)) !important;
+}
+
+/* 5. Identical content edge spacing immediately under the hero */
+#flip7App .setup-shell,
+#flip7App main,
+.sea-main,
+.six39-setup-wrap,
+.six39-game-main{
+  padding-left:24px !important;
+  padding-right:24px !important;
+}
+
+/* Mobile: keep all three heroes equal, only reduce the shared height */
+@media(max-width:600px){
+  #flip7App > .hero,
+  .sea-brand-hero,
+  .six39-hero{
+    height:260px !important;
+    min-height:260px !important;
+    max-height:260px !important;
+  }
+  .sea-brand-hero > img{
+    transform:scale(.90) !important;
+  }
+  #flip7App .corner,
+  .sea-corner,
+  .six39-corner{
+    width:58px !important;
+    height:58px !important;
+    border-radius:17px !important;
+  }
+  #flip7App .top-icon,
+  .sea-top-icon,
+  .six39-top-icon{
+    width:27px !important;
+    height:27px !important;
+    font-size:18px !important;
+  }
+}
+
+@media(max-width:420px){
+  #flip7App > .hero,
+  .sea-brand-hero,
+  .six39-hero{
+    height:230px !important;
+    min-height:230px !important;
+    max-height:230px !important;
+  }
+  .sea-brand-hero > img{
+    transform:scale(.91) !important;
+  }
+}
