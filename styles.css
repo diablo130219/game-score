@@ -7093,3 +7093,354 @@ button,
   .gs-six-number-card strong{font-size:17px}
   .gs-six-number-card span{font-size:5px}
 }
+
+
+/* =========================================================
+   v62 — HARD FALLBACK SPECTATOR LAYOUT
+   Prevents the "raw vertical content" defect on desktop/mobile.
+   These rules intentionally avoid color-mix(), mask and nesting.
+   ========================================================= */
+
+.gs-spectator,
+.gs-spectator *{box-sizing:border-box}
+
+.gs-spectator{
+  width:100%;
+  min-height:100vh;
+  min-height:100dvh;
+  overflow-x:hidden;
+  background:#050714;
+  color:#fff;
+}
+
+.gs-spectator-hero{
+  width:100%;
+  padding:22px 16px 24px;
+  text-align:center;
+  border-bottom:1px solid rgba(168,76,255,.35);
+  background:
+    radial-gradient(circle at 50% 0,rgba(111,54,181,.22),transparent 38%),
+    #080918;
+}
+
+.gs-spectator-logo{
+  width:100%;
+  max-width:430px;
+  margin:0 auto 12px;
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+}
+
+.gs-spectator-main{
+  width:100%;
+  max-width:900px;
+  margin:0 auto;
+  padding:16px 14px 34px;
+}
+
+.gs-spectator-round{
+  width:100%;
+  min-height:82px;
+  display:flex !important;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:14px 18px;
+  border:1px solid rgba(168,76,255,.55);
+  border-radius:18px;
+  background:#0a0c1b;
+}
+
+.gs-spectator-title{
+  width:100%;
+  margin:18px 0 10px;
+  font-size:11px;
+  font-weight:1000;
+  letter-spacing:.14em;
+  color:#d8d4df;
+}
+
+.gs-premium-live-ranking{
+  width:100%;
+  display:flex !important;
+  flex-direction:column;
+  gap:12px;
+}
+
+.gs-premium-player{
+  position:relative;
+  width:100%;
+  min-height:126px;
+  display:grid !important;
+  grid-template-columns:72px 122px minmax(0,1fr) 108px;
+  align-items:center;
+  column-gap:8px;
+  overflow:hidden;
+  border:2px solid var(--pc,#ffd20a);
+  border-radius:22px;
+  background:#070a13;
+  box-shadow:0 10px 24px rgba(0,0,0,.32);
+}
+
+.gs-live-rank{
+  width:56px;
+  height:84px;
+  margin-left:10px;
+  display:flex !important;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  border:1px solid var(--pc,#ffd20a);
+  border-radius:15px 15px 19px 19px;
+  background:#0b0d17;
+}
+
+.gs-live-rank strong{font-size:24px;line-height:1;color:#fff}
+.gs-live-crown{font-size:15px;color:var(--pc,#ffd20a)}
+
+.gs-live-art{
+  position:relative;
+  width:112px;
+  height:112px;
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+}
+
+.gs-live-player-main{
+  min-width:0;
+  padding:6px 4px;
+}
+
+.gs-live-player-main>strong{
+  display:block;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#fff;
+  font-size:28px;
+  line-height:1.05;
+  font-weight:1000;
+}
+
+.gs-live-last{
+  margin-top:11px;
+  display:flex !important;
+  align-items:center;
+  gap:7px;
+}
+
+.gs-live-last span,
+.gs-live-last b{
+  display:inline-flex !important;
+  align-items:center;
+  justify-content:center;
+  min-height:25px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:1000;
+}
+
+.gs-live-last span{
+  padding:4px 9px;
+  border:1px solid rgba(255,255,255,.15);
+  background:#080a12;
+  color:#fff;
+}
+
+.gs-live-last b{
+  min-width:38px;
+  padding:4px 8px;
+  background:var(--pc,#ffd20a);
+  color:#06070a;
+}
+
+.gs-live-score{
+  padding-right:14px;
+  text-align:right;
+}
+
+.gs-live-score>strong{
+  display:block;
+  color:var(--pc,#ffd20a);
+  font-size:52px;
+  line-height:.9;
+  font-weight:1000;
+}
+
+.gs-live-score>span{
+  display:block;
+  margin-top:8px;
+  color:#eeeaf2;
+  font-size:9px;
+}
+
+.gs-live-score>span b{color:var(--pc,#ffd20a)}
+
+.gs-live-status{
+  position:absolute;
+  top:0;
+  right:0;
+  z-index:6;
+  padding:5px 9px;
+  border-radius:0 0 0 12px;
+  background:var(--pc,#ffd20a);
+  color:#07080b;
+  font-size:7px;
+  font-weight:1000;
+}
+
+/* Flip 7 art */
+.gs-live-flip-art .gs-live-card-back{
+  position:absolute;
+  width:68px;
+  height:94px;
+  border:2px solid #6332a4;
+  border-radius:11px;
+  background:#251044;
+  box-shadow:0 7px 14px rgba(0,0,0,.4);
+}
+.gs-live-flip-art .back-one{transform:translateX(-14px) rotate(-8deg)}
+.gs-live-flip-art .back-two{transform:translateX(-6px) rotate(-3deg)}
+.gs-live-card-front{
+  position:relative;
+  z-index:3;
+  width:82px;
+  height:103px;
+  transform:translateX(7px) rotate(3deg);
+}
+.gs-live-card-front .avatar-img,
+.gs-live-card-front .number-card{
+  width:82px !important;
+  height:103px !important;
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+  margin:0 !important;
+  object-fit:contain !important;
+  border:2px solid #eee !important;
+  border-radius:12px !important;
+  background:#141622;
+  box-shadow:5px 8px 16px rgba(0,0,0,.42) !important;
+}
+
+/* Sea Salt art */
+.gs-sea-medallion{
+  position:relative;
+  width:86px;
+  height:104px;
+  overflow:hidden;
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+  border:2px solid #d8ffff;
+  border-radius:14px;
+  background:#a8e2e7;
+  box-shadow:5px 8px 15px rgba(0,0,0,.35);
+}
+.gs-sea-medallion img{width:100%;height:100%;object-fit:cover}
+.gs-sea-medallion>span{font-size:40px}
+.gs-sea-medallion small{
+  position:absolute;
+  left:5px;right:5px;bottom:5px;
+  padding:2px 3px;
+  border-radius:5px;
+  background:rgba(5,19,27,.82);
+  color:#fff;
+  text-align:center;
+  font-size:6px;
+  font-weight:1000;
+}
+
+/* 6... Le prendi! art */
+.gs-live-six-art>img{
+  position:absolute;
+  left:0;
+  top:9px;
+  width:88px;
+  height:94px;
+  object-fit:cover;
+  border:2px solid #fff2c1;
+  border-radius:13px;
+  box-shadow:0 8px 18px rgba(0,0,0,.38);
+}
+.gs-six-number-card{
+  position:absolute;
+  right:3px;
+  top:16px;
+  width:51px;
+  height:82px;
+  display:flex !important;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border:2px solid #f6e8bf;
+  border-radius:10px;
+  background:#fff5d2;
+  color:#94371f;
+  transform:rotate(4deg);
+  box-shadow:5px 8px 13px rgba(0,0,0,.34);
+}
+.gs-six-number-card strong{font-size:25px;line-height:1}
+.gs-six-number-card span{font-size:7px}
+
+.gs-spectator-foot{
+  width:100%;
+  margin:22px auto 0;
+  text-align:center;
+}
+
+@media (max-width:600px){
+  .gs-spectator-hero{padding:16px 10px 20px}
+  .gs-spectator-main{padding:12px 9px 28px}
+  .gs-premium-player{
+    min-height:104px;
+    grid-template-columns:48px 78px minmax(0,1fr) 64px;
+    column-gap:4px;
+    border-radius:18px;
+  }
+  .gs-live-rank{
+    width:39px;
+    height:62px;
+    margin-left:5px;
+    border-radius:11px 11px 15px 15px;
+  }
+  .gs-live-rank strong{font-size:18px}
+  .gs-live-crown{font-size:10px}
+  .gs-live-art{width:75px;height:92px}
+  .gs-live-player-main{padding:3px 1px}
+  .gs-live-player-main>strong{font-size:19px}
+  .gs-live-last{margin-top:7px;gap:3px}
+  .gs-live-last span{padding:3px 5px;font-size:7px}
+  .gs-live-last b{min-width:27px;padding:3px 4px;font-size:8px}
+  .gs-live-score{padding-right:5px}
+  .gs-live-score>strong{font-size:37px}
+  .gs-live-score>span{margin-top:5px;font-size:7px}
+
+  .gs-live-flip-art .gs-live-card-back{width:48px;height:69px;border-radius:9px}
+  .gs-live-flip-art .back-one{transform:translateX(-9px) rotate(-8deg)}
+  .gs-live-flip-art .back-two{transform:translateX(-3px) rotate(-3deg)}
+  .gs-live-card-front{width:56px;height:78px;transform:translateX(4px) rotate(3deg)}
+  .gs-live-card-front .avatar-img,
+  .gs-live-card-front .number-card{
+    width:56px !important;
+    height:78px !important;
+    border-radius:9px !important;
+  }
+
+  .gs-sea-medallion{width:57px;height:77px;border-radius:10px}
+  .gs-sea-medallion>span{font-size:28px}
+  .gs-sea-medallion small{font-size:5px;bottom:3px}
+
+  .gs-live-six-art>img{left:0;top:13px;width:58px;height:65px;border-radius:9px}
+  .gs-six-number-card{right:0;top:17px;width:35px;height:57px;border-radius:8px}
+  .gs-six-number-card strong{font-size:17px}
+  .gs-six-number-card span{font-size:5px}
+}
+
+@media (min-width:1200px){
+  .gs-spectator-main{max-width:1040px}
+}
