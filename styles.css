@@ -8356,3 +8356,55 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
   #leaderboard .flip7-word{font-size:17px !important;margin-bottom:-3px;}
   #leaderboard .flip7-seven{font-size:39px !important;}
 }
+
+/* v72 OSPITI — TROFEI + HALL OF FAME + ANIMAZIONE VINCITORE */
+.gs-spectator-hero{position:relative!important}
+.gs-spectator-hall-btn{position:absolute;top:max(16px,env(safe-area-inset-top));right:20px;z-index:30;width:64px;height:64px;border:1px solid rgba(255,213,51,.38);border-radius:19px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#fff;background:linear-gradient(180deg,rgba(35,29,55,.84),rgba(8,10,24,.94));box-shadow:0 10px 28px rgba(0,0,0,.28),0 0 16px rgba(255,210,10,.09);backdrop-filter:blur(12px)}
+.gs-spectator-hall-btn span{font-size:25px}.gs-spectator-hall-btn small{font-size:7px;font-weight:1000;letter-spacing:.08em}
+
+.gs-spectator-modal{position:fixed;inset:0;z-index:12000;padding:24px;display:grid;place-items:center;background:rgba(2,4,13,.8);backdrop-filter:blur(12px)}
+.gs-spectator-modal.hidden{display:none!important}
+.gs-spectator-modal-card{position:relative;width:min(620px,94vw);max-height:88dvh;overflow:auto;padding:28px;border:1px solid rgba(168,76,255,.42);border-radius:28px;background:radial-gradient(circle at 50% 0,rgba(168,76,255,.18),transparent 32%),linear-gradient(180deg,#111426,#060813);box-shadow:0 34px 90px rgba(0,0,0,.58)}
+.gs-spectator-modal-close,.gs-spectator-win-close{position:absolute;top:14px;right:14px;width:38px;height:38px;border:1px solid rgba(255,255,255,.14);border-radius:50%;background:#111426;color:#fff;font-size:24px}
+.gs-hall-kicker{color:#ffd20a;font-size:10px;font-weight:1000;letter-spacing:.14em}
+.gs-hall-card h2{margin:6px 44px 4px 0;color:#fff;font-size:30px}.gs-hall-card>p{margin:8px 0 18px;color:#aaa7b4;font-size:11px}
+.gs-hall-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}.gs-hall-summary>div{padding:12px 8px;border:1px solid rgba(255,255,255,.08);border-radius:14px;text-align:center;background:rgba(255,255,255,.035)}.gs-hall-summary strong{display:block;color:#ffd20a;font-size:23px}.gs-hall-summary span{display:block;margin-top:2px;color:#888594;font-size:6px;font-weight:1000}
+.gs-hall-rows{display:grid;gap:8px}.gs-hall-row{display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:10px;min-height:62px;padding:9px 12px;border:1px solid rgba(255,255,255,.08);border-radius:15px;background:rgba(255,255,255,.035)}.gs-hall-row.leader{border-color:rgba(255,210,10,.48)}.gs-hall-pos{font-size:20px;text-align:center}.gs-hall-name{min-width:0}.gs-hall-name strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff;font-size:15px}.gs-hall-name span{display:block;margin-top:3px;color:#8e8a98;font-size:8px}.gs-hall-wins{display:flex;align-items:center;gap:5px;color:#ffd20a}.gs-hall-wins strong{font-size:25px}.gs-hall-empty{padding:28px 10px;text-align:center;color:#9895a2;font-size:11px}
+
+.gs-spectator-win{--win-accent:#a84cff;position:fixed;inset:0;z-index:13000;display:grid;place-items:center;overflow:hidden;padding:20px;background:radial-gradient(circle at 50% 40%,rgba(168,76,255,.24),transparent 35%),rgba(2,3,12,.92);backdrop-filter:blur(10px)}
+.gs-spectator-win.hidden{display:none!important}.gs-spectator-win.soft-exit{animation:gsWinFadeOut .55s ease forwards}
+.gs-spectator-win-card{position:relative;isolation:isolate;width:min(520px,92vw);padding:42px 24px 32px;overflow:hidden;text-align:center;border:2px solid var(--win-accent);border-radius:32px;background:radial-gradient(circle at 50% 18%,rgba(255,255,255,.12),transparent 24%),linear-gradient(180deg,#161126,#070813 66%);box-shadow:0 40px 100px rgba(0,0,0,.66),0 0 45px color-mix(in srgb,var(--win-accent) 34%,transparent)}
+.gs-spectator-win.play .gs-spectator-win-card{animation:gsWinnerCardIn .82s cubic-bezier(.17,.89,.24,1.3) both}
+.gs-spectator-win-rays{position:absolute;z-index:-1;width:520px;height:520px;left:50%;top:-185px;transform:translateX(-50%);border-radius:50%;background:repeating-conic-gradient(from 0deg,color-mix(in srgb,var(--win-accent) 28%,transparent) 0deg 3deg,transparent 3deg 13deg);opacity:.65}.gs-spectator-win.play .gs-spectator-win-rays{animation:gsWinSpin 12s linear infinite}
+.gs-spectator-win-trophy{font-size:82px;line-height:1;filter:drop-shadow(0 0 20px rgba(255,213,33,.55))}.gs-spectator-win.play .gs-spectator-win-trophy{animation:gsTrophyBounce 1.1s .15s both}
+.gs-spectator-win-kicker{margin-top:12px;color:#ffd21a;font-size:10px;font-weight:1000;letter-spacing:.18em}.gs-spectator-win-card h2{margin:7px 0 10px;color:#fff;font-size:clamp(33px,8vw,52px);line-height:.95;font-weight:1000;text-transform:uppercase}.gs-spectator-win-score{display:flex;align-items:baseline;justify-content:center;gap:8px;margin-top:16px}.gs-spectator-win-score strong{color:var(--win-accent);font-size:62px;line-height:1;font-weight:1000}.gs-spectator-win-score span{color:#aaa7b4;font-size:10px;font-weight:1000}.gs-spectator-win-message{margin-top:20px;padding:10px 14px;border:1px solid rgba(255,255,255,.09);border-radius:999px;color:#fff;background:rgba(255,255,255,.045);font-size:11px;font-weight:850}
+.gs-spectator-confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}.gs-spectator-confetti i{--x:50vw;--delay:0s;--dur:3.4s;position:absolute;top:-8vh;left:var(--x);width:9px;height:17px;border-radius:2px;opacity:0;background:#ffd20a}.gs-spectator-win.play .gs-spectator-confetti i{animation:gsConfettiFall var(--dur) var(--delay) linear infinite}
+.gs-spectator-confetti i:nth-child(4n+2){background:#a84cff}.gs-spectator-confetti i:nth-child(4n+3){background:#159dff}.gs-spectator-confetti i:nth-child(4n){background:#35d44f}
+.gs-spectator-confetti i:nth-child(1){--x:19vw;--delay:0.18s;--dur:3.32s}
+.gs-spectator-confetti i:nth-child(2){--x:36vw;--delay:0.36s;--dur:3.54s}
+.gs-spectator-confetti i:nth-child(3){--x:53vw;--delay:0.54s;--dur:3.76s}
+.gs-spectator-confetti i:nth-child(4){--x:70vw;--delay:0.72s;--dur:3.98s}
+.gs-spectator-confetti i:nth-child(5){--x:87vw;--delay:0.90s;--dur:4.20s}
+.gs-spectator-confetti i:nth-child(6){--x:9vw;--delay:1.08s;--dur:3.10s}
+.gs-spectator-confetti i:nth-child(7){--x:26vw;--delay:0.00s;--dur:3.32s}
+.gs-spectator-confetti i:nth-child(8){--x:43vw;--delay:0.18s;--dur:3.54s}
+.gs-spectator-confetti i:nth-child(9){--x:60vw;--delay:0.36s;--dur:3.76s}
+.gs-spectator-confetti i:nth-child(10){--x:77vw;--delay:0.54s;--dur:3.98s}
+.gs-spectator-confetti i:nth-child(11){--x:94vw;--delay:0.72s;--dur:4.20s}
+.gs-spectator-confetti i:nth-child(12){--x:16vw;--delay:0.90s;--dur:3.10s}
+.gs-spectator-confetti i:nth-child(13){--x:33vw;--delay:1.08s;--dur:3.32s}
+.gs-spectator-confetti i:nth-child(14){--x:50vw;--delay:0.00s;--dur:3.54s}
+.gs-spectator-confetti i:nth-child(15){--x:67vw;--delay:0.18s;--dur:3.76s}
+.gs-spectator-confetti i:nth-child(16){--x:84vw;--delay:0.36s;--dur:3.98s}
+.gs-spectator-confetti i:nth-child(17){--x:6vw;--delay:0.54s;--dur:4.20s}
+.gs-spectator-confetti i:nth-child(18){--x:23vw;--delay:0.72s;--dur:3.10s}
+.gs-spectator-confetti i:nth-child(19){--x:40vw;--delay:0.90s;--dur:3.32s}
+.gs-spectator-confetti i:nth-child(20){--x:57vw;--delay:1.08s;--dur:3.54s}
+.gs-spectator-confetti i:nth-child(21){--x:74vw;--delay:0.00s;--dur:3.76s}
+.gs-spectator-confetti i:nth-child(22){--x:91vw;--delay:0.18s;--dur:3.98s}
+.gs-spectator-confetti i:nth-child(23){--x:13vw;--delay:0.36s;--dur:4.20s}
+.gs-spectator-confetti i:nth-child(24){--x:30vw;--delay:0.54s;--dur:3.10s}
+@keyframes gsWinnerCardIn{0%{opacity:0;transform:translateY(30px) scale(.72) rotate(-2deg)}60%{opacity:1;transform:translateY(-7px) scale(1.04)}100%{opacity:1;transform:none}}
+@keyframes gsTrophyBounce{0%{opacity:0;transform:scale(.3) rotate(-25deg)}55%{opacity:1;transform:scale(1.22) rotate(8deg)}75%{transform:scale(.92) rotate(-4deg)}100%{transform:scale(1)}}
+@keyframes gsWinSpin{to{transform:translateX(-50%) rotate(360deg)}}@keyframes gsConfettiFall{0%{opacity:0;transform:translate3d(0,-10vh,0) rotate(0)}10%{opacity:1}100%{opacity:.9;transform:translate3d(35px,118vh,0) rotate(720deg)}}@keyframes gsWinFadeOut{to{opacity:0;transform:scale(1.04)}}
+@media(max-width:600px){.gs-spectator-hall-btn{top:max(11px,env(safe-area-inset-top));right:10px;width:54px;height:54px;border-radius:16px}.gs-spectator-hall-btn span{font-size:21px}.gs-spectator-modal{padding:12px}.gs-spectator-modal-card{padding:23px 15px 20px;border-radius:22px}.gs-hall-card h2{font-size:24px}.gs-hall-row{grid-template-columns:34px minmax(0,1fr) auto;min-height:55px;padding:8px}.gs-spectator-win-card{padding:36px 16px 28px;border-radius:26px}.gs-spectator-win-trophy{font-size:67px}.gs-spectator-win-score strong{font-size:52px}}

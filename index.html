@@ -7,7 +7,7 @@
 <meta name="game-score-version" content="63">
 <title>Flip 7 Score</title>
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="styles.css?v=71">
+<link rel="stylesheet" href="styles.css?v=72">
 </head>
 <body>
 
@@ -1027,6 +1027,9 @@
         <small>IL TUO SEGNAPUNTI DA TAVOLO</small>
       </div>
     </div>
+    <button id="gsSpectatorHallBtn" class="gs-spectator-hall-btn" type="button" aria-label="Classifica generale">
+      <span>🏆</span><small>TROFEI</small>
+    </button>
     <div class="gs-live-pill"><i></i> LIVE</div>
     <div class="gs-spectator-brand">GAME SCORE</div>
     <h1 id="gsSpectatorGameTitle">Partita</h1>
@@ -1054,6 +1057,32 @@
     </div>
   </main>
 
+  <div id="gsSpectatorHallModal" class="gs-spectator-modal hidden">
+    <div class="gs-spectator-modal-card gs-hall-card">
+      <button id="gsSpectatorHallClose" class="gs-spectator-modal-close" type="button">×</button>
+      <div class="gs-hall-kicker">🏆 HALL OF FAME</div>
+      <h2 id="gsSpectatorHallTitle">Classifica generale</h2>
+      <p id="gsSpectatorHallSubtitle">Andamento storico del gruppo</p>
+      <div id="gsSpectatorHallSummary" class="gs-hall-summary"></div>
+      <div id="gsSpectatorHallRows" class="gs-hall-rows"></div>
+    </div>
+  </div>
+
+  <div id="gsSpectatorWinOverlay" class="gs-spectator-win hidden" aria-live="assertive">
+    <div class="gs-spectator-confetti">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+    <div class="gs-spectator-win-card">
+      <button id="gsSpectatorWinClose" class="gs-spectator-win-close" type="button">×</button>
+      <div class="gs-spectator-win-rays"></div>
+      <div class="gs-spectator-win-trophy">🏆</div>
+      <div class="gs-spectator-win-kicker">FINE PARTITA</div>
+      <h2 id="gsSpectatorWinName">VINCE!</h2>
+      <div class="gs-spectator-win-score"><strong id="gsSpectatorWinScore">0</strong><span id="gsSpectatorWinUnit">PUNTI</span></div>
+      <div class="gs-spectator-win-message">🎉 Complimenti al vincitore!</div>
+    </div>
+  </div>
+
   <div id="gsSpectatorOffline" class="gs-spectator-offline hidden">
     <strong>Partita non disponibile</strong>
     <span id="gsSpectatorOfflineText">Controlla il link o chiedi un nuovo QR all'host.</span>
@@ -1063,7 +1092,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="online-config.js?v=63"></script>
-<script src="app.js?v=71"></script>
+<script src="online-config.js?v=72"></script>
+<script src="app.js?v=72"></script>
 </body>
 </html>

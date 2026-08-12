@@ -1812,6 +1812,28 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     if(dot)dot.classList.toggle("bad",!ok);
   }
 
+
+  function gsHallSnapshot(game){
+    try{
+      let games=0, source={};
+      if(game==="flip7"){const h=loadHall()||{};games=Number(h.totalGames||0);source=h.players||{}}
+      else if(game==="seasalt"){const h=seaHallLoad()||{};games=Number(h.games||0);source=h.players||{}}
+      else if(game==="sixnimmt"){const h=six39HallLoad()||{};games=Number(h.games||0);source=h.players||{}}
+      const players=Object.values(source).map(p=>{
+        const wins=Number(p?.wins||0),g=Number(p?.games||0);
+        return {name:String(p?.name||"Giocatore"),wins,games:g,rate:g?Math.round(wins/g*100):0,lastWin:p?.lastWin||null};
+      }).sort((a,b)=>b.wins-a.wins||b.rate-a.rate||b.games-a.games||a.name.localeCompare(b.name,"it"));
+      return {games,players,updatedAt:new Date().toISOString()};
+    }catch(e){return {games:0,players:[],updatedAt:null}}
+  }
+  function gsOnlineState(game){
+    const src=currentState(game)||{};
+    let payload;
+    try{payload=structuredClone(src)}catch(e){payload=JSON.parse(JSON.stringify(src))}
+    payload.__hall=gsHallSnapshot(game);
+    return payload;
+  }
+
   async function createRoom(game){
     const sb=getClient();
     if(!sb)throw new Error("Supabase non configurato");
@@ -1819,7 +1841,7 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     if(existing?.joinCode && existing?.hostSecret)return existing;
 
     const hostSecret=randomSecret();
-    const payload=currentState(game);
+    const payload=gsOnlineState(game);
     const {data,error}=await sb.rpc("gs_create_room",{
       p_game_type:game,
       p_state:payload,
@@ -1837,7 +1859,7 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     const sb=getClient();
     const room=loadRoom(game);
     if(!sb||!room?.joinCode||!room?.hostSecret)return;
-    const payload=currentState(game);
+    const payload=gsOnlineState(game);
     const {error}=await sb.rpc("gs_update_room",{
       p_join_code:room.joinCode,
       p_host_secret:room.hostSecret,
@@ -1949,6 +1971,60 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
   function totalsFor(game,s){
     return (s.players||[]).map((_,i)=>(s.rounds||[]).reduce((sum,r)=>sum+(Number(r?.[i])||0),0));
   }
+
+  let spectatorHallState={game:null,hall:null};
+  let spectatorWinShownKey="";
+  let spectatorWinTimer=null;
+
+  function gsSpectatorRenderHall(game,hall){
+    spectatorHallState={game,hall:hall||{games:0,players:[]}};
+    const theme=spectatorTheme(game);
+    const players=Array.isArray(hall?.players)?hall.players:[];
+    document.getElementById("gsSpectatorHallTitle").textContent=`Classifica generale · ${theme.name}`;
+    document.getElementById("gsSpectatorHallSubtitle").textContent="Vittorie accumulate nel tempo dal gruppo";
+    document.getElementById("gsSpectatorHallSummary").innerHTML=`
+      <div><strong>${Number(hall?.games||0)}</strong><span>PARTITE</span></div>
+      <div><strong>${players.length}</strong><span>GIOCATORI</span></div>
+      <div><strong>${players.reduce((n,p)=>n+Number(p.wins||0),0)}</strong><span>VITTORIE</span></div>`;
+    document.getElementById("gsSpectatorHallRows").innerHTML=players.length?players.map((p,i)=>`
+      <div class="gs-hall-row ${i===0?"leader":""}">
+        <div class="gs-hall-pos">${i===0?"🥇":i===1?"🥈":i===2?"🥉":`${i+1}°`}</div>
+        <div class="gs-hall-name"><strong>${esc(p.name)}</strong><span>${p.games} partite · ${p.rate}% vittorie</span></div>
+        <div class="gs-hall-wins"><strong>${p.wins}</strong><span>🏆</span></div>
+      </div>`).join(""):`<div class="gs-hall-empty">La prima vittoria comparirà qui automaticamente.</div>`;
+  }
+  function gsSpectatorWinner(game,s,totals,target){
+    if(game==="seasalt"&&s.finished&&s.winner!==null&&s.winner!==undefined){
+      const i=Number(s.winner); return {names:[s.players[i]],score:totals[i]||0,unit:"PUNTI"};
+    }
+    if(game==="sixnimmt"&&s.finished&&s.winner!==null&&s.winner!==undefined){
+      const i=Number(s.winner); return {names:[s.players[i]],score:totals[i]||0,unit:"TESTE DI BUE"};
+    }
+    if(game==="flip7"&&(s.rounds||[]).length&&totals.some(v=>v>=target)){
+      const max=Math.max(...totals), names=s.players.filter((_,i)=>totals[i]===max);
+      return {names,score:max,unit:"PUNTI"};
+    }
+    return null;
+  }
+  function gsSpectatorCelebrate(game,winner,roundCount){
+    if(!winner)return;
+    const key=`${spectatorCode||"room"}:${game}:${winner.names.join("|")}:${winner.score}:${roundCount}`;
+    if(spectatorWinShownKey===key)return;
+    spectatorWinShownKey=key;
+    const overlay=document.getElementById("gsSpectatorWinOverlay"),theme=spectatorTheme(game);
+    overlay.style.setProperty("--win-accent",theme.accent);
+    document.getElementById("gsSpectatorWinName").textContent=winner.names.length>1?`${winner.names.map(x=>x.toUpperCase()).join(" & ")} VINCONO!`:`${winner.names[0].toUpperCase()} VINCE!`;
+    document.getElementById("gsSpectatorWinScore").textContent=winner.score;
+    document.getElementById("gsSpectatorWinUnit").textContent=winner.unit;
+    overlay.classList.remove("hidden","soft-exit");
+    void overlay.offsetWidth; overlay.classList.add("play");
+    try{navigator.vibrate?.([80,40,120,40,160])}catch(e){}
+    clearTimeout(spectatorWinTimer);
+    spectatorWinTimer=setTimeout(()=>{overlay.classList.add("soft-exit");setTimeout(()=>overlay.classList.add("hidden"),550)},7500);
+  }
+  function gsSpectatorCloseHall(){document.getElementById("gsSpectatorHallModal")?.classList.add("hidden")}
+  function gsSpectatorCloseWin(){clearTimeout(spectatorWinTimer);document.getElementById("gsSpectatorWinOverlay")?.classList.add("hidden")}
+
   function renderSpectator(game,s,closed=false){
     const theme=spectatorTheme(game);
     const app=document.getElementById("gsSpectatorApp");
@@ -1967,6 +2043,10 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
       game==="sixnimmt"?"66":target;
     document.getElementById("gsSpectatorMeta").textContent=
       `${s.players?.length||0} giocatori · ${closed?"Partita conclusa":"Aggiornamento in tempo reale"}`;
+
+    gsSpectatorRenderHall(game,s.__hall||{games:0,players:[]});
+    const gsWinner=gsSpectatorWinner(game,s,totals,target);
+    if(gsWinner)gsSpectatorCelebrate(game,gsWinner,(s.rounds||[]).length);
 
     let order=(s.players||[]).map((name,i)=>({name,i,total:totals[i]||0}));
     if(game==="sixnimmt")order.sort((a,b)=>a.total-b.total||a.i-b.i);
@@ -2135,6 +2215,14 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     });
   }
 
+
+  document.getElementById("gsSpectatorHallBtn")?.addEventListener("click",()=>{
+    gsSpectatorRenderHall(spectatorHallState.game,spectatorHallState.hall);
+    document.getElementById("gsSpectatorHallModal")?.classList.remove("hidden");
+  });
+  document.getElementById("gsSpectatorHallClose")?.addEventListener("click",gsSpectatorCloseHall);
+  document.getElementById("gsSpectatorHallModal")?.addEventListener("click",e=>{if(e.target===e.currentTarget)gsSpectatorCloseHall()});
+  document.getElementById("gsSpectatorWinClose")?.addEventListener("click",gsSpectatorCloseWin);
   // Wrap the three existing persistence methods: local save stays source of truth for host,
   // then online room is updated when one exists.
   const localFlipSave=save;
