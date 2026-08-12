@@ -11919,3 +11919,11 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
   animation:none !important;
   transform:none !important;
 }
+
+/* V106 — Nuova partita sempre cliccabile nella schermata vittoria */
+#newGameBtn,#seaNewGame,#six39NewGame{
+  position:relative !important;
+  z-index:130 !important;
+  pointer-events:auto !important;
+  touch-action:manipulation !important;
+}

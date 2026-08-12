@@ -1146,7 +1146,7 @@ $$("[data-world-back]").forEach(b=>b.onclick=showHome);
 
 
 $("#newGameBtn").onclick=()=>{
-  hideWinScreen();
+  gsHidePerfectWin("winScreen");
   newGame();
   $("#homeScreen").classList.add("hidden");
   hideAllGameWorlds();
@@ -2097,24 +2097,24 @@ if(document.getElementById("sixHomeAfterWin"))document.getElementById("sixHomeAf
 if(document.getElementById("sixHallAfterWin"))document.getElementById("sixHallAfterWin").onclick=()=>gsHallAfterWin("six39WinScreen","six");
 
 // New game actions retain the same game world instead of bouncing to home.
-document.getElementById("seaNewGame")?.addEventListener("click",()=>{
+if(document.getElementById("seaNewGame"))document.getElementById("seaNewGame").onclick=()=>{
+  gsHidePerfectWin("seaWinScreen");
   seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false,turnIndex:0};
   seaSave();
-  gsHidePerfectWin("seaWinScreen");
   $("#homeScreen").classList.add("hidden");
   hideAllGameWorlds();
   $("#seaSaltWorld").classList.remove("hidden");
   seaOpenInlineSetup(false);
-});
-document.getElementById("six39NewGame")?.addEventListener("click",()=>{
+};
+if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame").onclick=()=>{
+  gsHidePerfectWin("six39WinScreen");
   six39State={players:[],rounds:[],finished:false,winner:null,recorded:false,turnIndex:0};
   six39Save();
-  gsHidePerfectWin("six39WinScreen");
   $("#homeScreen").classList.add("hidden");
   hideAllGameWorlds();
   $("#sixNimmtWorld").classList.remove("hidden");
   six39OpenSetup(false);
-});
+};
 
 
 
