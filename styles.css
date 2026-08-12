@@ -9644,3 +9644,47 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     max-height:10px !important;
   }
 }
+
+
+/* ==========================================================
+   V82 — SCHERMATA OSPITI / TESTATA
+   Riduzione REALE dell'intero blocco GAME SCORE:
+   carte + GAME SCORE + payoff.
+   Stessa posizione in alto a sinistra.
+   LIVE e TROFEI invariati.
+   Valido per tutti e tre i giochi.
+   ========================================================== */
+
+.gs-spectator .brand,
+.gs-spectator .gs-brand,
+.gs-spectator .brand-lockup,
+.gs-spectator .gs-brand-lockup,
+.gs-spectator .spectator-brand,
+.gs-spectator .guest-brand,
+.gs-spectator header .logo,
+.gs-spectator header .brand {
+  transform: scale(.58) !important;
+  transform-origin: top left !important;
+}
+
+/* fallback per eventuale wrapper immagine del marchio */
+.gs-spectator header img[alt*="GAME SCORE" i],
+.gs-spectator header img[alt*="Game Score" i] {
+  transform: scale(.58) !important;
+  transform-origin: top left !important;
+}
+
+/* Mobile: stessa riduzione, senza spostare LIVE/TROFEI */
+@media(max-width:700px){
+  .gs-spectator .brand,
+  .gs-spectator .gs-brand,
+  .gs-spectator .brand-lockup,
+  .gs-spectator .gs-brand-lockup,
+  .gs-spectator .spectator-brand,
+  .gs-spectator .guest-brand,
+  .gs-spectator header .logo,
+  .gs-spectator header .brand {
+    transform: scale(.58) !important;
+    transform-origin: top left !important;
+  }
+}
