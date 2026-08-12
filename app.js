@@ -268,6 +268,8 @@ function showWinScreen(w){
   }).join("");
 
   gsShowPerfectWin("winScreen","flip");
+  // V89: Trofeo salvato, partita attiva azzerata subito.
+  gsAutoArchiveCompletedGame("flip");
 }
 
 function hideWinScreen(){
@@ -1135,6 +1137,8 @@ function seaFinish(i,mermaids=false){
   const order=seaState.players.map((n,j)=>({n,j,t:totals[j]})).sort((a,b)=>b.t-a.t);
   $("#seaFinalRanking").innerHTML=order.map((x,r)=>`<div class="final-row ${x.j===i?"winner-row":""}" style="--fc:#79e2dc"><div class="final-pos">${r===0?"🥇":r===1?"🥈":r===2?"🥉":r+1+"°"}</div><div class="final-name">${esc(x.n)}</div><div class="final-points"><b>${x.t}</b><span>punti</span></div></div>`).join("");
   gsShowPerfectWin("seaWinScreen","sea");
+  // V89: Trofeo salvato, partita attiva azzerata subito.
+  gsAutoArchiveCompletedGame("sea");
 }
 function seaRenderHistory(){
   $("#seaHistoryList").innerHTML=seaState.rounds.length?seaState.rounds.map((r,i)=>`<div class="sea-history-card"><div class="sea-history-head"><b>Round ${i+1}</b><div class="sea-history-actions"><button onclick="closeModal('seaHistoryModal');seaOpenRound(${i})">Modifica</button><button class="danger" onclick="seaDeleteRound(${i})">Elimina</button></div></div>${r.map((v,j)=>`<div>${esc(seaState.players[j])}: <b>+${v}</b></div>`).join("")}</div>`).reverse().join(""):'<p class="helper">Ancora nessun round.</p>';
@@ -1431,6 +1435,8 @@ function six39ShowWin(i){
     </div>`).join("");
   if(!six39State.recorded)six39RecordWin();
   gsShowPerfectWin("six39WinScreen","six");
+  // V89: la partita è già nei Trofei; ora sparisce subito dalle partite attive.
+  gsAutoArchiveCompletedGame("six");
 }
 function six39RecordWin(){
   if(six39State.recorded||six39State.winner===null)return;
@@ -1716,6 +1722,22 @@ function gsHidePerfectWin(id){
    Il risultato resta nei Trofei, ma la partita terminata non
    resta più come partita corrente/riprendibile.
    ========================================================= */
+let gsLastCompletedSnapshot={flip:null,sea:null,six:null};
+
+function gsAutoArchiveCompletedGame(game){
+  // Conserva solo in memoria i dati necessari alla schermata finale/rematch.
+  // Il salvataggio persistente viene invece azzerato subito:
+  // così la partita NON resta più tra quelle da riprendere.
+  if(game==="flip" && state.players.length){
+    gsLastCompletedSnapshot.flip=JSON.parse(JSON.stringify(state));
+  }else if(game==="sea" && seaState.players.length){
+    gsLastCompletedSnapshot.sea=JSON.parse(JSON.stringify(seaState));
+  }else if(game==="six" && six39State.players.length){
+    gsLastCompletedSnapshot.six=JSON.parse(JSON.stringify(six39State));
+  }
+  gsFinalizeCompletedGame(game);
+}
+
 function gsFinalizeCompletedGame(game){
   if(game==="flip"){
     // Il Trofeo è già stato registrato da recordResultIfNeeded().
@@ -1743,15 +1765,13 @@ function gsGameFromWinScreen(id){
 function gsHomeAfterWin(id){
   const game=gsGameFromWinScreen(id);
   gsHidePerfectWin(id);
-  if(game)gsFinalizeCompletedGame(game);
+  // V89: la partita è già stata archiviata automaticamente alla conclusione.
   showHome();
   window.renderResumeCenter?.();
 }
 function gsHallAfterWin(id,game){
   gsHidePerfectWin(id);
-  // Prima chiudiamo definitivamente la partita; lo storico Trofei
-  // è separato e quindi non viene cancellato.
-  gsFinalizeCompletedGame(game);
+  // V89: la chiusura persistente è già avvenuta alla conclusione.
   if(game==="flip"){
     renderHall();openModal("hallModal");
   }else if(game==="sea"){
