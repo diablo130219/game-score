@@ -11871,3 +11871,20 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
   .gs-spectator-turn-box{min-height:40px;padding:5px 7px;margin-bottom:5px}
   .gs-spectator-turn-box strong{font-size:14px}.gs-spectator-turn-box span{font-size:5.2px}
 }
+
+/* V103 — schermata vittoria sempre in primo piano */
+#winScreen.showing,#seaWinScreen.showing,#six39WinScreen.showing{
+  display:flex !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  z-index:50000 !important;
+  pointer-events:auto !important;
+}
+#winScreen.gs-win-enter,#seaWinScreen.gs-win-enter,#six39WinScreen.gs-win-enter{
+  animation:gsV103WinAppear .72s cubic-bezier(.2,.8,.2,1) both !important;
+}
+@keyframes gsV103WinAppear{
+  0%{opacity:0;transform:scale(.94)}
+  55%{opacity:1;transform:scale(1.018)}
+  100%{opacity:1;transform:scale(1)}
+}

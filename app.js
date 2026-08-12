@@ -130,39 +130,60 @@ function gsUnlockAudio(){
     return gsAudioCtx;
   }catch(e){return null}
 }
-function gsTone(ctx,freq,start,duration,gain=.035,type="sine"){
+let gsMasterAudio=null;
+function gsAudioDestination(ctx){
+  if(gsMasterAudio && gsMasterAudio.ctx===ctx)return gsMasterAudio.node;
+  const comp=ctx.createDynamicsCompressor();
+  comp.threshold.value=-22;
+  comp.knee.value=18;
+  comp.ratio.value=5;
+  comp.attack.value=.003;
+  comp.release.value=.18;
+  const master=ctx.createGain();
+  master.gain.value=2.8;
+  comp.connect(master); master.connect(ctx.destination);
+  gsMasterAudio={ctx,node:comp};
+  return comp;
+}
+function gsTone(ctx,freq,start,duration,gain=.16,type="sine"){
   const osc=ctx.createOscillator();
   const vol=ctx.createGain();
   osc.type=type;
   osc.frequency.setValueAtTime(freq,start);
   vol.gain.setValueAtTime(0.0001,start);
-  vol.gain.exponentialRampToValueAtTime(Math.max(.0002,gain),start+.018);
+  vol.gain.exponentialRampToValueAtTime(Math.max(.001,gain),start+.012);
   vol.gain.exponentialRampToValueAtTime(.0001,start+duration);
-  osc.connect(vol); vol.connect(ctx.destination);
-  osc.start(start); osc.stop(start+duration+.02);
+  osc.connect(vol); vol.connect(gsAudioDestination(ctx));
+  osc.start(start); osc.stop(start+duration+.025);
 }
 function gsPlaySound(kind){
   if(!gsSoundsEnabled())return;
   const ctx=gsUnlockAudio();
-  if(!ctx||ctx.state==="suspended")return;
-  const t=ctx.currentTime+.01;
-  try{
-    if(kind==="round"){
-      gsTone(ctx,520,t,.16,.0392,"sine");
-      gsTone(ctx,660,t+.08,.19,.0364,"sine");
-    }else if(kind==="rank"){
-      gsTone(ctx,440,t,.16,.0308,"triangle");
-      gsTone(ctx,590,t+.10,.18,.0364,"triangle");
-      gsTone(ctx,740,t+.20,.20,.0308,"triangle");
-    }else if(kind==="win"){
-      gsTone(ctx,523.25,t,.32,.0448,"triangle");
-      gsTone(ctx,659.25,t+.16,.35,.0476,"triangle");
-      gsTone(ctx,783.99,t+.32,.42,.0518,"triangle");
-      gsTone(ctx,1046.5,t+.56,.52,.035,"sine");
-    }else if(kind==="toggle"){
-      gsTone(ctx,620,t,.12,.0252,"sine");
-    }
-  }catch(e){}
+  if(!ctx)return;
+  const play=()=>{
+    const t=ctx.currentTime+.015;
+    try{
+      if(kind==="round"){
+        gsTone(ctx,520,t,.22,.15,"square");
+        gsTone(ctx,700,t+.10,.25,.13,"triangle");
+      }else if(kind==="rank"){
+        gsTone(ctx,440,t,.20,.12,"triangle");
+        gsTone(ctx,610,t+.11,.23,.14,"triangle");
+        gsTone(ctx,820,t+.23,.27,.12,"triangle");
+      }else if(kind==="win"){
+        gsTone(ctx,523.25,t,.42,.18,"triangle");
+        gsTone(ctx,659.25,t+.14,.46,.19,"triangle");
+        gsTone(ctx,783.99,t+.30,.52,.20,"triangle");
+        gsTone(ctx,1046.5,t+.50,.65,.18,"square");
+        gsTone(ctx,1318.5,t+.72,.62,.14,"sine");
+      }else if(kind==="toggle"){
+        gsTone(ctx,660,t,.16,.12,"triangle");
+      }
+    }catch(e){}
+  };
+  if(ctx.state==="suspended"){
+    ctx.resume().then(play).catch(()=>{});
+  }else play();
 }
 
 document.addEventListener("pointerdown",()=>gsUnlockAudio(),{passive:true});
@@ -439,8 +460,8 @@ function showWinScreen(w){
 
   gsShowPerfectWin("winScreen","flip");
   gsPlaySound("win");
-  // V89: Trofeo salvato, partita attiva azzerata subito.
-  gsAutoArchiveCompletedGame("flip");
+  // V103: lascia montare e vedere l'animazione prima di azzerare la partita attiva.
+  setTimeout(()=>gsAutoArchiveCompletedGame("flip"),1800);
 }
 
 function hideWinScreen(){
@@ -1370,8 +1391,8 @@ function seaFinish(i,mermaids=false){
   $("#seaFinalRanking").innerHTML=order.map((x,r)=>`<div class="final-row ${x.j===i?"winner-row":""}" style="--fc:#79e2dc"><div class="final-pos">${r===0?"🥇":r===1?"🥈":r===2?"🥉":r+1+"°"}</div><div class="final-name">${esc(x.n)}</div><div class="final-points"><b>${x.t}</b><span>punti</span></div></div>`).join("");
   gsShowPerfectWin("seaWinScreen","sea");
   gsPlaySound("win");
-  // V89: Trofeo salvato, partita attiva azzerata subito.
-  gsAutoArchiveCompletedGame("sea");
+  // V103: lascia montare e vedere l'animazione prima di azzerare la partita attiva.
+  setTimeout(()=>gsAutoArchiveCompletedGame("sea"),1800);
 }
 function seaRenderHistory(){
   $("#seaHistoryList").innerHTML=seaState.rounds.length?seaState.rounds.map((r,i)=>`<div class="sea-history-card"><div class="sea-history-head"><b>Round ${i+1}</b><div class="sea-history-actions"><button onclick="closeModal('seaHistoryModal');seaOpenRound(${i})">Modifica</button><button class="danger" onclick="seaDeleteRound(${i})">Elimina</button></div></div>${r.map((v,j)=>`<div>${esc(seaState.players[j])}: <b>+${v}</b></div>`).join("")}</div>`).reverse().join(""):'<p class="helper">Ancora nessun round.</p>';
@@ -1673,8 +1694,8 @@ function six39ShowWin(i){
   if(!six39State.recorded)six39RecordWin();
   gsShowPerfectWin("six39WinScreen","six");
   gsPlaySound("win");
-  // V89: la partita è già nei Trofei; ora sparisce subito dalle partite attive.
-  gsAutoArchiveCompletedGame("six");
+  // V103: lascia montare e vedere l'animazione prima di azzerare la partita attiva.
+  setTimeout(()=>gsAutoArchiveCompletedGame("six"),1800);
 }
 function six39RecordWin(){
   if(six39State.recorded||six39State.winner===null)return;
