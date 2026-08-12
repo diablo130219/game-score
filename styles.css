@@ -11504,3 +11504,145 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     right:10px !important;
   }
 }
+
+
+/* =========================================================
+   V98 — FLIP 7: MODALE INSERIMENTO PUNTI
+   Correzione mirata della sola impaginazione delle righe.
+   ========================================================= */
+
+#roundModal .flip98-round-row{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 118px !important;
+  align-items:center !important;
+  column-gap:16px !important;
+  min-height:82px !important;
+  padding:12px 14px !important;
+  box-sizing:border-box !important;
+}
+
+#roundModal .flip98-player-mini{
+  display:grid !important;
+  grid-template-columns:58px minmax(0,1fr) !important;
+  align-items:center !important;
+  gap:12px !important;
+  min-width:0 !important;
+}
+
+#roundModal .flip98-mini-card{
+  width:52px !important;
+  height:58px !important;
+  min-width:52px !important;
+  box-sizing:border-box !important;
+  padding:5px 3px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  overflow:hidden !important;
+  white-space:normal !important;
+  word-break:normal !important;
+  line-height:.88 !important;
+  font-size:10px !important;
+  letter-spacing:-.05em !important;
+}
+
+#roundModal .flip98-player-copy{
+  min-width:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+  gap:5px !important;
+  padding-left:0 !important;
+}
+
+#roundModal .flip98-player-copy strong{
+  display:block !important;
+  margin:0 !important;
+  color:#fff !important;
+  font-size:16px !important;
+  line-height:1.05 !important;
+  font-weight:1000 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+
+#roundModal .flip98-player-copy .player-last{
+  display:block !important;
+  margin:0 !important;
+  color:#c7cad5 !important;
+  font-size:11px !important;
+  line-height:1.15 !important;
+  white-space:nowrap !important;
+}
+
+#roundModal .flip98-round-score{
+  width:118px !important;
+  min-width:118px !important;
+  height:56px !important;
+  margin:0 !important;
+  padding:0 12px !important;
+  box-sizing:border-box !important;
+  text-align:center !important;
+  font-size:18px !important;
+  font-weight:1000 !important;
+  border-radius:15px !important;
+}
+
+/* Tablet/desktop: più spazio ai nomi senza cambiare il resto della modale */
+@media(min-width:701px){
+  #roundModal .flip98-round-row{
+    grid-template-columns:minmax(0,1fr) 126px !important;
+    column-gap:20px !important;
+    padding-left:16px !important;
+    padding-right:16px !important;
+  }
+  #roundModal .flip98-player-mini{
+    grid-template-columns:62px minmax(0,1fr) !important;
+    gap:14px !important;
+  }
+  #roundModal .flip98-mini-card{
+    width:56px !important;
+    min-width:56px !important;
+    height:60px !important;
+  }
+  #roundModal .flip98-player-copy strong{
+    font-size:17px !important;
+  }
+}
+
+/* Mobile: input compatto, nome sempre separato dalla tessera */
+@media(max-width:700px){
+  #roundModal .sheet{
+    width:min(94vw,620px) !important;
+  }
+  #roundModal .flip98-round-row{
+    grid-template-columns:minmax(0,1fr) 86px !important;
+    column-gap:9px !important;
+    min-height:76px !important;
+    padding:9px 10px !important;
+  }
+  #roundModal .flip98-player-mini{
+    grid-template-columns:47px minmax(0,1fr) !important;
+    gap:9px !important;
+  }
+  #roundModal .flip98-mini-card{
+    width:44px !important;
+    min-width:44px !important;
+    height:52px !important;
+    font-size:8px !important;
+  }
+  #roundModal .flip98-player-copy strong{
+    font-size:14px !important;
+  }
+  #roundModal .flip98-player-copy .player-last{
+    font-size:9px !important;
+  }
+  #roundModal .flip98-round-score{
+    width:86px !important;
+    min-width:86px !important;
+    height:52px !important;
+    font-size:17px !important;
+  }
+}

@@ -491,12 +491,15 @@ function render(){
 
   $("#roundInputs").innerHTML=state.players.map((n,i)=>{
     const t=themes[i%themes.length];
-    return `<div class="round-input-row" style="--rc:${t.c}">
-      <div class="player-mini">
-        <div class="player-mini-icon">${esc(t.fallback)}</div>
-        <div><strong>${esc(n)}</strong><div class="player-last">Totale attuale: ${ts[i]}</div></div>
+    return `<div class="round-input-row flip98-round-row" style="--rc:${t.c}">
+      <div class="player-mini flip98-player-mini">
+        <div class="player-mini-icon flip98-mini-card">${esc(t.fallback)}</div>
+        <div class="flip98-player-copy">
+          <strong>${esc(n)}</strong>
+          <div class="player-last">Totale attuale: ${ts[i]}</div>
+        </div>
       </div>
-      <input class="input round-score" type="number" min="0" inputmode="numeric" value="0" data-i="${i}">
+      <input class="input round-score flip98-round-score" type="number" min="0" inputmode="numeric" value="0" data-i="${i}">
     </div>`;
   }).join("");
   bindRoundInputTotals();
@@ -555,12 +558,15 @@ function editHistoryRound(roundIndex){
   const tsBefore=state.players.map((_,i)=>state.rounds.slice(0,roundIndex).reduce((a,r)=>a+(Number(r[i])||0),0));
   $("#roundInputs").innerHTML=state.players.map((n,i)=>{
     const t=themes[i%themes.length];
-    return `<div class="round-input-row" style="--rc:${t.c}">
-      <div class="player-mini">
-        <div class="player-mini-icon">${esc(t.fallback)}</div>
-        <div><strong>${esc(n)}</strong><div class="player-last">Totale prima del round: ${tsBefore[i]}</div></div>
+    return `<div class="round-input-row flip98-round-row" style="--rc:${t.c}">
+      <div class="player-mini flip98-player-mini">
+        <div class="player-mini-icon flip98-mini-card">${esc(t.fallback)}</div>
+        <div class="flip98-player-copy">
+          <strong>${esc(n)}</strong>
+          <div class="player-last">Totale prima del round: ${tsBefore[i]}</div>
+        </div>
       </div>
-      <input class="input round-score" type="number" min="0" inputmode="numeric" value="${existing[i]||0}" data-i="${i}">
+      <input class="input round-score flip98-round-score" type="number" min="0" inputmode="numeric" value="${existing[i]||0}" data-i="${i}">
     </div>`;
   }).join("");
   bindRoundInputTotals();
