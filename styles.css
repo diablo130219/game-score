@@ -7934,3 +7934,102 @@ button,
     font-size:12.5px !important;
   }
 }
+
+
+/* =========================================================
+   v68 — FLIP 7 PLAYER CARDS: CLEAN LOGO EDITION
+   Solo estetica Flip 7. Nessuna modifica alle regole/logica.
+   ========================================================= */
+
+/* Hide the old mixed card artwork only inside Flip 7 game */
+body[data-game="flip7"] .player-avatar,
+.game-flip7 .player-avatar,
+[data-game-id="flip7"] .player-avatar{
+  position:relative !important;
+  overflow:visible !important;
+  background:none !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+/* Turn every Flip 7 avatar into one premium neon card */
+body[data-game="flip7"] .player-avatar img,
+.game-flip7 .player-avatar img,
+[data-game-id="flip7"] .player-avatar img{
+  opacity:0 !important;
+}
+
+body[data-game="flip7"] .player-avatar::before,
+.game-flip7 .player-avatar::before,
+[data-game-id="flip7"] .player-avatar::before{
+  content:"FLIP\A 7";
+  white-space:pre;
+  position:absolute;
+  inset:4px 8px;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  border:2px solid var(--paccent,#9d42ff);
+  border-radius:14px;
+  background:
+    radial-gradient(circle at 50% 42%, color-mix(in srgb,var(--paccent,#9d42ff) 38%,transparent), transparent 55%),
+    linear-gradient(145deg,color-mix(in srgb,var(--paccent,#9d42ff) 34%,#080713),#080713 68%);
+  color:#fff;
+  font-weight:1000;
+  font-style:italic;
+  font-size:20px;
+  line-height:.76;
+  letter-spacing:-.06em;
+  text-shadow:
+    2px 2px 0 #24123f,
+    -1px -1px 0 #24123f,
+    0 0 9px rgba(255,255,255,.22);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb,var(--paccent,#9d42ff) 25%,transparent),
+    0 0 16px color-mix(in srgb,var(--paccent,#9d42ff) 55%,transparent),
+    inset 0 0 18px color-mix(in srgb,var(--paccent,#9d42ff) 16%,transparent);
+  transform:rotate(3deg);
+  z-index:3;
+}
+
+body[data-game="flip7"] .player-avatar::after,
+.game-flip7 .player-avatar::after,
+[data-game-id="flip7"] .player-avatar::after{
+  content:"";
+  position:absolute;
+  inset:8px 14px 0 2px;
+  border:1px solid color-mix(in srgb,var(--paccent,#9d42ff) 72%,white);
+  border-radius:13px;
+  background:color-mix(in srgb,var(--paccent,#9d42ff) 22%,#080713);
+  transform:rotate(-7deg);
+  z-index:1;
+  opacity:.72;
+  box-shadow:0 0 11px color-mix(in srgb,var(--paccent,#9d42ff) 35%,transparent);
+}
+
+/* More premium glow and cleaner spacing on Flip 7 rows */
+body[data-game="flip7"] .player-row,
+.game-flip7 .player-row,
+[data-game-id="flip7"] .player-row{
+  box-shadow:
+    0 0 0 1px color-mix(in srgb,var(--paccent,#9d42ff) 30%,transparent),
+    0 0 18px color-mix(in srgb,var(--paccent,#9d42ff) 13%,transparent),
+    inset 0 0 28px color-mix(in srgb,var(--paccent,#9d42ff) 8%,transparent);
+}
+
+/* Fallback selectors used by current Game Score templates */
+body:has([data-game="flip7"].active) .player-card .player-avatar img,
+body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
+  opacity:0 !important;
+}
+
+/* Mobile: keep the logo card large and readable */
+@media(max-width:680px){
+  body[data-game="flip7"] .player-avatar::before,
+  .game-flip7 .player-avatar::before,
+  [data-game-id="flip7"] .player-avatar::before{
+    font-size:17px;
+    border-radius:11px;
+    inset:3px 5px;
+  }
+}

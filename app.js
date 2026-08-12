@@ -2186,3 +2186,32 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     setTimeout(()=>startSpectator(roomParam),0);
   }
 })();
+
+
+/* v68 visual hook: exposes current game to CSS only. */
+(function(){
+  function gsVisualGameHook(){
+    try{
+      var candidates = [
+        document.querySelector('[data-game].active'),
+        document.querySelector('[data-game-id].active'),
+        document.querySelector('.game-screen:not([hidden])'),
+        document.querySelector('.game-page:not([hidden])')
+      ].filter(Boolean);
+      var el = candidates[0];
+      var val = el && (el.dataset.game || el.dataset.gameId || '');
+      if(!val){
+        var t=(document.title+' '+document.body.innerText.slice(0,500)).toLowerCase();
+        if(t.includes('flip 7') || t.includes('flip7')) val='flip7';
+        else if(t.includes('sea salt')) val='seasalt';
+        else if(t.includes('le prendi')) val='6nimmt';
+      }
+      if(val) document.body.dataset.game=val;
+    }catch(e){}
+  }
+  document.addEventListener('click',function(){setTimeout(gsVisualGameHook,30)},true);
+  window.addEventListener('hashchange',gsVisualGameHook);
+  window.addEventListener('popstate',gsVisualGameHook);
+  window.addEventListener('load',gsVisualGameHook);
+  setInterval(gsVisualGameHook,1200);
+})();
