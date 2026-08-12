@@ -9766,3 +9766,16 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
   .gs-host-room-card{grid-template-columns:40px minmax(0,1fr) auto;padding:9px}.gs-host-room-icon{width:36px;height:36px}.gs-host-room-copy strong{font-size:12px}.gs-host-room-action{font-size:7px}
   .gs-host-transfer{grid-template-columns:1fr}.gs-host-transfer .btn{width:100%}
 }
+
+
+/* V85 — HOST ONLINE è una funzione secondaria: sotto i tre giochi */
+#gsCloudHostCenter{
+  margin-top:26px !important;
+  margin-bottom:10px !important;
+}
+@media(max-width:700px){
+  #gsCloudHostCenter{
+    margin-top:22px !important;
+    margin-bottom:8px !important;
+  }
+}
