@@ -2075,22 +2075,25 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
 
     if(game==="flip7"){
       ranking.innerHTML=order.map((p,pos)=>{
-        const t=themes[p.i%themes.length];
-        const c=t.c||colors[p.i%colors.length];
+        const c=colors[p.i%colors.length];
         const status=statusFor(pos);
         const missing=Math.max(0,target-p.total);
-        return `<article class="gs-premium-player gs-flip-live-card" style="--pc:${c}">
+        const playerName=(typeof p.name==="object" && p.name!==null)
+          ? String(p.name.name||p.name.label||p.name.playerName||`Giocatore ${p.i+1}`)
+          : String(p.name ?? `Giocatore ${p.i+1}`);
+        return `<article class="gs-premium-player gs-flip-live-card gs-spectator-flip-fixed" style="--pc:${c};--flip-player:${c}">
           ${status?`<span class="gs-live-status">${status}</span>`:""}
           ${rankBlock(pos,c)}
-          <div class="gs-live-art gs-live-flip-art">
-            <div class="gs-flip-burst"></div>
-            <div class="gs-live-card-back back-one"></div>
-            <div class="gs-live-card-back back-two"></div>
-            <div class="gs-live-card-front">${cardMarkup(p.i)}</div>
-            <div class="gs-flip-card-shine"></div>
+          <div class="gs-live-art gs-spectator-flip-art">
+            <div class="gs-spectator-flip-stack stack-a"></div>
+            <div class="gs-spectator-flip-stack stack-b"></div>
+            <div class="gs-spectator-flip-tile">
+              <span class="gs-spectator-flip-word">FLIP</span>
+              <span class="gs-spectator-flip-seven">7</span>
+            </div>
           </div>
           <div class="gs-live-player-main">
-            <strong>${esc(p.name)}</strong>
+            <strong>${esc(playerName)}</strong>
             <div class="gs-live-last"><span>Ultimo round</span><b>+${Number(last?.[p.i]||0)}</b></div>
           </div>
           <div class="gs-live-score">

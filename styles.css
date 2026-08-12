@@ -8635,3 +8635,203 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     margin-top:74px !important;
   }
 }
+
+
+/* =========================================================
+   v74 — FIX OSPITI: TESSERE FLIP 7 + TROFEI SEMPRE VISIBILI
+   ========================================================= */
+
+/* Header controls must never disappear behind themed backgrounds */
+.gs-spectator .gs-spectator-logo{
+  display:flex !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  position:absolute !important;
+  top:18px !important;
+  left:22px !important;
+  z-index:100 !important;
+}
+.gs-spectator .gs-spectator-hall-btn{
+  display:flex !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  position:absolute !important;
+  top:18px !important;
+  right:22px !important;
+  z-index:110 !important;
+  pointer-events:auto !important;
+}
+.gs-spectator .gs-spectator-hall-btn::after{
+  content:"CLASSIFICA";
+  position:absolute;
+  top:67px;
+  left:50%;
+  transform:translateX(-50%);
+  color:#ffd20a;
+  font-size:6px;
+  font-weight:1000;
+  letter-spacing:.08em;
+  white-space:nowrap;
+  text-shadow:0 2px 7px #000;
+}
+
+/* Flip 7 spectator player card: vertical and colored like the approved host tile */
+.gs-spectator-flip-fixed{
+  grid-template-columns:72px 112px minmax(0,1fr) 108px !important;
+}
+.gs-spectator-flip-art{
+  position:relative !important;
+  width:104px !important;
+  height:116px !important;
+  display:grid !important;
+  place-items:center !important;
+  overflow:visible !important;
+  perspective:700px;
+}
+.gs-spectator-flip-stack{
+  position:absolute;
+  width:67px;
+  height:96px;
+  border:1.5px solid color-mix(in srgb,var(--flip-player) 55%,#fff 45%);
+  border-radius:11px;
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb,var(--flip-player) 20%,#1c1530 80%),
+      color-mix(in srgb,var(--flip-player) 10%,#090b18 90%));
+  box-shadow:0 7px 16px rgba(0,0,0,.42),0 0 11px color-mix(in srgb,var(--flip-player) 22%,transparent);
+}
+.gs-spectator-flip-stack.stack-a{transform:translateX(-14px) rotate(-8deg)}
+.gs-spectator-flip-stack.stack-b{transform:translateX(-7px) rotate(-4deg)}
+.gs-spectator-flip-tile{
+  position:relative;
+  z-index:4;
+  width:72px;
+  height:104px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border:2px solid color-mix(in srgb,var(--flip-player) 72%,#fff 28%);
+  border-radius:12px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 34%,rgba(255,255,255,.20),transparent 29%),
+    repeating-conic-gradient(from 240deg at 50% 52%,rgba(255,255,255,.08) 0 2deg,transparent 2deg 13deg),
+    linear-gradient(150deg,
+      color-mix(in srgb,var(--flip-player) 88%,#fff 12%),
+      var(--flip-player) 45%,
+      color-mix(in srgb,var(--flip-player) 58%,#03050d 42%));
+  box-shadow:
+    0 9px 0 color-mix(in srgb,var(--flip-player) 30%,#05060b 70%),
+    0 13px 18px rgba(0,0,0,.44),
+    0 0 18px color-mix(in srgb,var(--flip-player) 45%,transparent),
+    inset 0 1px 0 rgba(255,255,255,.35);
+  transform:rotate(2deg);
+}
+.gs-spectator-flip-tile::after{
+  content:"";
+  position:absolute;
+  inset:5px;
+  border:1px solid rgba(255,255,255,.28);
+  border-radius:8px;
+}
+.gs-spectator-flip-word{
+  position:relative;
+  z-index:2;
+  color:#fff;
+  font-size:22px;
+  line-height:.9;
+  font-weight:1000;
+  font-style:italic;
+  letter-spacing:-.08em;
+  -webkit-text-stroke:.8px #111526;
+  text-shadow:2px 2px 0 #15182b,0 4px 7px rgba(0,0,0,.45);
+  transform:skewX(-7deg);
+}
+.gs-spectator-flip-seven{
+  position:relative;
+  z-index:2;
+  margin-top:-2px;
+  color:#ffd31b;
+  font-size:43px;
+  line-height:.85;
+  font-weight:1000;
+  font-style:italic;
+  -webkit-text-stroke:1px #342300;
+  text-shadow:2px 3px 0 #9a5a00,0 5px 8px rgba(0,0,0,.45);
+  transform:skewX(-7deg);
+}
+
+/* Keep the player's name clearly separated from the card */
+.gs-spectator-flip-fixed .gs-live-player-main{
+  padding-left:10px !important;
+}
+.gs-spectator-flip-fixed .gs-live-player-main>strong{
+  font-size:28px !important;
+  color:#fff !important;
+  text-transform:none !important;
+}
+
+/* On desktop the header behaves like host: logo left, trophy right */
+@media(min-width:701px){
+  .gs-spectator .gs-spectator-logo{
+    max-width:250px !important;
+  }
+}
+
+/* Mobile */
+@media(max-width:700px){
+  .gs-spectator .gs-spectator-logo{
+    top:12px !important;
+    left:10px !important;
+    max-width:150px !important;
+  }
+  .gs-spectator .gs-spectator-hall-btn{
+    top:10px !important;
+    right:9px !important;
+  }
+  .gs-spectator .gs-spectator-hall-btn::after{
+    display:none;
+  }
+  .gs-spectator-flip-fixed{
+    grid-template-columns:46px 76px minmax(0,1fr) 62px !important;
+  }
+  .gs-spectator-flip-art{
+    width:72px !important;
+    height:91px !important;
+  }
+  .gs-spectator-flip-stack{
+    width:45px;
+    height:68px;
+    border-radius:8px;
+  }
+  .gs-spectator-flip-stack.stack-a{transform:translateX(-9px) rotate(-8deg)}
+  .gs-spectator-flip-stack.stack-b{transform:translateX(-4px) rotate(-4deg)}
+  .gs-spectator-flip-tile{
+    width:50px;
+    height:76px;
+    border-radius:9px;
+  }
+  .gs-spectator-flip-word{
+    font-size:15px;
+    -webkit-text-stroke:.55px #111526;
+  }
+  .gs-spectator-flip-seven{
+    font-size:31px;
+    -webkit-text-stroke:.7px #342300;
+  }
+  .gs-spectator-flip-fixed .gs-live-player-main{
+    padding-left:4px !important;
+  }
+  .gs-spectator-flip-fixed .gs-live-player-main>strong{
+    font-size:18px !important;
+  }
+}
+
+/* Trofei modal sits above every themed layer */
+.gs-spectator-modal{
+  z-index:20000 !important;
+}
+.gs-spectator-win{
+  z-index:21000 !important;
+}
