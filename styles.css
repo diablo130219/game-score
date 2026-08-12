@@ -9610,3 +9610,37 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     font-size:37px !important;
   }
 }
+
+
+/* ==========================================================
+   V81 — TESTATA OSPITI
+   Unica modifica rispetto alla V80:
+   logo/firma GAME SCORE ridotto al 42% circa.
+   Applicato a Flip 7, Sea Salt & Paper e 6... Le prendi!
+   LIVE, TROFEI, titoli, sfondi, ROUND, classifiche e logica invariati.
+   ========================================================== */
+
+.gs-spectator .gs-spectator-logo{
+  width:30px !important;
+  max-width:30px !important;
+  opacity:.76 !important;
+}
+.gs-spectator .gs-spectator-logo img{
+  width:30px !important;
+  max-width:30px !important;
+  max-height:13px !important;
+  object-fit:contain !important;
+}
+
+@media(max-width:700px){
+  .gs-spectator .gs-spectator-logo{
+    width:20px !important;
+    max-width:20px !important;
+    opacity:.78 !important;
+  }
+  .gs-spectator .gs-spectator-logo img{
+    width:20px !important;
+    max-width:20px !important;
+    max-height:10px !important;
+  }
+}
