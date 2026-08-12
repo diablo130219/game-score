@@ -8313,3 +8313,46 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     -webkit-text-stroke:.8px #241a00;
   }
 }
+
+/* =========================================================
+   GAME SCORE v71 — FLIP 7 TILE VERTICALE
+   Riferimento approvato: tessera stretta/verticale, libera il testo
+   "Ultimo round" e mantiene il colore del giocatore.
+   ========================================================= */
+#leaderboard .flip53-card-stage{
+  width:126px !important;
+  height:142px !important;
+}
+#leaderboard .flip53-front-wrap{
+  width:96px !important;
+  height:132px !important;
+}
+#leaderboard .flip7-logo-tile{
+  border-radius:15px !important;
+  transform:perspective(500px) rotateY(-4deg) rotateZ(-1deg) !important;
+  flex-direction:column !important;
+  gap:0 !important;
+}
+#leaderboard .flip7-word{
+  font-size:27px !important;
+  letter-spacing:-.07em !important;
+  margin-bottom:-5px;
+}
+#leaderboard .flip7-seven{
+  font-size:58px !important;
+  line-height:.86 !important;
+  margin-left:0 !important;
+}
+@media(max-width:560px){
+  #leaderboard .flip53-card-stage{
+    width:82px !important;
+    height:104px !important;
+  }
+  #leaderboard .flip53-front-wrap{
+    width:62px !important;
+    height:92px !important;
+  }
+  #leaderboard .flip7-logo-tile{border-radius:10px !important;}
+  #leaderboard .flip7-word{font-size:17px !important;margin-bottom:-3px;}
+  #leaderboard .flip7-seven{font-size:39px !important;}
+}
