@@ -2380,24 +2380,82 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     }
     return null;
   }
+  function gsOrdinalIt(n){
+    n=Math.max(1,Number(n||1));
+    return `${n}ª`;
+  }
+
+  function gsSpectatorWinnerHistory(winner){
+    const hall=spectatorHallState?.hall;
+    const players=Array.isArray(hall?.players)?hall.players:[];
+    const wanted=(winner?.names||[]).map(n=>String(n||"").trim().toLocaleLowerCase("it"));
+    const found=players.filter(p=>wanted.includes(String(p?.name||"").trim().toLocaleLowerCase("it")));
+    const wins=found.length?Math.max(...found.map(p=>Number(p?.wins||0))):0;
+    const leaderWins=players.length?Math.max(...players.map(p=>Number(p?.wins||0))):0;
+    return {wins,leaderWins,isHistoricalLeader:wins>0&&wins===leaderWins};
+  }
+
   function gsSpectatorCelebrate(game,winner,roundCount){
     if(!winner)return;
     const key=`${spectatorCode||"room"}:${game}:${winner.names.join("|")}:${winner.score}:${roundCount}`;
     if(spectatorWinShownKey===key)return;
     spectatorWinShownKey=key;
-    const overlay=document.getElementById("gsSpectatorWinOverlay"),theme=spectatorTheme(game);
+
+    const overlay=document.getElementById("gsSpectatorWinOverlay");
+    const theme=spectatorTheme(game);
+    const hist=gsSpectatorWinnerHistory(winner);
+    const gameNames={flip7:"FLIP 7",seasalt:"SEA SALT & PAPER",sixnimmt:"6… LE PRENDI!"};
+
     overlay.style.setProperty("--win-accent",theme.accent);
-    document.getElementById("gsSpectatorWinName").textContent=winner.names.length>1?`${winner.names.map(x=>x.toUpperCase()).join(" & ")} VINCONO!`:`${winner.names[0].toUpperCase()} VINCE!`;
+    overlay.dataset.winGame=game;
+
+    document.getElementById("gsSpectatorWinGame").textContent=gameNames[game]||theme.name;
+    document.getElementById("gsSpectatorWinName").textContent=
+      winner.names.length>1
+        ? `${winner.names.map(x=>String(x).toUpperCase()).join(" & ")} VINCONO!`
+        : `${String(winner.names[0]||"").toUpperCase()} VINCE!`;
+
     document.getElementById("gsSpectatorWinScore").textContent=winner.score;
     document.getElementById("gsSpectatorWinUnit").textContent=winner.unit;
-    overlay.classList.remove("hidden","soft-exit");
-    void overlay.offsetWidth; overlay.classList.add("play");
-    try{navigator.vibrate?.([80,40,120,40,160])}catch(e){}
+
+    const history=document.getElementById("gsSpectatorWinHistory");
+    const leader=document.getElementById("gsSpectatorWinLeader");
+    if(hist.wins>0){
+      history.innerHTML=`<span>🏆</span><strong>${gsOrdinalIt(hist.wins)} vittoria in classifica generale</strong>`;
+      leader.textContent=hist.isHistoricalLeader
+        ? `👑 Leader storico · ${hist.wins} ${hist.wins===1?"vittoria":"vittorie"}`
+        : `Hall of Fame · ${hist.wins} ${hist.wins===1?"vittoria":"vittorie"}`;
+    }else{
+      history.innerHTML=`<span>🏆</span><strong>Vittoria registrata nella Hall of Fame</strong>`;
+      leader.textContent="";
+    }
+
+    // Piccolo ritardo: lascia finire l'aggiornamento del totale/classifica
+    // prima di occupare tutto lo schermo con la celebrazione.
     clearTimeout(spectatorWinTimer);
-    spectatorWinTimer=setTimeout(()=>{overlay.classList.add("soft-exit");setTimeout(()=>overlay.classList.add("hidden"),550)},7500);
+    spectatorWinTimer=setTimeout(()=>{
+      overlay.classList.remove("hidden","soft-exit");
+      void overlay.offsetWidth;
+      overlay.classList.add("play");
+      try{navigator.vibrate?.([100,50,140,50,190])}catch(e){}
+
+      // Finale più importante: resta visibile 10 secondi.
+      spectatorWinTimer=setTimeout(()=>{
+        overlay.classList.add("soft-exit");
+        setTimeout(()=>{
+          overlay.classList.add("hidden");
+          overlay.classList.remove("play","soft-exit");
+        },700);
+      },10000);
+    },1850);
   }
   function gsSpectatorCloseHall(){document.getElementById("gsSpectatorHallModal")?.classList.add("hidden")}
-  function gsSpectatorCloseWin(){clearTimeout(spectatorWinTimer);document.getElementById("gsSpectatorWinOverlay")?.classList.add("hidden")}
+  function gsSpectatorCloseWin(){
+    clearTimeout(spectatorWinTimer);
+    const el=document.getElementById("gsSpectatorWinOverlay");
+    el?.classList.add("hidden");
+    el?.classList.remove("play","soft-exit");
+  }
 
 
   // V91 — sequenza ospite del nuovo round:

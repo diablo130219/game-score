@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#080816">
-<meta name="game-score-version" content="91">
+<meta name="game-score-version" content="92">
 <title>Flip 7 Score</title>
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="styles.css?v=91">
+<link rel="stylesheet" href="styles.css?v=92">
 </head>
 <body>
 
@@ -1126,14 +1126,30 @@
     <div class="gs-spectator-confetti">
       <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
     </div>
-    <div class="gs-spectator-win-card">
-      <button id="gsSpectatorWinClose" class="gs-spectator-win-close" type="button">×</button>
-      <div class="gs-spectator-win-rays"></div>
-      <div class="gs-spectator-win-trophy">🏆</div>
-      <div class="gs-spectator-win-kicker">FINE PARTITA</div>
-      <h2 id="gsSpectatorWinName">VINCE!</h2>
-      <div class="gs-spectator-win-score"><strong id="gsSpectatorWinScore">0</strong><span id="gsSpectatorWinUnit">PUNTI</span></div>
-      <div class="gs-spectator-win-message">🎉 Complimenti al vincitore!</div>
+    <div class="gs-spectator-win-stage">
+      <div id="gsSpectatorWinGame" class="gs-spectator-win-game">GAME SCORE</div>
+      <div class="gs-spectator-win-card">
+        <button id="gsSpectatorWinClose" class="gs-spectator-win-close" type="button">×</button>
+        <div class="gs-spectator-win-rays"></div>
+        <div class="gs-spectator-win-starburst" aria-hidden="true"></div>
+        <div class="gs-spectator-win-champion">CAMPIONE DELLA PARTITA</div>
+        <div class="gs-spectator-win-trophy-wrap">
+          <div class="gs-spectator-win-trophy-glow"></div>
+          <div class="gs-spectator-win-trophy">🏆</div>
+        </div>
+        <div class="gs-spectator-win-kicker">FINE PARTITA</div>
+        <h2 id="gsSpectatorWinName">VINCE!</h2>
+        <div class="gs-spectator-win-score">
+          <strong id="gsSpectatorWinScore">0</strong>
+          <span id="gsSpectatorWinUnit">PUNTI</span>
+        </div>
+        <div id="gsSpectatorWinHistory" class="gs-spectator-win-history">
+          <span>🏆</span>
+          <strong>Vittoria in classifica generale</strong>
+        </div>
+        <div id="gsSpectatorWinLeader" class="gs-spectator-win-leader"></div>
+        <div class="gs-spectator-win-message">🎉 Complimenti!</div>
+      </div>
     </div>
   </div>
 
@@ -1146,7 +1162,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="online-config.js?v=91"></script>
-<script src="app.js?v=91"></script>
+<script src="online-config.js?v=92"></script>
+<script src="app.js?v=92"></script>
 </body>
 </html>

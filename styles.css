@@ -10271,3 +10271,324 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     transform:translateY(-50%) scale(1);
   }
 }
+
+
+/* =========================================================
+   V92 — FINE PARTITA CINEMATOGRAFICA / HALL OF FAME
+   ========================================================= */
+
+.gs-spectator-win{
+  --win-accent:#a84cff;
+  position:fixed;
+  inset:0;
+  z-index:30000 !important;
+  padding:18px;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  background:#04050d;
+  isolation:isolate;
+}
+
+/* Specific game atmosphere */
+.gs-spectator-win:before{
+  content:"";
+  position:absolute;
+  inset:-3%;
+  z-index:-4;
+  background-position:center;
+  background-size:cover;
+  filter:saturate(1.2) brightness(.72);
+  transform:scale(1.04);
+}
+.gs-spectator-win[data-win-game="flip7"]:before{
+  background-image:
+    linear-gradient(180deg,rgba(42,4,92,.22),rgba(4,4,15,.65)),
+    url("assets/home-flip7-approved.jpg");
+}
+.gs-spectator-win[data-win-game="seasalt"]:before{
+  background-image:
+    linear-gradient(180deg,rgba(0,62,86,.14),rgba(2,9,19,.64)),
+    url("assets/home-seasalt-approved.jpg");
+}
+.gs-spectator-win[data-win-game="sixnimmt"]:before{
+  background-image:
+    linear-gradient(180deg,rgba(119,42,0,.15),rgba(14,6,4,.68)),
+    url("assets/home-sixnimmt-approved.jpg");
+}
+.gs-spectator-win:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-3;
+  background:
+    radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--win-accent) 35%,transparent),transparent 28%),
+    radial-gradient(circle at 50% 50%,transparent 10%,rgba(2,3,11,.48) 55%,rgba(2,3,11,.93) 100%);
+  backdrop-filter:blur(2px);
+}
+
+.gs-spectator-win-stage{
+  position:relative;
+  width:min(600px,95vw);
+  z-index:5;
+  display:grid;
+  justify-items:center;
+  gap:10px;
+}
+.gs-spectator-win-game{
+  position:relative;
+  z-index:7;
+  padding:7px 15px;
+  border:1px solid color-mix(in srgb,var(--win-accent) 55%,white 15%);
+  border-radius:999px;
+  background:rgba(4,6,15,.68);
+  color:#fff;
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:.16em;
+  box-shadow:0 8px 25px rgba(0,0,0,.3);
+  backdrop-filter:blur(10px);
+}
+
+.gs-spectator-win-card{
+  position:relative;
+  isolation:isolate;
+  width:100%;
+  min-height:520px;
+  padding:40px 28px 30px !important;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  text-align:center;
+  border:2px solid color-mix(in srgb,var(--win-accent) 68%,#fff 32%) !important;
+  border-radius:34px !important;
+  background:
+    radial-gradient(circle at 50% 22%,rgba(255,255,255,.13),transparent 22%),
+    linear-gradient(180deg,
+      color-mix(in srgb,var(--win-accent) 16%,rgba(14,15,31,.96)),
+      rgba(5,7,16,.97) 62%) !important;
+  box-shadow:
+    0 45px 110px rgba(0,0,0,.68),
+    0 0 58px color-mix(in srgb,var(--win-accent) 38%,transparent),
+    inset 0 1px 0 rgba(255,255,255,.14) !important;
+}
+.gs-spectator-win.play .gs-spectator-win-card{
+  animation:gsV92FinalEntrance 1.15s cubic-bezier(.16,.82,.22,1.16) both !important;
+}
+
+.gs-spectator-win-starburst{
+  position:absolute;
+  z-index:-2;
+  left:50%;
+  top:35%;
+  width:700px;
+  height:700px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      color-mix(in srgb,var(--win-accent) 30%,transparent) 0deg 2deg,
+      transparent 2deg 11deg
+    );
+  opacity:.42;
+}
+.gs-spectator-win.play .gs-spectator-win-starburst{
+  animation:gsV92FinalSpin 20s linear infinite;
+}
+
+.gs-spectator-win-champion{
+  position:absolute;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:6px 14px;
+  border-radius:999px;
+  background:linear-gradient(180deg,#ffe870,#eeb700);
+  color:#171006;
+  font-size:7px;
+  font-weight:1000;
+  letter-spacing:.14em;
+  box-shadow:0 5px 18px rgba(255,205,23,.20);
+}
+
+.gs-spectator-win-trophy-wrap{
+  position:relative;
+  width:170px;
+  height:150px;
+  display:grid;
+  place-items:center;
+  margin-bottom:5px;
+}
+.gs-spectator-win-trophy-glow{
+  position:absolute;
+  inset:12px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,219,57,.48),rgba(255,182,0,.10) 46%,transparent 72%);
+  filter:blur(8px);
+}
+.gs-spectator-win-trophy{
+  position:relative;
+  z-index:2;
+  font-size:112px !important;
+  line-height:1 !important;
+  filter:
+    drop-shadow(0 10px 4px rgba(0,0,0,.35))
+    drop-shadow(0 0 24px rgba(255,210,31,.70)) !important;
+}
+.gs-spectator-win.play .gs-spectator-win-trophy{
+  animation:gsV92TrophyHero 1.5s .18s cubic-bezier(.16,.8,.22,1.15) both !important;
+}
+
+.gs-spectator-win-kicker{
+  margin-top:4px !important;
+  color:#ffd21a !important;
+  font-size:9px !important;
+  letter-spacing:.22em !important;
+}
+.gs-spectator-win-card h2{
+  max-width:94%;
+  margin:8px 0 8px !important;
+  color:#fff !important;
+  font-size:clamp(38px,9vw,60px) !important;
+  line-height:.92 !important;
+  letter-spacing:-.045em;
+  text-shadow:
+    0 5px 0 rgba(0,0,0,.28),
+    0 0 25px color-mix(in srgb,var(--win-accent) 52%,transparent) !important;
+}
+.gs-spectator-win-score{
+  margin:12px 0 0 !important;
+  padding:10px 20px 8px;
+  border-top:1px solid rgba(255,255,255,.08);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.gs-spectator-win-score strong{
+  color:#fff !important;
+  font-size:72px !important;
+  text-shadow:
+    0 0 18px color-mix(in srgb,var(--win-accent) 60%,transparent),
+    0 5px 0 rgba(0,0,0,.2) !important;
+}
+.gs-spectator-win-score span{
+  color:#bdbbc5 !important;
+  font-size:9px !important;
+}
+
+.gs-spectator-win-history{
+  margin-top:18px;
+  min-height:48px;
+  padding:10px 17px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  border:1px solid rgba(255,210,10,.28);
+  border-radius:16px;
+  background:
+    linear-gradient(90deg,rgba(255,210,10,.07),rgba(255,255,255,.035),rgba(255,210,10,.07));
+  color:#fff;
+  box-shadow:0 0 18px rgba(255,210,10,.06);
+}
+.gs-spectator-win-history span{font-size:21px}
+.gs-spectator-win-history strong{
+  color:#ffe55b;
+  font-size:13px;
+  font-weight:1000;
+}
+.gs-spectator-win-leader{
+  min-height:16px;
+  margin-top:8px;
+  color:#b8b6c2;
+  font-size:9px;
+  font-weight:850;
+  letter-spacing:.04em;
+}
+.gs-spectator-win-message{
+  margin-top:15px !important;
+  padding:7px 13px !important;
+  font-size:9px !important;
+  opacity:.85;
+}
+
+.gs-spectator-win-close{
+  z-index:50 !important;
+}
+
+/* More confetti energy */
+.gs-spectator-win.play .gs-spectator-confetti i{
+  animation-duration:4.5s !important;
+}
+.gs-spectator-confetti i:nth-child(5n){width:13px;height:13px;border-radius:50%}
+.gs-spectator-confetti i:nth-child(3n){filter:drop-shadow(0 0 5px currentColor)}
+
+@keyframes gsV92FinalEntrance{
+  0%{opacity:0;transform:translateY(34px) scale(.77)}
+  62%{opacity:1;transform:translateY(-5px) scale(1.025)}
+  100%{opacity:1;transform:none}
+}
+@keyframes gsV92TrophyHero{
+  0%{opacity:0;transform:translateY(22px) scale(.28) rotate(-15deg)}
+  52%{opacity:1;transform:translateY(-8px) scale(1.17) rotate(5deg)}
+  72%{transform:translateY(2px) scale(.95) rotate(-2deg)}
+  100%{transform:none}
+}
+@keyframes gsV92FinalSpin{
+  to{transform:translate(-50%,-50%) rotate(360deg)}
+}
+
+@media(max-width:700px){
+  .gs-spectator-win{
+    padding:12px;
+  }
+  .gs-spectator-win-stage{
+    width:min(470px,96vw);
+  }
+  .gs-spectator-win-card{
+    min-height:500px;
+    padding:35px 15px 25px !important;
+    border-radius:27px !important;
+  }
+  .gs-spectator-win-game{
+    font-size:7px;
+    padding:5px 10px;
+  }
+  .gs-spectator-win-trophy-wrap{
+    width:135px;
+    height:120px;
+  }
+  .gs-spectator-win-trophy{
+    font-size:88px !important;
+  }
+  .gs-spectator-win-card h2{
+    max-width:98%;
+    font-size:clamp(35px,10.5vw,48px) !important;
+  }
+  .gs-spectator-win-score strong{
+    font-size:59px !important;
+  }
+  .gs-spectator-win-history{
+    max-width:92%;
+    min-height:42px;
+    padding:8px 12px;
+  }
+  .gs-spectator-win-history strong{font-size:11px}
+  .gs-spectator-win-history span{font-size:18px}
+}
+
+@media(max-height:700px) and (max-width:700px){
+  .gs-spectator-win-card{
+    min-height:440px;
+    padding-top:28px !important;
+  }
+  .gs-spectator-win-trophy-wrap{
+    width:105px;
+    height:90px;
+  }
+  .gs-spectator-win-trophy{font-size:70px !important}
+  .gs-spectator-win-card h2{font-size:33px !important}
+  .gs-spectator-win-score strong{font-size:48px !important}
+  .gs-spectator-win-history{margin-top:10px}
+}
