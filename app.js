@@ -1304,7 +1304,7 @@ function six39Render(){
 
       <div class="six45-score-side">
         <div class="six45-total">${p.total}</div>
-        <div class="six45-threshold">${p.total>66?"OLTRE 66":`Mancano ${67-p.total}`}</div>
+        <div class="six45-threshold">${p.total>66?"OLTRE 66":p.total===66?"SOGLIA RAGGIUNTA":`Mancano ${66-p.total}`}</div>
       </div>
     </article>`;
   }).join("");
@@ -2147,7 +2147,7 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
       ranking.innerHTML=order.map((p,pos)=>{
         const c=colors[p.i%colors.length];
         const status=statusFor(pos);
-        const remaining=Math.max(0,67-p.total);
+        const remaining=Math.max(0,66-p.total);
         const art=arts[p.i%arts.length];
         const cardNo=String(p.i+1).padStart(2,"0");
         return `<article class="gs-premium-player gs-six-live-card" style="--pc:${c}">
@@ -2165,7 +2165,7 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
           </div>
           <div class="gs-live-score">
             <strong>${p.total}</strong>
-            <span>${p.total>66?"OLTRE 66":`Mancano <b>${remaining}</b>`}</span>
+            <span>${p.total>66?"OLTRE 66":p.total===66?"SOGLIA RAGGIUNTA":`Mancano <b>${remaining}</b>`}</span>
           </div>
         </article>`;
       }).join("");
