@@ -10030,3 +10030,150 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
   0%,100%{transform:translateY(0) rotate(-1deg)}
   50%{transform:translateY(-2px) rotate(1deg)}
 }
+
+
+/* =========================================================
+   V90 — TROFEO GENERALE ELEGANTE + VITTORIE LEADER STORICO
+   ========================================================= */
+
+/* Shared visual language */
+.gs-trophy-smart{
+  position:relative !important;
+  overflow:visible !important;
+  isolation:isolate;
+  border-color:rgba(255,210,10,.34) !important;
+  background:
+    linear-gradient(145deg,rgba(22,18,38,.92),rgba(8,10,23,.94)) !important;
+  box-shadow:
+    0 10px 28px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 0 0 1px rgba(255,210,10,.045) !important;
+  backdrop-filter:blur(12px);
+  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease !important;
+}
+.gs-trophy-smart:active{
+  transform:scale(.96) !important;
+}
+.gs-trophy-smart.has-history{
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.32),
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 0 18px rgba(255,210,10,.10) !important;
+}
+.gs-trophy-smart-icon{
+  filter:drop-shadow(0 0 7px rgba(255,210,10,.32));
+}
+
+/* Small wins counter next to / over trophy */
+.gs-trophy-smart-count{
+  position:absolute;
+  z-index:20;
+  top:7px;
+  right:7px;
+  min-width:22px;
+  height:22px;
+  padding:0 6px;
+  display:grid;
+  place-items:center;
+  box-sizing:border-box;
+  border:1px solid rgba(255,238,141,.72);
+  border-radius:999px;
+  background:linear-gradient(180deg,#ffe66b,#f2b900);
+  color:#15100a;
+  font-size:10px;
+  line-height:1;
+  font-weight:1000;
+  letter-spacing:-.02em;
+  box-shadow:
+    0 3px 10px rgba(0,0,0,.35),
+    0 0 12px rgba(255,210,10,.20);
+}
+.gs-trophy-smart-count.is-zero{
+  background:rgba(19,20,33,.92);
+  border-color:rgba(255,255,255,.16);
+  color:#8d8f9d;
+  box-shadow:none;
+}
+
+/* HOME trophy */
+.home-trophy.gs-trophy-smart{
+  width:82px !important;
+  min-width:82px;
+  height:66px !important;
+  border-radius:20px !important;
+  display:grid !important;
+  grid-template-columns:1fr;
+  justify-items:center;
+  align-content:center;
+  gap:2px;
+}
+.home-trophy.gs-trophy-smart .gs-trophy-smart-icon{
+  font-size:26px;
+  line-height:1;
+}
+.home-trophy.gs-trophy-smart small{
+  font-size:6px !important;
+  letter-spacing:.09em !important;
+  color:#f4f0e9 !important;
+}
+
+/* Host game corners */
+.corner.gs-trophy-smart,
+.sea-corner.gs-trophy-smart,
+.six39-corner.gs-trophy-smart{
+  overflow:visible !important;
+}
+.corner.gs-trophy-smart .gs-trophy-smart-count,
+.sea-corner.gs-trophy-smart .gs-trophy-smart-count,
+.six39-corner.gs-trophy-smart .gs-trophy-smart-count{
+  top:6px;
+  right:6px;
+}
+
+/* Spectator: compact and elegant */
+.gs-spectator-hall-btn.gs-trophy-smart{
+  min-width:66px !important;
+  min-height:58px !important;
+  border-radius:18px !important;
+}
+.gs-spectator-hall-btn.gs-trophy-smart .gs-trophy-smart-icon{
+  font-size:24px !important;
+}
+.gs-spectator-hall-btn.gs-trophy-smart small{
+  font-size:6px !important;
+  letter-spacing:.12em !important;
+}
+.gs-spectator-hall-btn.gs-trophy-smart .gs-trophy-smart-count{
+  top:5px;
+  right:5px;
+  min-width:20px;
+  height:20px;
+  font-size:9px;
+}
+
+/* Gentle emphasis only when there is historical data */
+.gs-trophy-smart.has-history .gs-trophy-smart-icon{
+  animation:gsTrophyBreath 4.8s ease-in-out infinite;
+}
+@keyframes gsTrophyBreath{
+  0%,100%{filter:drop-shadow(0 0 5px rgba(255,210,10,.22));transform:translateY(0)}
+  50%{filter:drop-shadow(0 0 10px rgba(255,210,10,.40));transform:translateY(-1px)}
+}
+
+@media(max-width:700px){
+  .home-trophy.gs-trophy-smart{
+    width:70px !important;
+    min-width:70px;
+    height:60px !important;
+    border-radius:18px !important;
+  }
+  .home-trophy.gs-trophy-smart .gs-trophy-smart-icon{font-size:23px}
+  .gs-trophy-smart-count{
+    top:5px;
+    right:5px;
+    min-width:20px;
+    height:20px;
+    padding:0 5px;
+    font-size:9px;
+  }
+}

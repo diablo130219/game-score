@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#080816">
-<meta name="game-score-version" content="89">
+<meta name="game-score-version" content="90">
 <title>Flip 7 Score</title>
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="styles.css?v=89">
+<link rel="stylesheet" href="styles.css?v=90">
 </head>
 <body>
 
@@ -24,8 +24,10 @@
       <div class="brand-title">GAME <span>SCORE</span></div>
       <div class="brand-tagline">IL TUO SEGNAPUNTI DA TAVOLO</div>
     </div>
-    <button id="homeHallBtn" class="home-trophy" aria-label="Trofei Flip 7">
-      <span>🏆</span><small>TROFEI</small>
+    <button id="homeHallBtn" class="home-trophy gs-trophy-smart" aria-label="Hall of Fame generale">
+      <span class="gs-trophy-smart-icon">🏆</span>
+      <span id="homeHallLeaderWins" class="gs-trophy-smart-count" aria-label="Vittorie leader storico">0</span>
+      <small>HALL OF FAME</small>
     </button>
   </div>
 
@@ -130,9 +132,10 @@
         <span class="six39-top-icon">🎴</span>
         <span class="six39-top-label">GIOCHI</span>
       </button>
-      <button id="six39HallBtn" class="six39-corner right">
-        <span class="six39-top-icon">🏆</span>
-        <span class="six39-top-label">TROFEI</span>
+      <button id="six39HallBtn" class="six39-corner right gs-trophy-smart">
+        <span class="six39-top-icon gs-trophy-smart-icon">🏆</span>
+        <span id="six39HallLeaderWins" class="gs-trophy-smart-count">0</span>
+        <span class="six39-top-label">HALL</span>
       </button>
     </header>
 
@@ -485,9 +488,10 @@
         <span class="sea-top-icon">🎴</span>
         <span class="sea-top-label">GIOCHI</span>
       </button>
-      <button id="seaTrophyBtn" class="sea-corner right" aria-label="Trofei">
-        <span class="sea-top-icon">🏆</span>
-        <span class="sea-top-label">TROFEI</span>
+      <button id="seaTrophyBtn" class="sea-corner right gs-trophy-smart" aria-label="Hall of Fame">
+        <span class="sea-top-icon gs-trophy-smart-icon">🏆</span>
+        <span id="seaHallLeaderWins" class="gs-trophy-smart-count">0</span>
+        <span class="sea-top-label">HALL</span>
       </button>
     </header>
 
@@ -657,9 +661,10 @@
       <span class="top-icon">♠</span>
       <span class="top-label">GIOCHI</span>
     </button>
-    <button id="hallBtn" class="corner right top-hall-btn" aria-label="Classifica generale">
-      <span class="top-icon">🏆</span>
-      <span class="top-label">TROFEI</span>
+    <button id="hallBtn" class="corner right top-hall-btn gs-trophy-smart" aria-label="Hall of Fame">
+      <span class="top-icon gs-trophy-smart-icon">🏆</span>
+      <span id="flipHallLeaderWins" class="gs-trophy-smart-count">0</span>
+      <span class="top-label">HALL</span>
     </button>
   </header>
 
@@ -1074,8 +1079,10 @@
         <small>IL TUO SEGNAPUNTI DA TAVOLO</small>
       </div>
     </div>
-    <button id="gsSpectatorHallBtn" class="gs-spectator-hall-btn" type="button" aria-label="Classifica generale">
-      <span>🏆</span><small>TROFEI</small>
+    <button id="gsSpectatorHallBtn" class="gs-spectator-hall-btn gs-trophy-smart" type="button" aria-label="Hall of Fame">
+      <span class="gs-trophy-smart-icon">🏆</span>
+      <span id="gsSpectatorHallLeaderWins" class="gs-trophy-smart-count">0</span>
+      <small>HALL</small>
     </button>
     <div class="gs-live-pill"><i></i> LIVE</div>
     <div class="gs-spectator-brand">GAME SCORE</div>
@@ -1139,7 +1146,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="online-config.js?v=89"></script>
-<script src="app.js?v=89"></script>
+<script src="online-config.js?v=90"></script>
+<script src="app.js?v=90"></script>
 </body>
 </html>

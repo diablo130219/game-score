@@ -124,13 +124,67 @@ function load(){
   state=gsRobustLoad(KEY,state);
   if(state.resultRecorded===undefined)state.resultRecorded=false;
 }
+
+/* =========================================================
+   V90 — TROFEO GENERALE CON VITTORIE DEL LEADER STORICO
+   ========================================================= */
+function gsHallMaxWinsFromPlayers(players){
+  if(!players)return 0;
+  const list=Array.isArray(players)?players:Object.values(players);
+  return list.reduce((max,p)=>Math.max(max,Number(p?.wins||0)),0);
+}
+
+function gsGlobalHistoricalLeaderWins(){
+  // "Generale" = somma le vittorie della stessa persona nei tre giochi.
+  // In questo modo il numero sulla Home rappresenta davvero il leader
+  // storico di tutto GAME SCORE, non di un singolo gioco.
+  const totals={};
+  const add=(players)=>{
+    const list=Array.isArray(players)?players:Object.values(players||{});
+    list.forEach(p=>{
+      const name=String(p?.name||"").trim();
+      if(!name)return;
+      const key=name.toLocaleLowerCase("it");
+      totals[key]=(totals[key]||0)+Number(p?.wins||0);
+    });
+  };
+  try{ add(loadHall()?.players); }catch(e){}
+  try{ add(seaHallLoad()?.players); }catch(e){}
+  try{ add(six39HallLoad()?.players); }catch(e){}
+  return Object.values(totals).reduce((m,v)=>Math.max(m,Number(v||0)),0);
+}
+
+function gsSetTrophyCount(id,value){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const n=Math.max(0,Number(value||0));
+  el.textContent=String(n);
+  el.classList.toggle("is-zero",n===0);
+  el.parentElement?.classList.toggle("has-history",n>0);
+}
+
+function gsUpdateHistoricalTrophyButtons(){
+  try{
+    gsSetTrophyCount("flipHallLeaderWins",gsHallMaxWinsFromPlayers(loadHall()?.players));
+  }catch(e){}
+  try{
+    gsSetTrophyCount("seaHallLeaderWins",gsHallMaxWinsFromPlayers(seaHallLoad()?.players));
+  }catch(e){}
+  try{
+    gsSetTrophyCount("six39HallLeaderWins",gsHallMaxWinsFromPlayers(six39HallLoad()?.players));
+  }catch(e){}
+  try{
+    gsSetTrophyCount("homeHallLeaderWins",gsGlobalHistoricalLeaderWins());
+  }catch(e){}
+}
+
 function loadHall(){
   try{
     const raw=localStorage.getItem(HALL_KEY);
     return raw?JSON.parse(raw):{players:{},totalGames:0};
   }catch(e){return {players:{},totalGames:0}}
 }
-function saveHall(h){localStorage.setItem(HALL_KEY,JSON.stringify(h))}
+function saveHall(h){localStorage.setItem(HALL_KEY,JSON.stringify(h));setTimeout(gsUpdateHistoricalTrophyButtons,0)}
 function totals(){return state.players.map((_,i)=>state.rounds.reduce((a,r)=>a+(Number(r[i])||0),0))}
 function lastRound(){return state.rounds.length?state.rounds[state.rounds.length-1]:state.players.map(()=>0)}
 
@@ -736,6 +790,7 @@ function openPlayerProfile(playerKey){
 }
 
 function renderHall(){
+  setTimeout(gsUpdateHistoricalTrophyButtons,0);
   const hall=loadHall();
   const rows=Object.entries(hall.players||{})
     .map(([key,p])=>({
@@ -936,7 +991,7 @@ function seaSave(){gsRobustSave(SEA_KEY,seaState,"seasalt",!!seaState.players.le
 function seaTotals(){return seaState.players.map((_,i)=>seaState.rounds.reduce((s,r)=>s+(Number(r[i])||0),0))}
 function seaTargetFor(n){return n===2?40:n===3?35:30}
 function seaHallLoad(){try{return JSON.parse(localStorage.getItem(SEA_HALL_KEY))||{games:0,players:{}}}catch(e){return{games:0,players:{}}}}
-function seaHallSave(h){localStorage.setItem(SEA_HALL_KEY,JSON.stringify(h))}
+function seaHallSave(h){localStorage.setItem(SEA_HALL_KEY,JSON.stringify(h));setTimeout(gsUpdateHistoricalTrophyButtons,0)}
 function seaKey(n){return n.trim().toLocaleLowerCase("it")}
 
 function seaShow(){
@@ -1145,6 +1200,7 @@ function seaRenderHistory(){
 }
 function seaDeleteRound(i){if(seaState.finished)return alert("La partita è già conclusa.");if(confirm(`Eliminare Round ${i+1}?`)){seaState.rounds.splice(i,1);seaSave();seaRender();seaRenderHistory()}}
 function seaRenderHall(){
+  setTimeout(gsUpdateHistoricalTrophyButtons,0);
   const h=seaHallLoad();
   const rows=Object.values(h.players||{})
     .map(p=>({...p,rate:p.games?((p.wins||0)/p.games*100):0}))
@@ -1248,7 +1304,7 @@ function six39Load(){six39State=gsRobustLoad(SIX39_KEY,six39State)}
 function six39Save(){gsRobustSave(SIX39_KEY,six39State,"sixnimmt",!!six39State.players.length && !six39State.finished)}
 function six39Totals(){return six39State.players.map((_,i)=>six39State.rounds.reduce((s,r)=>s+(Number(r[i])||0),0))}
 function six39HallLoad(){try{return JSON.parse(localStorage.getItem(SIX39_HALL)||'{"games":0,"players":{}}')}catch(e){return{games:0,players:{}}}}
-function six39HallSave(h){localStorage.setItem(SIX39_HALL,JSON.stringify(h))}
+function six39HallSave(h){localStorage.setItem(SIX39_HALL,JSON.stringify(h));setTimeout(gsUpdateHistoricalTrophyButtons,0)}
 
 function six39Show(){
   $("#homeScreen").classList.add("hidden");
@@ -1451,6 +1507,7 @@ function six39RecordWin(){
   six39HallSave(hall);six39State.recorded=true;six39Save();
 }
 function six39RenderHall(){
+  setTimeout(gsUpdateHistoricalTrophyButtons,0);
   const h=six39HallLoad(),rows=Object.values(h.players||{}).map(p=>({...p,rate:p.games?((p.wins||0)/p.games*100):0}))
     .sort((a,b)=>(b.wins||0)-(a.wins||0)||b.rate-a.rate||(b.games||0)-(a.games||0)||a.name.localeCompare(b.name,"it"));
   $("#six39HallSummary").innerHTML=`
@@ -2296,6 +2353,7 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     spectatorHallState={game,hall:hall||{games:0,players:[]}};
     const theme=spectatorTheme(game);
     const players=Array.isArray(hall?.players)?hall.players:[];
+    gsSetTrophyCount("gsSpectatorHallLeaderWins",gsHallMaxWinsFromPlayers(players));
     document.getElementById("gsSpectatorHallTitle").textContent=`Classifica generale · ${theme.name}`;
     document.getElementById("gsSpectatorHallSubtitle").textContent="Vittorie accumulate nel tempo dal gruppo";
     document.getElementById("gsSpectatorHallSummary").innerHTML=`
@@ -2708,3 +2766,8 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
   document.addEventListener("click",()=>setTimeout(gsV76TitleFix,40),true);
   setInterval(gsV76TitleFix,1200);
 })();
+
+
+/* V90 — prima sincronizzazione dei contatori Trofeo */
+setTimeout(()=>{try{gsUpdateHistoricalTrophyButtons()}catch(e){}},120);
+window.addEventListener("pageshow",()=>setTimeout(()=>{try{gsUpdateHistoricalTrophyButtons()}catch(e){}},80));
