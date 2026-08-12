@@ -2307,3 +2307,16 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
   window.addEventListener('load',gsVisualGameHook);
   setInterval(gsVisualGameHook,1200);
 })();
+
+/* V76 visual-only spectator title helper */
+(function(){
+  function gsV76TitleFix(){
+    const el=document.getElementById("gsSpectatorGameTitle") ||
+             document.querySelector(".gs-spectator-game-title");
+    if(!el)return;
+    el.classList.toggle("gs-title-has-seven",/\b7\b/.test(el.textContent||""));
+  }
+  window.addEventListener("load",gsV76TitleFix);
+  document.addEventListener("click",()=>setTimeout(gsV76TitleFix,40),true);
+  setInterval(gsV76TitleFix,1200);
+})();

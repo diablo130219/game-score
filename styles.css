@@ -8835,3 +8835,268 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
 .gs-spectator-win{
   z-index:21000 !important;
 }
+
+
+/* =========================================================
+   V76 — TESTATA OSPITI WOW
+   Logo del gioco protagonista; GAME SCORE diventa una firma.
+   Solo schermata spettatore. Logica e pannelli invariati.
+   ========================================================= */
+
+.gs-spectator .gs-spectator-hero{
+  position:relative !important;
+  min-height:350px !important;
+  padding:18px 18px 34px !important;
+  overflow:hidden !important;
+  isolation:isolate;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+/* GAME SCORE: firma discreta */
+.gs-spectator .gs-spectator-logo{
+  top:16px !important;
+  left:18px !important;
+  width:138px !important;
+  max-width:138px !important;
+  opacity:.82 !important;
+  filter:drop-shadow(0 4px 10px rgba(0,0,0,.45));
+}
+.gs-spectator .gs-spectator-logo img{
+  width:100% !important;
+  max-width:138px !important;
+  max-height:44px !important;
+  object-fit:contain !important;
+}
+
+/* LIVE: piccolo ma leggibile */
+.gs-spectator .gs-live-pill{
+  position:absolute !important;
+  top:22px !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  z-index:20 !important;
+  margin:0 !important;
+  padding:7px 14px !important;
+  border:1px solid rgba(255,255,255,.16) !important;
+  background:rgba(4,7,16,.64) !important;
+  box-shadow:0 8px 24px rgba(0,0,0,.25) !important;
+  backdrop-filter:blur(10px);
+}
+
+/* GAME SCORE testuale non deve competere con il gioco */
+.gs-spectator .gs-spectator-brand{
+  position:absolute !important;
+  top:72px !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  z-index:8 !important;
+  margin:0 !important;
+  color:rgba(255,255,255,.55) !important;
+  font-size:9px !important;
+  font-weight:900 !important;
+  letter-spacing:.24em !important;
+  text-transform:uppercase;
+}
+
+/* Titolo/logo gioco: vero protagonista */
+.gs-spectator .gs-spectator-game-title{
+  position:relative !important;
+  z-index:12 !important;
+  width:min(780px,82vw) !important;
+  margin:105px auto 0 !important;
+  text-align:center !important;
+  font-size:clamp(48px,7.4vw,92px) !important;
+  line-height:.88 !important;
+  font-weight:1000 !important;
+  letter-spacing:-.055em !important;
+  text-transform:uppercase !important;
+  color:#fff !important;
+  text-shadow:
+    0 6px 0 rgba(0,0,0,.25),
+    0 14px 30px rgba(0,0,0,.38);
+}
+.gs-spectator .gs-spectator-meta{
+  position:relative !important;
+  z-index:12 !important;
+  margin:18px auto 0 !important;
+  padding:7px 14px !important;
+  width:max-content !important;
+  max-width:90vw !important;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:999px;
+  color:rgba(255,255,255,.78) !important;
+  background:rgba(4,7,16,.42);
+  backdrop-filter:blur(9px);
+  font-size:10px !important;
+}
+
+/* Trofei resta ben visibile */
+.gs-spectator .gs-spectator-hall-btn{
+  top:15px !important;
+  right:18px !important;
+  z-index:30 !important;
+  box-shadow:
+    0 10px 28px rgba(0,0,0,.35),
+    0 0 18px rgba(255,210,10,.12) !important;
+}
+
+/* ---------- SEA SALT & PAPER ---------- */
+.gs-spectator[data-spectator-game="seasalt"] .gs-spectator-hero{
+  background:
+    radial-gradient(ellipse at 50% 12%,rgba(116,244,240,.22),transparent 30%),
+    linear-gradient(180deg,rgba(0,78,112,.13),rgba(1,15,31,.50)) !important;
+}
+.gs-spectator[data-spectator-game="seasalt"] .gs-spectator-hero::before{
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:-40px -10%;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse at 12% 62%,rgba(61,220,222,.22),transparent 20%),
+    radial-gradient(ellipse at 87% 42%,rgba(78,207,231,.18),transparent 22%),
+    repeating-radial-gradient(ellipse at 50% 110%,transparent 0 34px,rgba(122,244,241,.10) 35px 37px,transparent 38px 62px);
+  filter:blur(.2px);
+}
+.gs-spectator[data-spectator-game="seasalt"] .gs-spectator-game-title{
+  color:#eaffff !important;
+  text-shadow:
+    0 5px 0 rgba(0,59,79,.72),
+    0 0 18px rgba(90,239,235,.52),
+    0 15px 30px rgba(0,0,0,.35) !important;
+}
+.gs-spectator[data-spectator-game="seasalt"] .gs-spectator-game-title::after{
+  content:"✦  ◇  ✦";
+  display:block;
+  margin-top:16px;
+  color:#75eee9;
+  font-size:18px;
+  letter-spacing:.55em;
+  text-shadow:0 0 13px rgba(78,238,233,.75);
+}
+
+/* ---------- FLIP 7 ---------- */
+.gs-spectator[data-spectator-game="flip7"] .gs-spectator-hero{
+  background:
+    radial-gradient(circle at 50% 26%,rgba(175,72,255,.27),transparent 29%),
+    linear-gradient(180deg,rgba(41,6,94,.12),rgba(6,5,24,.52)) !important;
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-spectator-hero::before{
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:-60px -8%;
+  pointer-events:none;
+  opacity:.78;
+  background:
+    linear-gradient(154deg,transparent 43%,rgba(185,55,255,.48) 43.4%,rgba(185,55,255,.48) 44%,transparent 44.5%),
+    linear-gradient(166deg,transparent 57%,rgba(79,89,255,.42) 57.4%,rgba(79,89,255,.42) 58%,transparent 58.5%),
+    linear-gradient(22deg,transparent 69%,rgba(255,199,18,.30) 69.4%,rgba(255,199,18,.30) 70%,transparent 70.5%);
+  filter:drop-shadow(0 0 10px rgba(161,48,255,.35));
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-spectator-game-title{
+  color:#fff !important;
+  font-style:italic;
+  text-shadow:
+    4px 5px 0 #30105e,
+    0 0 18px rgba(176,75,255,.60),
+    0 15px 30px rgba(0,0,0,.42) !important;
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-spectator-game-title::first-letter{
+  color:#ffd31b;
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-spectator-game-title::after{
+  content:"7";
+  display:inline-block;
+  margin-left:10px;
+  color:#ffd21a;
+  font-size:.92em;
+  transform:rotate(4deg);
+  text-shadow:3px 4px 0 #9c5a00,0 0 16px rgba(255,210,26,.45);
+}
+
+/* Avoid duplicate 7 only if title already visually contains it: handled via JS class below */
+.gs-spectator[data-spectator-game="flip7"] .gs-spectator-game-title.gs-title-has-seven::after{
+  content:"";
+  display:none;
+}
+
+/* ---------- 6... LE PRENDI! ---------- */
+.gs-spectator[data-spectator-game="sixnimmt"] .gs-spectator-hero{
+  background:
+    radial-gradient(circle at 50% 25%,rgba(255,173,35,.25),transparent 29%),
+    linear-gradient(180deg,rgba(115,41,0,.13),rgba(30,10,5,.54)) !important;
+}
+.gs-spectator[data-spectator-game="sixnimmt"] .gs-spectator-hero::before{
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:-50px -8%;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 14% 58%,rgba(255,111,0,.20),transparent 18%),
+    radial-gradient(circle at 86% 45%,rgba(255,191,34,.17),transparent 18%),
+    repeating-linear-gradient(162deg,transparent 0 52px,rgba(255,143,16,.07) 53px 55px,transparent 56px 86px);
+}
+.gs-spectator[data-spectator-game="sixnimmt"] .gs-spectator-game-title{
+  color:#fff3d0 !important;
+  text-shadow:
+    0 5px 0 rgba(116,42,0,.75),
+    0 0 18px rgba(255,146,18,.52),
+    0 15px 30px rgba(0,0,0,.38) !important;
+}
+.gs-spectator[data-spectator-game="sixnimmt"] .gs-spectator-game-title::after{
+  content:"🐂";
+  display:block;
+  margin-top:12px;
+  font-size:34px;
+  filter:drop-shadow(0 0 12px rgba(255,153,24,.48));
+}
+
+/* Mobile: spettacolare ma compatta, classifica subito vicina */
+@media(max-width:700px){
+  .gs-spectator .gs-spectator-hero{
+    min-height:278px !important;
+    padding-bottom:22px !important;
+  }
+  .gs-spectator .gs-spectator-logo{
+    top:12px !important;
+    left:10px !important;
+    width:105px !important;
+    max-width:105px !important;
+  }
+  .gs-spectator .gs-spectator-logo img{
+    max-width:105px !important;
+    max-height:36px !important;
+  }
+  .gs-spectator .gs-live-pill{
+    top:15px !important;
+    padding:6px 10px !important;
+    font-size:8px !important;
+  }
+  .gs-spectator .gs-spectator-hall-btn{
+    top:9px !important;
+    right:9px !important;
+  }
+  .gs-spectator .gs-spectator-brand{
+    top:64px !important;
+    font-size:7px !important;
+  }
+  .gs-spectator .gs-spectator-game-title{
+    width:94vw !important;
+    margin-top:94px !important;
+    font-size:clamp(39px,12vw,62px) !important;
+  }
+  .gs-spectator .gs-spectator-meta{
+    margin-top:13px !important;
+    font-size:8px !important;
+  }
+  .gs-spectator[data-spectator-game="seasalt"] .gs-spectator-game-title::after{
+    margin-top:10px;
+    font-size:12px;
+  }
+  .gs-spectator[data-spectator-game="sixnimmt"] .gs-spectator-game-title::after{
+    margin-top:8px;
+    font-size:25px;
+  }
+}
