@@ -1952,14 +1952,18 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     const theme=spectatorTheme(game);
     const app=document.getElementById("gsSpectatorApp");
     app.style.setProperty("--spectator-accent",theme.accent);
+    app.dataset.spectatorGame=game;
     document.getElementById("gsSpectatorGameTitle").textContent=theme.name;
 
     const totals=totalsFor(game,s);
     const round=(s.rounds?.length||0)+1;
+    const target=
+      game==="flip7"?(s.target||200):
+      game==="seasalt"?(s.target||40):67;
+
     document.getElementById("gsSpectatorRound").textContent=round;
     document.getElementById("gsSpectatorGoal").textContent=
-      game==="flip7"?(s.target||200):
-      game==="seasalt"?(s.target||40):"66+";
+      game==="sixnimmt"?"66":target;
     document.getElementById("gsSpectatorMeta").textContent=
       `${s.players?.length||0} giocatori · ${closed?"Partita conclusa":"Aggiornamento in tempo reale"}`;
 
@@ -1967,64 +1971,113 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     if(game==="sixnimmt")order.sort((a,b)=>a.total-b.total||a.i-b.i);
     else order.sort((a,b)=>b.total-a.total||a.i-b.i);
 
+    const last=s.rounds?.length ? s.rounds.at(-1) : Array((s.players||[]).length).fill(0);
+    const allEqual=order.length ? order.every(x=>x.total===order[0].total) : true;
     const ranking=document.getElementById("gsSpectatorRanking");
+    ranking.className=`gs-spectator-ranking gs-premium-live-ranking gs-live-${game}`;
 
-    /* FLIP 7: stessa tessera premium dell'HOST, ma in sola lettura */
+    const colors=["#ffd20a","#a84cff","#159dff","#35d44f","#ff8d19","#28d6c4","#ff304f","#ef4cc8"];
+
+    function statusFor(pos){
+      if(allEqual)return "";
+      if(pos===0)return game==="sixnimmt"?"MIGLIORE":"IN TESTA";
+      if(pos===order.length-1&&order.length>1)return "ULTIMO";
+      return "";
+    }
+
+    function rankBlock(pos,c){
+      return `<div class="gs-live-rank" style="--pc:${c}">
+        <span class="gs-live-crown">${pos===0?"♛":"♕"}</span>
+        <strong>${pos+1}°</strong>
+      </div>`;
+    }
+
     if(game==="flip7"){
-      const lr=s.rounds?.length ? s.rounds.at(-1) : Array((s.players||[]).length).fill(0);
-      const allEqual=order.length ? order.every(x=>x.total===order[0].total) : true;
-
-      ranking.className="gs-spectator-ranking gs-spectator-ranking-flip";
       ranking.innerHTML=order.map((p,pos)=>{
         const t=themes[p.i%themes.length];
-        const c=t.c;
-        const isLeader=pos===0&&!allEqual;
-        const isLast=pos===order.length-1&&order.length>1&&!allEqual;
-        const status=isLeader?"IN TESTA":(isLast?"ULTIMO":"");
-        const missing=Math.max(0,(s.target||200)-p.total);
-
-        return `<article class="gs-view-flip-card ${isLeader?"leader":""}" style="--c:${c}">
-          ${status?`<span class="gs-view-status ${isLast?"last":""}">${status}</span>`:""}
-
-          <div class="gs-view-rank">
-            <span class="gs-view-crown">♛</span>
-            <strong>${pos+1}°</strong>
+        const c=t.c||colors[p.i%colors.length];
+        const status=statusFor(pos);
+        const missing=Math.max(0,target-p.total);
+        return `<article class="gs-premium-player gs-flip-live-card" style="--pc:${c}">
+          ${status?`<span class="gs-live-status">${status}</span>`:""}
+          ${rankBlock(pos,c)}
+          <div class="gs-live-art gs-live-flip-art">
+            <div class="gs-live-card-back back-one"></div>
+            <div class="gs-live-card-back back-two"></div>
+            <div class="gs-live-card-front">${cardMarkup(p.i)}</div>
           </div>
-
-          <div class="gs-view-card-stage">
-            <div class="gs-view-card-back back-one"></div>
-            <div class="gs-view-card-back back-two"></div>
-            <div class="gs-view-card-front">${cardMarkup(p.i)}</div>
-          </div>
-
-          <div class="gs-view-player-copy">
+          <div class="gs-live-player-main">
             <strong>${esc(p.name)}</strong>
-            <div class="gs-view-last">
-              <span>Ultimo round</span>
-              <b>+${Number(lr?.[p.i]||0)}</b>
-            </div>
+            <div class="gs-live-last"><span>Ultimo round</span><b>+${Number(last?.[p.i]||0)}</b></div>
           </div>
-
-          <div class="gs-view-score">
+          <div class="gs-live-score">
             <strong>${p.total}</strong>
             <span>Mancano <b>${missing}</b></span>
           </div>
         </article>`;
       }).join("");
-    }else{
-      /* Gli altri giochi mantengono per ora la vista online attuale. */
-      const colors=["#ffd20a","#a84cff","#159dff","#35d44f","#ff8d19","#28d6c4","#ff304f","#ef4cc8"];
-      ranking.className="gs-spectator-ranking";
+    }else if(game==="seasalt"){
+      const seaCards=[
+        {img:"assets/sea46-card-boat.jpg",emoji:"⛵",label:"BARCA"},
+        {img:"assets/sea46-card-fish.jpg",emoji:"🐟",label:"PESCE"},
+        {emoji:"⭐",label:"STELLA"},
+        {emoji:"🐚",label:"CONCHIGLIA"},
+        {emoji:"🦀",label:"GRANCHIO"},
+        {emoji:"🌿",label:"ORIGAMI"}
+      ];
       ranking.innerHTML=order.map((p,pos)=>{
         const c=colors[p.i%colors.length];
-        const last=s.rounds?.length ? Number(s.rounds.at(-1)?.[p.i]||0) : 0;
-        return `<article class="gs-spectator-player" style="--pc:${c}">
-          <div class="gs-spectator-pos">${pos+1}°</div>
-          <div class="gs-spectator-player-copy">
-            <strong>${esc(p.name)}</strong>
-            <span>Ultimo round <b>+${last}</b></span>
+        const status=statusFor(pos);
+        const missing=Math.max(0,target-p.total);
+        const card=seaCards[p.i%seaCards.length];
+        return `<article class="gs-premium-player gs-sea-live-card" style="--pc:${c}">
+          ${status?`<span class="gs-live-status">${status}</span>`:""}
+          ${rankBlock(pos,c)}
+          <div class="gs-live-art gs-live-sea-art">
+            <div class="gs-sea-medallion">
+              ${card.img?`<img src="${card.img}" alt="${card.label}">`:`<span>${card.emoji}</span>`}
+              <small>${card.label}</small>
+            </div>
           </div>
-          <div class="gs-spectator-score">${p.total}</div>
+          <div class="gs-live-player-main">
+            <strong>${esc(p.name)}</strong>
+            <div class="gs-live-last"><span>Ultimo round</span><b>+${Number(last?.[p.i]||0)}</b></div>
+          </div>
+          <div class="gs-live-score">
+            <strong>${p.total}</strong>
+            <span>${missing?`Mancano <b>${missing}</b>`:"Traguardo raggiunto"}</span>
+          </div>
+        </article>`;
+      }).join("");
+    }else{
+      const arts=[
+        "assets/six45-player-gold.jpg",
+        "assets/six45-player-purple.jpg",
+        "assets/six45-player-blue.jpg"
+      ];
+      ranking.innerHTML=order.map((p,pos)=>{
+        const c=colors[p.i%colors.length];
+        const status=statusFor(pos);
+        const remaining=Math.max(0,67-p.total);
+        const art=arts[p.i%arts.length];
+        const cardNo=String(p.i+1).padStart(2,"0");
+        return `<article class="gs-premium-player gs-six-live-card" style="--pc:${c}">
+          ${status?`<span class="gs-live-status">${status}</span>`:""}
+          ${rankBlock(pos,c)}
+          <div class="gs-live-art gs-live-six-art">
+            <img src="${art}" alt="Toro">
+            <div class="gs-six-number-card">
+              <span>🐂</span><strong>${cardNo}</strong><span>🐂</span>
+            </div>
+          </div>
+          <div class="gs-live-player-main">
+            <strong>${esc(p.name)}</strong>
+            <div class="gs-live-last"><span>Ultimo round</span><b>+${Number(last?.[p.i]||0)}</b></div>
+          </div>
+          <div class="gs-live-score">
+            <strong>${p.total}</strong>
+            <span>${p.total>66?"OLTRE 66":`Mancano <b>${remaining}</b>`}</span>
+          </div>
         </article>`;
       }).join("");
     }
