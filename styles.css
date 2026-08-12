@@ -8163,3 +8163,153 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     height:280px;
   }
 }
+
+
+/* =========================================================
+   GAME SCORE v70 — FLIP 7: TESSERE LOGO APPROVATE
+   Le vecchie carte Freeze / Flip Three / Second Chance /
+   numeriche NON vengono più usate nella classifica.
+   Ogni giocatore ha lo stesso logo FLIP 7, colorato col suo tema.
+   ========================================================= */
+
+#leaderboard .flip53-card-stage{
+  position:relative !important;
+  width:170px !important;
+  height:116px !important;
+  display:grid !important;
+  place-items:center !important;
+  overflow:visible !important;
+  transform:none !important;
+}
+
+/* Elimina davvero le due vecchie carte posteriori */
+#leaderboard .flip53-card-stage .flip53-back-card{
+  display:none !important;
+}
+
+#leaderboard .flip53-front-wrap{
+  position:relative !important;
+  inset:auto !important;
+  width:154px !important;
+  height:92px !important;
+  display:block !important;
+  transform:none !important;
+  filter:none !important;
+  z-index:5 !important;
+}
+
+#leaderboard .flip7-logo-tile{
+  --tile:#a84cff;
+  position:relative;
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:1px;
+  overflow:hidden;
+  border-radius:18px;
+  border:2px solid color-mix(in srgb,var(--tile) 76%,white 24%);
+  background:
+    radial-gradient(circle at 50% 25%,rgba(255,255,255,.23),transparent 28%),
+    linear-gradient(145deg,
+      color-mix(in srgb,var(--tile) 88%,white 12%) 0%,
+      var(--tile) 42%,
+      color-mix(in srgb,var(--tile) 64%,#050710 36%) 100%);
+  box-shadow:
+    0 12px 0 color-mix(in srgb,var(--tile) 35%,#02030a 65%),
+    0 17px 25px rgba(0,0,0,.45),
+    0 0 20px color-mix(in srgb,var(--tile) 48%,transparent),
+    inset 0 1px 0 rgba(255,255,255,.42),
+    inset 0 -18px 28px rgba(0,0,0,.18);
+  transform:perspective(500px) rotateY(-5deg) rotateZ(-1deg);
+  isolation:isolate;
+}
+
+#leaderboard .flip7-logo-tile:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:
+    repeating-conic-gradient(from 245deg at 50% 55%,
+      rgba(255,255,255,.13) 0deg 2deg,
+      transparent 2deg 14deg);
+  opacity:.38;
+}
+
+#leaderboard .flip7-logo-tile:after{
+  content:"";
+  position:absolute;
+  top:8px;
+  left:11px;
+  right:11px;
+  height:2px;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);
+  opacity:.7;
+}
+
+#leaderboard .flip7-word{
+  color:#fff;
+  font-size:35px;
+  line-height:1;
+  font-weight:1000;
+  font-style:italic;
+  letter-spacing:-.075em;
+  -webkit-text-stroke:1.2px #111323;
+  text-shadow:
+    2px 3px 0 #17192b,
+    0 5px 9px rgba(0,0,0,.45);
+  transform:skewX(-7deg);
+}
+
+#leaderboard .flip7-seven{
+  margin-left:2px;
+  color:#ffd51b;
+  font-size:53px;
+  line-height:.82;
+  font-weight:1000;
+  font-style:italic;
+  letter-spacing:-.08em;
+  -webkit-text-stroke:1.4px #241a00;
+  text-shadow:
+    2px 3px 0 #9c5a00,
+    0 6px 9px rgba(0,0,0,.48),
+    0 0 9px rgba(255,218,26,.28);
+  transform:skewX(-7deg) rotate(2deg);
+}
+
+/* Hide any legacy artwork that an old cached DOM might still contain */
+#leaderboard .flip53-card-stage .avatar-img,
+#leaderboard .flip53-card-stage .number-card{
+  display:none !important;
+}
+
+@media(max-width:560px){
+  #leaderboard .flip53-card-stage{
+    width:92px !important;
+    height:82px !important;
+  }
+  #leaderboard .flip53-front-wrap{
+    width:86px !important;
+    height:58px !important;
+  }
+  #leaderboard .flip7-logo-tile{
+    border-radius:11px;
+    border-width:1.5px;
+    box-shadow:
+      0 6px 0 color-mix(in srgb,var(--tile) 35%,#02030a 65%),
+      0 9px 15px rgba(0,0,0,.42),
+      0 0 12px color-mix(in srgb,var(--tile) 42%,transparent),
+      inset 0 1px 0 rgba(255,255,255,.35);
+  }
+  #leaderboard .flip7-word{
+    font-size:20px;
+    -webkit-text-stroke:.7px #111323;
+  }
+  #leaderboard .flip7-seven{
+    font-size:31px;
+    -webkit-text-stroke:.8px #241a00;
+  }
+}

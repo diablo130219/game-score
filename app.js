@@ -227,8 +227,9 @@ function recordResultIfNeeded(winner){
 
 function cardMarkup(i){
   const t=themes[i%themes.length];
-  if(t.asset)return `<img class="avatar-img" src="${t.asset}" alt="${esc(t.fallback)}">`;
-  return `<div class="number-card">${esc(t.fallback)}</div>`;
+  return `<div class="flip7-logo-tile" style="--tile:${t.c}" aria-label="Flip 7">
+    <span class="flip7-word">FLIP</span><span class="flip7-seven">7</span>
+  </div>`;
 }
 
 
