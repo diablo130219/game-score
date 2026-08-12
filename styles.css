@@ -10177,3 +10177,97 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     font-size:9px;
   }
 }
+
+
+/* =========================================================
+   V91 — ANIMAZIONE ROUND OSPITI (1,5 SECONDI)
+   Prima +N, poi totale, poi eventuale sorpasso.
+   ========================================================= */
+.gs-live-score{
+  position:relative;
+  overflow:visible !important;
+}
+.gs-round-delta{
+  position:absolute;
+  z-index:120;
+  right:0;
+  top:50%;
+  min-width:70px;
+  padding:8px 11px 7px;
+  display:grid;
+  justify-items:center;
+  gap:1px;
+  transform:translateY(-50%) scale(.78);
+  opacity:0;
+  pointer-events:none;
+  border:1px solid color-mix(in srgb,var(--pc) 62%,white 10%);
+  border-radius:14px;
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb,var(--pc) 20%,#0b0d19 80%),
+      rgba(6,8,18,.97));
+  box-shadow:
+    0 10px 26px rgba(0,0,0,.44),
+    0 0 22px color-mix(in srgb,var(--pc) 25%,transparent),
+    inset 0 1px 0 rgba(255,255,255,.09);
+  backdrop-filter:blur(10px);
+}
+.gs-round-delta.show{
+  animation:gsRoundDelta15 1.5s cubic-bezier(.2,.7,.2,1) both;
+}
+.gs-round-delta span{
+  color:#a9aab4;
+  font-size:6px;
+  line-height:1;
+  font-weight:1000;
+  letter-spacing:.14em;
+}
+.gs-round-delta strong{
+  color:#fff;
+  font-size:25px;
+  line-height:1;
+  font-weight:1000;
+  text-shadow:0 0 13px color-mix(in srgb,var(--pc) 55%,transparent);
+}
+
+@keyframes gsRoundDelta15{
+  0%{
+    opacity:0;
+    transform:translateY(-50%) translateX(8px) scale(.76);
+  }
+  14%{
+    opacity:1;
+    transform:translateY(-50%) translateX(0) scale(1.07);
+  }
+  24%{
+    opacity:1;
+    transform:translateY(-50%) scale(1);
+  }
+  76%{
+    opacity:1;
+    transform:translateY(-50%) scale(1);
+  }
+  100%{
+    opacity:0;
+    transform:translateY(-50%) translateY(-5px) scale(.94);
+  }
+}
+
+@media(max-width:700px){
+  .gs-round-delta{
+    right:-2px;
+    min-width:57px;
+    padding:7px 8px 6px;
+    border-radius:12px;
+  }
+  .gs-round-delta strong{font-size:21px}
+  .gs-round-delta span{font-size:5px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .gs-round-delta.show{
+    animation:none !important;
+    opacity:1;
+    transform:translateY(-50%) scale(1);
+  }
+}

@@ -2399,6 +2399,96 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
   function gsSpectatorCloseHall(){document.getElementById("gsSpectatorHallModal")?.classList.add("hidden")}
   function gsSpectatorCloseWin(){clearTimeout(spectatorWinTimer);document.getElementById("gsSpectatorWinOverlay")?.classList.add("hidden")}
 
+
+  // V91 — sequenza ospite del nuovo round:
+  // 1) mostra il punteggio del round per 1,5s mantenendo classifica/totali precedenti
+  // 2) aggiorna i totali
+  // 3) se cambia l'ordine, parte la già esistente animazione FLIP della classifica.
+  let gsSpectatorRenderedSnapshot=null;
+  let gsSpectatorRoundTimer=null;
+  let gsSpectatorPendingPayload=null;
+  let gsSpectatorRoundSequenceActive=false;
+
+  function gsSpectatorClone(v){
+    try{return JSON.parse(JSON.stringify(v))}catch(e){return v}
+  }
+
+  function gsSpectatorRoundCount(s){
+    return Array.isArray(s?.rounds)?s.rounds.length:0;
+  }
+
+  function gsSpectatorSamePlayers(a,b){
+    const ap=Array.isArray(a?.players)?a.players:[];
+    const bp=Array.isArray(b?.players)?b.players:[];
+    if(ap.length!==bp.length)return false;
+    return ap.every((p,i)=>{
+      const an=typeof p==="object"?String(p?.name||p?.label||p?.playerName||""):String(p??"");
+      const bn=typeof bp[i]==="object"?String(bp[i]?.name||bp[i]?.label||bp[i]?.playerName||""):String(bp[i]??"");
+      return an===bn;
+    });
+  }
+
+  function gsSpectatorShouldAnimateRound(game,next){
+    const prev=gsSpectatorRenderedSnapshot;
+    if(!prev||!gsSpectatorSamePlayers(prev,next))return false;
+    const before=gsSpectatorRoundCount(prev);
+    const after=gsSpectatorRoundCount(next);
+    return after===before+1 && after>0;
+  }
+
+  function gsSpectatorShowRoundDelta(next){
+    const round=next?.rounds?.at?.(-1) || next?.rounds?.[next.rounds.length-1] || [];
+    document.querySelectorAll("#gsSpectatorRanking [data-gs-player-key]").forEach(card=>{
+      const i=Number(card.dataset.gsPlayerKey);
+      const value=Number(round?.[i]||0);
+      const score=card.querySelector(".gs-live-score");
+      if(!score)return;
+
+      const bubble=document.createElement("div");
+      bubble.className="gs-round-delta";
+      bubble.innerHTML=`<span>ROUND</span><strong>${value>=0?"+":""}${value}</strong>`;
+      score.appendChild(bubble);
+      requestAnimationFrame(()=>bubble.classList.add("show"));
+    });
+  }
+
+  function gsSpectatorReceiveState(game,s,closed=false){
+    const payload={game,state:gsSpectatorClone(s),closed:!!closed};
+
+    // Se arriva un altro update mentre è in corso la presentazione del round,
+    // conserviamo l'ultimo e lo applichiamo dopo.
+    if(gsSpectatorRoundSequenceActive){
+      gsSpectatorPendingPayload=payload;
+      return;
+    }
+
+    if(gsSpectatorShouldAnimateRound(game,s)){
+      gsSpectatorRoundSequenceActive=true;
+
+      // La classifica resta ancora con i valori del round precedente.
+      // Sopra quei valori compare il +N del nuovo round.
+      gsSpectatorShowRoundDelta(s);
+
+      clearTimeout(gsSpectatorRoundTimer);
+      gsSpectatorRoundTimer=setTimeout(()=>{
+        gsSpectatorRoundSequenceActive=false;
+
+        // Ora aggiorniamo il totale. renderSpectator conserva le vecchie
+        // coordinate e quindi l'eventuale sorpasso parte SUBITO DOPO.
+        renderSpectator(game,s,closed);
+
+        if(gsSpectatorPendingPayload){
+          const pending=gsSpectatorPendingPayload;
+          gsSpectatorPendingPayload=null;
+          setTimeout(()=>gsSpectatorReceiveState(pending.game,pending.state,pending.closed),80);
+        }
+      },1500);
+      return;
+    }
+
+    renderSpectator(game,s,closed);
+  }
+
   function renderSpectator(game,s,closed=false){
     const theme=spectatorTheme(game);
     const app=document.getElementById("gsSpectatorApp");
@@ -2592,6 +2682,10 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
 
     document.getElementById("gsSpectatorOffline").classList.add("hidden");
     app.classList.remove("hidden");
+
+    // Snapshot dello stato realmente mostrato, usato per riconoscere
+    // l'arrivo del round successivo.
+    gsSpectatorRenderedSnapshot=gsSpectatorClone(s);
   }
 
   async function fetchSpectator(code){
@@ -2602,7 +2696,7 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     if(!data)throw new Error("Partita non trovata.");
     const row=Array.isArray(data)?data[0]:data;
     if(!row)throw new Error("Partita non trovata.");
-    renderSpectator(row.game_type,row.state,row.closed);
+    gsSpectatorReceiveState(row.game_type,row.state,row.closed);
   }
 
   async function startSpectator(code){
@@ -2626,7 +2720,7 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     const sb=getClient();
     spectatorChannel=sb.channel(`gs-room-${spectatorCode}`)
       .on("broadcast",{event:"state"},({payload})=>{
-        if(payload?.state)renderSpectator(payload.game_type,payload.state,!!payload.closed);
+        if(payload?.state)gsSpectatorReceiveState(payload.game_type,payload.state,!!payload.closed);
       })
       .subscribe();
 
