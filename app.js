@@ -1539,31 +1539,473 @@ $("#six39NewGame").onclick=six39NewGame;
 
   function snapshot(game){
     if(game==="flip7"){
-      const flipSpectatorCards=[
-        {asset:"assets/freeze.png",label:"FREEZE!",value:null},
-        {asset:"assets/flip_three.png",label:"FLIP THREE!",value:null},
-        {asset:"assets/second_chance.png",label:"SECOND CHANCE",value:null},
-        {asset:"assets/num_12.png",label:"12",value:null},
-        {asset:null,label:"11",value:"11"},
-        {asset:null,label:"7",value:"7"}
-      ];
+      return {
+        valid:!!state.players.length,
+        active:!!state.players.length&&!state.resultRecorded,
+        players:state.players,
+        rounds:state.rounds.length,
+        label:`Round ${state.rounds.length+1} · ${state.players.length} giocatori`
+      };
+    }
+    if(game==="seasalt"){
+      return {
+        valid:!!seaState.players.length,
+        active:!!seaState.players.length&&!seaState.finished,
+        players:seaState.players,
+        rounds:seaState.rounds.length,
+        label:`Round ${seaState.rounds.length+1} · ${seaState.players.length} giocatori`
+      };
+    }
+    return {
+      valid:!!six39State.players.length,
+      active:!!six39State.players.length&&!six39State.finished,
+      players:six39State.players,
+      rounds:six39State.rounds.length,
+      label:`Round ${six39State.rounds.length+1} · ${six39State.players.length} giocatori`
+    };
+  }
+
+  function meta(game){
+    try{return gsSafeParse(localStorage.getItem(GS_META_PREFIX+game))||{}}catch(e){return{}}
+  }
+
+  function chooseLatest(){
+    let preferred=null;
+    try{preferred=localStorage.getItem(GS_LAST_ACTIVE_KEY)}catch(e){}
+    if(preferred && snapshot(preferred).active)return preferred;
+
+    return Object.keys(defs)
+      .filter(g=>snapshot(g).active)
+      .sort((a,b)=>(meta(b).updatedAt||0)-(meta(a).updatedAt||0))[0]||null;
+  }
+
+  function updateGameCards(){
+    document.querySelectorAll("[data-home-game]").forEach(card=>{
+      const g=card.dataset.homeGame==="6nimmt"?"sixnimmt":card.dataset.homeGame;
+      const s=snapshot(g);
+      const small=card.querySelector("small");
+      const pill=card.querySelector(".home-play-btn,.play-pill");
+      card.classList.toggle("has-saved-game",s.active);
+      if(s.active){
+        if(small)small.textContent=`${s.label} · salvata`;
+        if(pill)pill.innerHTML='RIPRENDI <b>›</b>';
+      }else{
+        if(small)small.textContent="Segnapunti completo";
+        if(pill)pill.innerHTML='GIOCA <b>›</b>';
+      }
+    });
+  }
+
+  window.renderResumeCenter=function(){
+    updateGameCards();
+    const box=document.getElementById("resumeCenter");
+    const btn=document.getElementById("resumeMainBtn");
+    if(!box||!btn)return;
+    const game=chooseLatest();
+    if(!game){
+      box.classList.add("hidden");
+      return;
+    }
+    const s=snapshot(game),d=defs[game];
+    box.classList.remove("hidden");
+    box.style.setProperty("--resume-accent",d.accent);
+    document.getElementById("resumeGameIcon").textContent=d.icon;
+    document.getElementById("resumeGameName").textContent=d.name;
+    document.getElementById("resumeGameMeta").textContent=
+      `${s.label} · ${s.players.slice(0,3).join(", ")}${s.players.length>3?"…":""}`;
+    btn.onclick=()=>{
+      gsTouchGame(game,game==="flip7"?state:game==="seasalt"?seaState:six39State,true);
+      homeChooseGame(game);
+    };
+  };
+
+  // Re-save the current state whenever Safari backgrounds/closes the page.
+  function flush(){
+    try{
+      if(state.players.length)save();
+      if(seaState.players.length)seaSave();
+      if(six39State.players.length)six39Save();
+    }catch(e){}
+  }
+  window.addEventListener("pagehide",flush);
+  window.addEventListener("beforeunload",flush);
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")flush()});
+
+  // When returning with Back/Forward cache, restore UI without losing state.
+  window.addEventListener("pageshow",e=>{
+    if(e.persisted){
+      load();seaLoad();six39Load();
+      window.renderResumeCenter();
+    }
+  });
+
+  // First final refresh occurs after all three game loaders ran.
+  setTimeout(window.renderResumeCenter,0);
+})();
+
+
+
+/* =========================================================
+   v57 — FINE PARTITA PERFETTA
+   ========================================================= */
+function gsShowPerfectWin(id,theme){
+  const screen=document.getElementById(id);
+  if(!screen)return;
+  screen.classList.remove("hidden");
+  screen.classList.remove("showing","gs-win-enter");
+  void screen.offsetWidth;
+  screen.classList.add("showing","gs-win-enter");
+  screen.dataset.winTheme=theme;
+  document.documentElement.classList.add("gs-modal-open");
+
+  try{
+    if(navigator.vibrate)navigator.vibrate([45,35,80,40,130]);
+  }catch(e){}
+
+  // Re-trigger ranking reveal.
+  screen.querySelectorAll(".final-row").forEach((row,i)=>{
+    row.style.setProperty("--win-delay",`${310+i*95}ms`);
+    row.classList.remove("gs-final-in");
+    void row.offsetWidth;
+    row.classList.add("gs-final-in");
+  });
+
+  // Hall confirmation appears after the trophy/title reveal.
+  const confirm=screen.querySelector(".win-hall-confirm");
+  if(confirm){
+    confirm.classList.remove("gs-confirm-in");
+    setTimeout(()=>confirm.classList.add("gs-confirm-in"),650);
+  }
+}
+function gsHidePerfectWin(id){
+  const screen=document.getElementById(id);
+  if(screen)screen.classList.add("hidden");
+  document.documentElement.classList.remove("gs-modal-open");
+}
+function gsHomeAfterWin(id){
+  gsHidePerfectWin(id);
+  showHome();
+  window.renderResumeCenter?.();
+}
+function gsHallAfterWin(id,game){
+  gsHidePerfectWin(id);
+  if(game==="flip"){
+    renderHall();openModal("hallModal");
+  }else if(game==="sea"){
+    seaRenderHall();openModal("seaHallModal");
+  }else{
+    six39RenderHall();openModal("six39HallModal");
+  }
+}
+
+document.getElementById("flipHomeAfterWin")?.addEventListener("click",()=>gsHomeAfterWin("winScreen"));
+document.getElementById("flipHallAfterWin")?.addEventListener("click",()=>gsHallAfterWin("winScreen","flip"));
+document.getElementById("seaHomeAfterWin")?.addEventListener("click",()=>gsHomeAfterWin("seaWinScreen"));
+document.getElementById("seaHallAfterWin")?.addEventListener("click",()=>gsHallAfterWin("seaWinScreen","sea"));
+document.getElementById("sixHomeAfterWin")?.addEventListener("click",()=>gsHomeAfterWin("six39WinScreen"));
+document.getElementById("sixHallAfterWin")?.addEventListener("click",()=>gsHallAfterWin("six39WinScreen","six"));
+
+// New game actions retain the same game world instead of bouncing to home.
+document.getElementById("seaNewGame")?.addEventListener("click",()=>{
+  seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false};
+  seaSave();
+  gsHidePerfectWin("seaWinScreen");
+  $("#homeScreen").classList.add("hidden");
+  hideAllGameWorlds();
+  $("#seaSaltWorld").classList.remove("hidden");
+  seaOpenInlineSetup(false);
+});
+document.getElementById("six39NewGame")?.addEventListener("click",()=>{
+  six39State={players:[],rounds:[],finished:false,winner:null,recorded:false};
+  six39Save();
+  gsHidePerfectWin("six39WinScreen");
+  $("#homeScreen").classList.add("hidden");
+  hideAllGameWorlds();
+  $("#sixNimmtWorld").classList.remove("hidden");
+  six39OpenSetup(false);
+});
+
+
+
+/* =========================================================
+   GAME SCORE v59 — ONLINE + QR + HOST/SPECTATOR
+   ========================================================= */
+(function gsOnline(){
+  const CFG=window.GS_ONLINE_CONFIG||{};
+  const ROOM_STORAGE="gs:online-room-v1:";
+  let client=null;
+  let spectatorChannel=null;
+  let spectatorCode=null;
+  let onlineBusy=false;
+
+  const configured=()=>Boolean(
+    CFG.SUPABASE_URL &&
+    CFG.SUPABASE_PUBLISHABLE_KEY &&
+    window.supabase?.createClient
+  );
+
+  function getClient(){
+    if(client)return client;
+    if(!configured())return null;
+    client=window.supabase.createClient(
+      CFG.SUPABASE_URL,
+      CFG.SUPABASE_PUBLISHABLE_KEY,
+      {auth:{persistSession:false,autoRefreshToken:false}}
+    );
+    return client;
+  }
+
+  function randomSecret(){
+    const bytes=new Uint8Array(32);
+    crypto.getRandomValues(bytes);
+    return [...bytes].map(b=>b.toString(16).padStart(2,"0")).join("");
+  }
+
+  function currentGame(){
+    if(!document.getElementById("flip7App")?.classList.contains("hidden"))return "flip7";
+    if(!document.getElementById("seaSaltWorld")?.classList.contains("hidden"))return "seasalt";
+    if(!document.getElementById("sixNimmtWorld")?.classList.contains("hidden"))return "sixnimmt";
+    return null;
+  }
+
+  function currentState(game){
+    if(game==="flip7")return state;
+    if(game==="seasalt")return seaState;
+    if(game==="sixnimmt")return six39State;
+    return null;
+  }
+
+  function gameHasPlayers(game){
+    const s=currentState(game);
+    return !!(s && Array.isArray(s.players) && s.players.length);
+  }
+
+  function roomKey(game){return ROOM_STORAGE+game}
+
+  function loadRoom(game){
+    try{return JSON.parse(localStorage.getItem(roomKey(game))||"null")}catch(e){return null}
+  }
+  function saveRoom(game,room){
+    try{localStorage.setItem(roomKey(game),JSON.stringify(room))}catch(e){}
+  }
+  function clearRoom(game){
+    try{localStorage.removeItem(roomKey(game))}catch(e){}
+  }
+
+  function appBase(){
+    const fixed=String(CFG.APP_PUBLIC_URL||"").trim().replace(/\/+$/,"");
+    if(fixed)return fixed;
+    return location.origin && location.origin!=="null"
+      ? location.origin+location.pathname.replace(/\/[^/]*$/,"")
+      : location.href.split("?")[0].replace(/\/index\.html$/,"");
+  }
+
+  function spectatorUrl(code){
+    return `${appBase()}/?room=${encodeURIComponent(code)}`;
+  }
+
+  function setStatus(text,ok=true){
+    const dot=document.getElementById("gsOnlineStatusDot");
+    const label=document.getElementById("gsOnlineStatusText");
+    if(label)label.textContent=text;
+    if(dot)dot.classList.toggle("bad",!ok);
+  }
+
+  async function createRoom(game){
+    const sb=getClient();
+    if(!sb)throw new Error("Supabase non configurato");
+    const existing=loadRoom(game);
+    if(existing?.joinCode && existing?.hostSecret)return existing;
+
+    const hostSecret=randomSecret();
+    const payload=currentState(game);
+    const {data,error}=await sb.rpc("gs_create_room",{
+      p_game_type:game,
+      p_state:payload,
+      p_host_secret:hostSecret
+    });
+    if(error)throw error;
+    const joinCode=typeof data==="string"?data:data?.join_code||data?.joinCode;
+    if(!joinCode)throw new Error("Codice partita non ricevuto");
+    const room={joinCode,hostSecret,game};
+    saveRoom(game,room);
+    return room;
+  }
+
+  async function pushRoom(game,closed=false){
+    const sb=getClient();
+    const room=loadRoom(game);
+    if(!sb||!room?.joinCode||!room?.hostSecret)return;
+    const payload=currentState(game);
+    const {error}=await sb.rpc("gs_update_room",{
+      p_join_code:room.joinCode,
+      p_host_secret:room.hostSecret,
+      p_state:payload,
+      p_closed:closed
+    });
+    if(error){
+      console.warn("GAME SCORE online sync:",error);
+      setStatus("Errore sincronizzazione",false);
+      return;
+    }
+
+    // Fast live update to spectators. Initial/recovery state still comes from the DB RPC.
+    try{
+      const channel=sb.channel(`gs-room-${room.joinCode}`);
+      await channel.subscribe();
+      await channel.send({
+        type:"broadcast",
+        event:"state",
+        payload:{game_type:game,state:payload,closed}
+      });
+      await sb.removeChannel(channel);
+    }catch(e){
+      console.warn("Broadcast:",e);
+    }
+    setStatus(closed?"Partita chiusa":"Sincronizzato");
+  }
+
+  // Called by the wrapped local save methods.
+  window.gsOnlineMaybePush=function(game,data){
+    const room=loadRoom(game);
+    if(!room)return;
+    const closed=!(data?.players?.length);
+    clearTimeout(window.__gsOnlinePushTimer);
+    window.__gsOnlinePushTimer=setTimeout(async()=>{
+      await pushRoom(game,closed);
+      if(closed)clearRoom(game);
+    },120);
+  };
+
+  function qrRender(url){
+    const box=document.getElementById("gsQrBox");
+    if(!box)return;
+    box.innerHTML="";
+    if(window.QRCode){
+      new window.QRCode(box,{
+        text:url,
+        width:220,
+        height:220,
+        colorDark:"#090914",
+        colorLight:"#ffffff",
+        correctLevel:window.QRCode.CorrectLevel.M
+      });
+    }else{
+      box.innerHTML=`<div class="gs-qr-fallback">QR non caricato.<br><small>Usa “Copia link”.</small></div>`;
+    }
+  }
+
+  async function openShare(){
+    const game=currentGame();
+    if(!game || !gameHasPlayers(game))return;
+    const modal=document.getElementById("gsShareModal");
+    modal?.classList.remove("hidden");
+
+    const noCfg=document.getElementById("gsOnlineNotConfigured");
+    const ready=document.getElementById("gsOnlineShareReady");
+    if(!configured()){
+      noCfg?.classList.remove("hidden");
+      ready?.classList.add("hidden");
+      return;
+    }
+    noCfg?.classList.add("hidden");
+    ready?.classList.remove("hidden");
+
+    if(onlineBusy)return;
+    onlineBusy=true;
+    setStatus("Creazione stanza…");
+    try{
+      const room=await createRoom(game);
+      const url=spectatorUrl(room.joinCode);
+      document.getElementById("gsRoomCode").textContent=room.joinCode;
+      document.getElementById("gsSpectatorUrl").value=url;
+      qrRender(url);
+      await pushRoom(game,false);
+      setStatus("Online · giocatori possono entrare");
+    }catch(e){
+      console.error(e);
+      setStatus("Impossibile creare la stanza",false);
+      alert("GAME SCORE Online: "+(e.message||e));
+    }finally{
+      onlineBusy=false;
+    }
+  }
+
+  function updateShareButton(){
+    const btn=document.getElementById("gsShareRoomBtn");
+    const game=currentGame();
+    const spectator=new URLSearchParams(location.search).has("room");
+    if(!btn)return;
+    btn.classList.toggle("hidden",spectator || !game || !gameHasPlayers(game));
+  }
+
+  // -------- SPECTATOR --------
+  function spectatorTheme(game){
+    if(game==="seasalt")return {name:"Sea Salt & Paper",accent:"#6fe2df",goal:"Punti"};
+    if(game==="sixnimmt")return {name:"6... Le prendi!",accent:"#ffb51b",goal:"66+"};
+    return {name:"Flip 7",accent:"#a84cff",goal:"200"};
+  }
+  function totalsFor(game,s){
+    return (s.players||[]).map((_,i)=>(s.rounds||[]).reduce((sum,r)=>sum+(Number(r?.[i])||0),0));
+  }
+  function renderSpectator(game,s,closed=false){
+    const theme=spectatorTheme(game);
+    const app=document.getElementById("gsSpectatorApp");
+    app.style.setProperty("--spectator-accent",theme.accent);
+    app.dataset.spectatorGame=game;
+    document.getElementById("gsSpectatorGameTitle").textContent=theme.name;
+
+    const totals=totalsFor(game,s);
+    const round=(s.rounds?.length||0)+1;
+    const target=
+      game==="flip7"?(s.target||200):
+      game==="seasalt"?(s.target||40):67;
+
+    document.getElementById("gsSpectatorRound").textContent=round;
+    document.getElementById("gsSpectatorGoal").textContent=
+      game==="sixnimmt"?"66":target;
+    document.getElementById("gsSpectatorMeta").textContent=
+      `${s.players?.length||0} giocatori · ${closed?"Partita conclusa":"Aggiornamento in tempo reale"}`;
+
+    let order=(s.players||[]).map((name,i)=>({name,i,total:totals[i]||0}));
+    if(game==="sixnimmt")order.sort((a,b)=>a.total-b.total||a.i-b.i);
+    else order.sort((a,b)=>b.total-a.total||a.i-b.i);
+
+    const last=s.rounds?.length ? s.rounds.at(-1) : Array((s.players||[]).length).fill(0);
+    const allEqual=order.length ? order.every(x=>x.total===order[0].total) : true;
+    const ranking=document.getElementById("gsSpectatorRanking");
+    ranking.className=`gs-spectator-ranking gs-premium-live-ranking gs-live-${game}`;
+
+    const colors=["#ffd20a","#a84cff","#159dff","#35d44f","#ff8d19","#28d6c4","#ff304f","#ef4cc8"];
+
+    function statusFor(pos){
+      if(allEqual)return "";
+      if(pos===0)return game==="sixnimmt"?"MIGLIORE":"IN TESTA";
+      if(pos===order.length-1&&order.length>1)return "ULTIMO";
+      return "";
+    }
+
+    function rankBlock(pos,c){
+      return `<div class="gs-live-rank" style="--pc:${c}">
+        <span class="gs-live-crown">${pos===0?"♛":"♕"}</span>
+        <strong>${pos+1}°</strong>
+      </div>`;
+    }
+
+    if(game==="flip7"){
       ranking.innerHTML=order.map((p,pos)=>{
-        const c=colors[p.i%colors.length];
+        const t=themes[p.i%themes.length];
+        const c=t.c||colors[p.i%colors.length];
         const status=statusFor(pos);
         const missing=Math.max(0,target-p.total);
-        const card=flipSpectatorCards[p.i%flipSpectatorCards.length];
-        const art=card.asset
-          ? `<img class="gs-flip-approved-img" src="${card.asset}" alt="${esc(card.label)}">`
-          : `<div class="gs-flip-approved-number gs-flip-num-${card.value}"><span>${card.value}</span><small>FLIP 7</small></div>`;
-        return `<article class="gs-premium-player gs-flip-live-card gs-flip-approved" style="--pc:${c}">
+        return `<article class="gs-premium-player gs-flip-live-card" style="--pc:${c}">
           ${status?`<span class="gs-live-status">${status}</span>`:""}
           ${rankBlock(pos,c)}
           <div class="gs-live-art gs-live-flip-art">
             <div class="gs-flip-burst"></div>
             <div class="gs-live-card-back back-one"></div>
             <div class="gs-live-card-back back-two"></div>
-            <div class="gs-live-card-back back-three"></div>
-            <div class="gs-flip-approved-front">${art}</div>
+            <div class="gs-live-card-front">${cardMarkup(p.i)}</div>
             <div class="gs-flip-card-shine"></div>
           </div>
           <div class="gs-live-player-main">
@@ -1578,30 +2020,26 @@ $("#six39NewGame").onclick=six39NewGame;
       }).join("");
     }else if(game==="seasalt"){
       const seaCards=[
-        {kind:"emoji",symbol:"⛵",label:"BARCA",tone:"boat"},
-        {kind:"emoji",symbol:"⭐",label:"STELLA MARINA",tone:"star"},
-        {kind:"emoji",symbol:"🦀",label:"GRANCHIO",tone:"crab"},
-        {kind:"emoji",symbol:"🐚",label:"CONCHIGLIA",tone:"shell"},
-        {kind:"origami",symbol:"◆",label:"ORIGAMI",tone:"origami"},
-        {kind:"emoji",symbol:"🐟",label:"PESCE",tone:"fish"}
+        {img:"assets/sea46-card-boat.jpg",emoji:"⛵",label:"BARCA"},
+        {img:"assets/sea46-card-fish.jpg",emoji:"🐟",label:"PESCE"},
+        {emoji:"⭐",label:"STELLA"},
+        {emoji:"🐚",label:"CONCHIGLIA"},
+        {emoji:"🦀",label:"GRANCHIO"},
+        {emoji:"🌿",label:"ORIGAMI"}
       ];
       ranking.innerHTML=order.map((p,pos)=>{
         const c=colors[p.i%colors.length];
         const status=statusFor(pos);
         const missing=Math.max(0,target-p.total);
         const card=seaCards[p.i%seaCards.length];
-        const seaArt=card.kind==="origami"
-          ? `<div class="gs-sea-origami-crane" aria-label="${esc(card.label)}"><i></i><b></b><em></em></div>`
-          : `<div class="gs-sea-symbol gs-sea-${card.tone}" aria-label="${esc(card.label)}">${card.symbol}</div>`;
-        return `<article class="gs-premium-player gs-sea-live-card gs-sea-approved" style="--pc:${c}">
+        return `<article class="gs-premium-player gs-sea-live-card" style="--pc:${c}">
           ${status?`<span class="gs-live-status">${status}</span>`:""}
           ${rankBlock(pos,c)}
           <div class="gs-live-art gs-live-sea-art">
             <div class="gs-sea-wave-back"></div>
             <div class="gs-sea-paper-card back"></div>
-            <div class="gs-sea-medallion gs-sea-approved-card">
-              <div class="gs-sea-paper-fold"></div>
-              ${seaArt}
+            <div class="gs-sea-medallion">
+              ${card.img?`<img src="${card.img}" alt="${card.label}">`:`<span>${card.emoji}</span>`}
               <small>${card.label}</small>
             </div>
             <div class="gs-sea-foam">≈ ≋</div>
