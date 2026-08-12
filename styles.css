@@ -10592,3 +10592,174 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
   .gs-spectator-win-score strong{font-size:48px !important}
   .gs-spectator-win-history{margin-top:10px}
 }
+
+
+/* =========================================================
+   V93 — OSPITI MOBILE: ABOVE-THE-FOLD PIÙ COMPATTO
+   Obiettivo: logo + LIVE + 2/3 giocatori visibili senza scroll.
+   SOLO schermata spettatore su telefono.
+   ========================================================= */
+@media (max-width:700px){
+  /* riduce lo spazio esterno dell'intera schermata ospite */
+  #gsSpectatorApp{
+    padding-top:0 !important;
+  }
+  #gsSpectatorApp .gs-spectator-shell{
+    padding:8px 10px 16px !important;
+    gap:7px !important;
+  }
+
+  /* HERO: molto meno alto, ma mantiene il carattere del gioco */
+  #gsSpectatorApp .gs-spectator-hero{
+    min-height:104px !important;
+    height:104px !important;
+    padding:8px 10px !important;
+    border-radius:20px !important;
+    margin-bottom:0 !important;
+    overflow:hidden;
+  }
+  #gsSpectatorApp .gs-spectator-hero:before,
+  #gsSpectatorApp .gs-spectator-hero:after{
+    opacity:.88;
+  }
+
+  /* testata: elementi più vicini e allineati */
+  #gsSpectatorApp .gs-spectator-top{
+    min-height:28px !important;
+    margin:0 !important;
+    padding:0 !important;
+    gap:6px !important;
+  }
+  #gsSpectatorApp .gs-spectator-brand{
+    gap:5px !important;
+  }
+  #gsSpectatorApp .gs-spectator-brand small{
+    font-size:5px !important;
+    letter-spacing:.10em !important;
+  }
+
+  /* logo/titolo del gioco resta protagonista, ma senza divorare viewport */
+  #gsSpectatorApp .gs-spectator-game-title,
+  #gsSpectatorApp .gs-spectator-title{
+    margin:1px 0 0 !important;
+    line-height:.88 !important;
+    transform-origin:left center;
+  }
+  #gsSpectatorApp .gs-spectator-game-logo,
+  #gsSpectatorApp .gs-spectator-logo{
+    max-height:47px !important;
+    width:auto !important;
+  }
+
+  /* LIVE sempre evidente, ma compatto */
+  #gsSpectatorApp .gs-spectator-live,
+  #gsSpectatorApp .gs-live-pill,
+  #gsSpectatorApp [class*="live-badge"]{
+    min-height:24px !important;
+    padding:4px 8px !important;
+    font-size:7px !important;
+    letter-spacing:.08em !important;
+  }
+
+  /* Trofeo/Hall più piccolo in testata */
+  #gsSpectatorApp .gs-spectator-hall-btn{
+    min-width:52px !important;
+    width:52px !important;
+    min-height:46px !important;
+    height:46px !important;
+    border-radius:15px !important;
+  }
+  #gsSpectatorApp .gs-spectator-hall-btn .gs-trophy-smart-icon{
+    font-size:20px !important;
+  }
+  #gsSpectatorApp .gs-spectator-hall-btn small{
+    font-size:5px !important;
+  }
+
+  /* eventuale riga stato/round sotto il logo: compressa */
+  #gsSpectatorApp .gs-spectator-status,
+  #gsSpectatorApp .gs-spectator-meta,
+  #gsSpectatorApp .gs-spectator-round-info{
+    margin-top:2px !important;
+    padding:3px 7px !important;
+    min-height:20px !important;
+    font-size:6px !important;
+  }
+
+  /* classifica subito sotto la testata */
+  #gsSpectatorRanking{
+    margin-top:4px !important;
+    gap:6px !important;
+  }
+
+  /* Tessere più verticalmente efficienti:
+     abbastanza grandi da restare leggibili, ma 3 entrano molto prima. */
+  #gsSpectatorRanking .gs-premium-player{
+    min-height:88px !important;
+    padding-top:8px !important;
+    padding-bottom:8px !important;
+    border-radius:18px !important;
+  }
+  #gsSpectatorRanking .gs-live-rank{
+    min-width:42px !important;
+  }
+  #gsSpectatorRanking .gs-live-name strong,
+  #gsSpectatorRanking .gs-player-name strong{
+    font-size:clamp(14px,4.2vw,18px) !important;
+  }
+  #gsSpectatorRanking .gs-live-score>strong{
+    font-size:clamp(27px,8vw,37px) !important;
+  }
+
+  /* Footer modalità giocatore non deve occupare spazio above-the-fold */
+  #gsSpectatorApp .gs-spectator-foot{
+    margin-top:5px !important;
+    padding:7px 8px !important;
+    min-height:0 !important;
+  }
+  #gsSpectatorApp .gs-spectator-foot span{
+    font-size:6px !important;
+  }
+  #gsSpectatorApp .gs-spectator-foot small{
+    display:none !important;
+  }
+}
+
+/* Telefoni bassi: ulteriore compressione controllata */
+@media (max-width:700px) and (max-height:760px){
+  #gsSpectatorApp .gs-spectator-shell{
+    padding:6px 8px 12px !important;
+    gap:5px !important;
+  }
+  #gsSpectatorApp .gs-spectator-hero{
+    min-height:90px !important;
+    height:90px !important;
+    padding:6px 8px !important;
+  }
+  #gsSpectatorApp .gs-spectator-game-logo,
+  #gsSpectatorApp .gs-spectator-logo{
+    max-height:40px !important;
+  }
+  #gsSpectatorRanking{
+    gap:5px !important;
+  }
+  #gsSpectatorRanking .gs-premium-player{
+    min-height:80px !important;
+    padding-top:6px !important;
+    padding-bottom:6px !important;
+  }
+}
+
+/* Telefoni molto stretti */
+@media (max-width:390px){
+  #gsSpectatorApp .gs-spectator-hero{
+    border-radius:17px !important;
+  }
+  #gsSpectatorApp .gs-spectator-hall-btn{
+    min-width:47px !important;
+    width:47px !important;
+  }
+  #gsSpectatorRanking .gs-premium-player{
+    min-height:82px !important;
+  }
+}
