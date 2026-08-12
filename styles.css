@@ -7444,3 +7444,489 @@ button,
 @media (min-width:1200px){
   .gs-spectator-main{max-width:1040px}
 }
+
+
+/* =========================================================
+   v63 — WOW PLAYER CARDS
+   6... LE PRENDI! intentionally unchanged.
+   ========================================================= */
+
+/* ---------- FLIP 7 ---------- */
+.gs-spectator[data-spectator-game="flip7"] .gs-flip-live-card{
+  min-height:132px;
+  background:
+    radial-gradient(circle at 25% 50%,rgba(120,47,255,.24),transparent 26%),
+    linear-gradient(102deg,#100727 0%,#080914 48%,#03050b 100%);
+  border-width:2px;
+  box-shadow:
+    0 15px 32px rgba(0,0,0,.4),
+    0 0 18px var(--pc),
+    inset 0 1px 0 rgba(255,255,255,.07);
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-flip-live-card:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 28% 50%,rgba(255,255,255,.05),transparent 20%),
+    repeating-conic-gradient(from 235deg at 27% 50%,rgba(255,255,255,.035) 0deg 2deg,transparent 2deg 11deg);
+  opacity:.8;
+}
+.gs-flip-burst{
+  position:absolute;
+  width:118px;
+  height:118px;
+  border-radius:50%;
+  background:repeating-conic-gradient(
+    from 0deg,
+    color-mix(in srgb,var(--pc) 38%,transparent) 0deg 5deg,
+    transparent 5deg 15deg
+  );
+  opacity:.46;
+  filter:blur(.15px);
+  transform:scale(1.2);
+}
+.gs-live-flip-art{
+  perspective:650px;
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-live-flip-art .gs-live-card-back{
+  width:71px;
+  height:97px;
+  border-width:2px;
+  border-color:rgba(208,149,255,.75);
+  background:
+    repeating-linear-gradient(135deg,rgba(255,255,255,.055) 0 2px,transparent 2px 7px),
+    linear-gradient(150deg,#52208b,#1b0a38 72%);
+  box-shadow:
+    0 9px 18px rgba(0,0,0,.46),
+    inset 0 0 0 2px rgba(255,255,255,.04);
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-live-flip-art .back-one{
+  transform:translateX(-17px) rotate(-11deg) rotateY(-5deg);
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-live-flip-art .back-two{
+  transform:translateX(-8px) rotate(-5deg) rotateY(-3deg);
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-live-card-front{
+  width:84px;
+  height:106px;
+  transform:translateX(8px) rotate(3deg) translateZ(10px);
+  filter:drop-shadow(0 11px 11px rgba(0,0,0,.48));
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-live-card-front .avatar-img,
+.gs-spectator[data-spectator-game="flip7"] .gs-live-card-front .number-card{
+  width:84px!important;
+  height:106px!important;
+  border:2px solid rgba(255,255,255,.82)!important;
+  box-shadow:
+    0 0 0 2px color-mix(in srgb,var(--pc) 60%,transparent),
+    0 11px 22px rgba(0,0,0,.48),
+    0 0 20px color-mix(in srgb,var(--pc) 28%,transparent)!important;
+}
+.gs-flip-card-shine{
+  position:absolute;
+  z-index:5;
+  width:44px;
+  height:98px;
+  left:59px;
+  top:8px;
+  border-radius:50%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);
+  transform:rotate(20deg);
+  pointer-events:none;
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-live-rank{
+  background:
+    linear-gradient(180deg,color-mix(in srgb,var(--pc) 26%,#090912 74%),#05070d);
+  box-shadow:
+    inset 0 0 18px color-mix(in srgb,var(--pc) 18%,transparent),
+    0 0 14px color-mix(in srgb,var(--pc) 18%,transparent);
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-live-player-main>strong{
+  text-shadow:0 3px 0 rgba(0,0,0,.35);
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-live-score>strong{
+  filter:drop-shadow(0 0 10px color-mix(in srgb,var(--pc) 35%,transparent));
+}
+
+/* ---------- SEA SALT & PAPER ---------- */
+.gs-spectator[data-spectator-game="seasalt"] .gs-sea-live-card{
+  min-height:132px;
+  border-color:var(--pc);
+  background:
+    radial-gradient(circle at 30% 30%,rgba(117,234,241,.15),transparent 26%),
+    linear-gradient(110deg,#092132 0%,#07131e 50%,#040a12 100%);
+  box-shadow:
+    0 15px 32px rgba(0,0,0,.38),
+    0 0 16px color-mix(in srgb,var(--pc) 35%,transparent),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+.gs-spectator[data-spectator-game="seasalt"] .gs-sea-live-card:after{
+  content:"";
+  position:absolute;
+  inset:auto 0 0 0;
+  height:34px;
+  z-index:-1;
+  opacity:.42;
+  background:
+    radial-gradient(28px 12px at 7% 100%,transparent 60%,rgba(96,226,230,.35) 62% 67%,transparent 69%),
+    radial-gradient(32px 14px at 20% 100%,transparent 60%,rgba(96,226,230,.25) 62% 67%,transparent 69%);
+  background-size:88px 32px;
+}
+.gs-sea-wave-back{
+  position:absolute;
+  inset:15px 0 auto 0;
+  height:72px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 100%,rgba(74,213,223,.18),transparent 58%);
+  filter:blur(1px);
+}
+.gs-sea-paper-card.back{
+  position:absolute;
+  width:72px;
+  height:94px;
+  left:15px;
+  top:8px;
+  border:2px solid rgba(231,255,255,.7);
+  border-radius:13px;
+  background:
+    linear-gradient(145deg,rgba(240,255,255,.88),rgba(145,213,226,.88));
+  box-shadow:0 9px 18px rgba(0,0,0,.36);
+  transform:rotate(-7deg);
+}
+.gs-spectator[data-spectator-game="seasalt"] .gs-sea-medallion{
+  width:86px;
+  height:106px;
+  z-index:3;
+  border:2px solid rgba(241,255,255,.92);
+  border-radius:14px;
+  background:
+    linear-gradient(155deg,#e9ffff,#9ddce5 62%,#6ab8c8);
+  box-shadow:
+    0 11px 22px rgba(0,0,0,.42),
+    0 0 18px rgba(96,226,230,.24);
+  transform:translateX(7px) rotate(3deg);
+}
+.gs-spectator[data-spectator-game="seasalt"] .gs-sea-medallion:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(130deg,rgba(255,255,255,.38),transparent 38%),
+    repeating-linear-gradient(55deg,rgba(20,104,128,.045) 0 1px,transparent 1px 7px);
+  pointer-events:none;
+}
+.gs-spectator[data-spectator-game="seasalt"] .gs-sea-medallion>span{
+  font-size:43px;
+  filter:drop-shadow(0 4px 2px rgba(0,0,0,.18));
+}
+.gs-spectator[data-spectator-game="seasalt"] .gs-sea-medallion small{
+  left:7px;
+  right:7px;
+  bottom:6px;
+  padding:3px 4px;
+  background:rgba(5,35,48,.82);
+  border:1px solid rgba(255,255,255,.2);
+  font-size:6px;
+  letter-spacing:.06em;
+}
+.gs-sea-foam{
+  position:absolute;
+  z-index:5;
+  right:1px;
+  bottom:5px;
+  color:#d9ffff;
+  font-size:11px;
+  letter-spacing:3px;
+  text-shadow:0 0 8px rgba(100,230,236,.7);
+}
+.gs-spectator[data-spectator-game="seasalt"] .gs-live-rank{
+  background:
+    radial-gradient(circle at 50% 12%,rgba(255,255,255,.09),transparent 35%),
+    linear-gradient(180deg,color-mix(in srgb,var(--pc) 22%,#07131c 78%),#041019);
+}
+.gs-spectator[data-spectator-game="seasalt"] .gs-live-score>strong{
+  text-shadow:
+    0 2px 0 rgba(0,0,0,.4),
+    0 0 13px color-mix(in srgb,var(--pc) 35%,transparent);
+}
+
+/* mobile wow tuning */
+@media(max-width:600px){
+  .gs-spectator[data-spectator-game="flip7"] .gs-flip-live-card,
+  .gs-spectator[data-spectator-game="seasalt"] .gs-sea-live-card{
+    min-height:108px;
+  }
+  .gs-flip-burst{width:82px;height:82px}
+  .gs-spectator[data-spectator-game="flip7"] .gs-live-flip-art .gs-live-card-back{
+    width:49px;height:71px;
+  }
+  .gs-spectator[data-spectator-game="flip7"] .gs-live-card-front{
+    width:57px;height:80px;
+  }
+  .gs-spectator[data-spectator-game="flip7"] .gs-live-card-front .avatar-img,
+  .gs-spectator[data-spectator-game="flip7"] .gs-live-card-front .number-card{
+    width:57px!important;height:80px!important;
+  }
+  .gs-flip-card-shine{
+    width:27px;height:75px;left:40px;top:9px;
+  }
+
+  .gs-sea-paper-card.back{
+    width:48px;height:70px;left:9px;top:12px;border-radius:9px;
+  }
+  .gs-spectator[data-spectator-game="seasalt"] .gs-sea-medallion{
+    width:58px;height:79px;border-radius:10px;transform:translateX(4px) rotate(3deg);
+  }
+  .gs-spectator[data-spectator-game="seasalt"] .gs-sea-medallion>span{font-size:29px}
+  .gs-sea-foam{font-size:7px;right:0;bottom:7px;letter-spacing:2px}
+}
+
+
+/* =========================================================
+   v64 — TESSERE DEFINITIVE SPETTATORE
+   Flip 7 + Sea Salt & Paper.
+   6... Le prendi! NON TOCCATO.
+   ========================================================= */
+
+/* ---------------- FLIP 7 APPROVATO ---------------- */
+.gs-flip-approved .gs-live-flip-art{
+  overflow:visible;
+  perspective:700px;
+}
+.gs-flip-approved .gs-live-card-back{
+  position:absolute;
+  width:70px;
+  height:96px;
+  border:2px solid rgba(223,169,255,.82);
+  border-radius:11px;
+  background:
+    repeating-linear-gradient(135deg,rgba(255,255,255,.055) 0 2px,transparent 2px 7px),
+    linear-gradient(150deg,#4f1887,#1a0837 72%);
+  box-shadow:0 9px 18px rgba(0,0,0,.48);
+}
+.gs-flip-approved .back-one{transform:translateX(-20px) rotate(-13deg)}
+.gs-flip-approved .back-two{transform:translateX(-12px) rotate(-8deg)}
+.gs-flip-approved .back-three{transform:translateX(-4px) rotate(-3deg)}
+.gs-flip-approved-front{
+  position:relative;
+  z-index:4;
+  width:86px;
+  height:108px;
+  transform:translateX(10px) rotate(3deg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  filter:drop-shadow(0 12px 11px rgba(0,0,0,.5));
+}
+.gs-flip-approved-img{
+  width:86px;
+  height:108px;
+  object-fit:contain;
+  border:2px solid rgba(255,255,255,.88);
+  border-radius:12px;
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.08),
+    0 0 18px var(--pc),
+    0 11px 20px rgba(0,0,0,.4);
+}
+.gs-flip-approved-number{
+  position:relative;
+  width:86px;
+  height:108px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border:2px solid rgba(255,255,255,.88);
+  border-radius:12px;
+  color:#fff;
+  font-weight:1000;
+  overflow:hidden;
+  text-shadow:
+    -2px -2px 0 rgba(0,0,0,.45),
+    2px 2px 0 rgba(0,0,0,.45);
+  box-shadow:
+    inset 0 0 0 3px rgba(255,255,255,.08),
+    0 0 18px var(--pc),
+    0 11px 20px rgba(0,0,0,.42);
+}
+.gs-flip-approved-number:before{
+  content:"";
+  position:absolute;
+  inset:5px;
+  border:1px solid rgba(255,255,255,.42);
+  border-radius:8px;
+}
+.gs-flip-approved-number span{
+  position:relative;
+  z-index:2;
+  font-size:48px;
+  line-height:.9;
+}
+.gs-flip-approved-number small{
+  position:relative;
+  z-index:2;
+  margin-top:8px;
+  font-size:7px;
+  letter-spacing:.08em;
+  color:rgba(255,255,255,.9);
+}
+.gs-flip-num-11{
+  background:
+    radial-gradient(circle at 48% 36%,rgba(255,255,255,.18),transparent 25%),
+    linear-gradient(145deg,#ff9d1f,#d85c00 72%);
+}
+.gs-flip-num-7{
+  background:
+    radial-gradient(circle at 48% 36%,rgba(255,255,255,.18),transparent 25%),
+    linear-gradient(145deg,#179ce8,#075ba8 72%);
+}
+
+/* ---------------- SEA SALT & PAPER APPROVATO ---------------- */
+.gs-sea-approved{
+  background:
+    radial-gradient(circle at 26% 35%,rgba(117,235,241,.17),transparent 26%),
+    linear-gradient(110deg,#0b2940 0%,#071723 51%,#030a12 100%) !important;
+}
+.gs-sea-approved-card{
+  position:relative;
+  width:88px !important;
+  height:108px !important;
+  overflow:hidden;
+  display:flex !important;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border:2px solid rgba(243,255,255,.96) !important;
+  border-radius:14px !important;
+  background:
+    linear-gradient(150deg,rgba(255,255,255,.95),rgba(192,236,242,.96) 48%,rgba(112,190,207,.96)) !important;
+  box-shadow:
+    0 11px 21px rgba(0,0,0,.42),
+    0 0 17px rgba(100,229,236,.3) !important;
+  transform:translateX(7px) rotate(3deg);
+}
+.gs-sea-paper-fold{
+  position:absolute;
+  top:0;
+  right:0;
+  width:28px;
+  height:28px;
+  background:linear-gradient(225deg,rgba(255,255,255,.72) 0 49%,rgba(77,145,161,.2) 50% 100%);
+  clip-path:polygon(0 0,100% 0,100% 100%);
+}
+.gs-sea-symbol{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:66px;
+  height:65px;
+  font-size:42px;
+  line-height:1;
+  filter:drop-shadow(0 5px 3px rgba(0,0,0,.22));
+}
+.gs-sea-star{font-size:44px}
+.gs-sea-crab{font-size:43px}
+.gs-sea-shell{font-size:43px}
+.gs-sea-boat{font-size:41px}
+.gs-sea-fish{font-size:42px}
+.gs-sea-approved-card small{
+  left:7px !important;
+  right:7px !important;
+  bottom:6px !important;
+  z-index:4;
+  padding:3px 4px !important;
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(4,35,48,.84) !important;
+  font-size:5.5px !important;
+  letter-spacing:.06em;
+}
+
+/* CSS origami crane */
+.gs-sea-origami-crane{
+  position:relative;
+  z-index:2;
+  width:66px;
+  height:58px;
+  filter:drop-shadow(0 5px 3px rgba(0,0,0,.2));
+}
+.gs-sea-origami-crane:before,
+.gs-sea-origami-crane:after,
+.gs-sea-origami-crane i,
+.gs-sea-origami-crane b,
+.gs-sea-origami-crane em{
+  content:"";
+  position:absolute;
+  display:block;
+  background:linear-gradient(145deg,#7453c8,#412079);
+}
+.gs-sea-origami-crane:before{
+  left:18px;top:17px;width:30px;height:28px;
+  clip-path:polygon(0 50%,100% 0,63% 100%);
+}
+.gs-sea-origami-crane:after{
+  left:2px;top:10px;width:31px;height:27px;
+  clip-path:polygon(0 0,100% 52%,14% 100%);
+}
+.gs-sea-origami-crane i{
+  right:0;top:7px;width:29px;height:25px;
+  clip-path:polygon(100% 0,82% 100%,0 55%);
+}
+.gs-sea-origami-crane b{
+  right:2px;top:0;width:25px;height:16px;
+  clip-path:polygon(0 100%,100% 0,72% 100%);
+}
+.gs-sea-origami-crane em{
+  left:29px;bottom:0;width:18px;height:22px;
+  clip-path:polygon(50% 0,100% 100%,0 100%);
+}
+.gs-sea-approved:after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:33px;
+  z-index:-1;
+  opacity:.5;
+  background:
+    radial-gradient(36px 15px at 8% 100%,transparent 60%,rgba(111,229,235,.32) 62% 68%,transparent 70%);
+  background-size:82px 32px;
+}
+
+/* mobile tuning for definitive cards */
+@media(max-width:600px){
+  .gs-flip-approved-front,
+  .gs-flip-approved-img,
+  .gs-flip-approved-number{
+    width:58px;
+    height:80px;
+  }
+  .gs-flip-approved-number span{font-size:34px}
+  .gs-flip-approved-number small{margin-top:5px;font-size:5px}
+  .gs-flip-approved .gs-live-card-back{
+    width:49px;
+    height:71px;
+  }
+  .gs-flip-approved .back-one{transform:translateX(-12px) rotate(-13deg)}
+  .gs-flip-approved .back-two{transform:translateX(-7px) rotate(-8deg)}
+  .gs-flip-approved .back-three{transform:translateX(-2px) rotate(-3deg)}
+  .gs-flip-approved-front{transform:translateX(5px) rotate(3deg)}
+
+  .gs-sea-approved-card{
+    width:59px !important;
+    height:80px !important;
+    transform:translateX(4px) rotate(3deg);
+    border-radius:10px !important;
+  }
+  .gs-sea-symbol{width:46px;height:48px;font-size:29px}
+  .gs-sea-star,.gs-sea-crab,.gs-sea-shell,.gs-sea-fish{font-size:30px}
+  .gs-sea-boat{font-size:28px}
+  .gs-sea-origami-crane{width:45px;height:41px;transform:scale(.8)}
+  .gs-sea-approved-card small{font-size:4.5px !important;bottom:3px !important}
+}
