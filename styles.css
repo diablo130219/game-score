@@ -9779,3 +9779,172 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     margin-bottom:8px !important;
   }
 }
+
+
+/* =========================================================
+   V86 — CLASSIFICA LIVE SPORTIVA / WOW (OSPITI)
+   ========================================================= */
+
+/* Podio: primo oro, secondo argento, terzo bronzo */
+.gs-premium-live-ranking .gs-premium-player{
+  position:relative;
+  transition:
+    border-color .28s ease,
+    box-shadow .28s ease,
+    background .28s ease,
+    filter .28s ease;
+  will-change:transform;
+}
+
+.gs-premium-live-ranking .gs-premium-player[data-gs-rank="1"]{
+  border-color:rgba(255,210,10,.74) !important;
+  box-shadow:
+    inset 4px 0 0 #ffd20a,
+    inset 0 0 24px rgba(255,210,10,.055),
+    0 0 0 1px rgba(255,210,10,.12),
+    0 0 22px rgba(255,210,10,.16) !important;
+}
+.gs-premium-live-ranking:not(.gs-ranking-tied) .gs-premium-player[data-gs-rank="1"]{
+  animation:gsLeaderGlow 2.7s ease-in-out infinite;
+}
+.gs-premium-live-ranking .gs-premium-player[data-gs-rank="2"]{
+  border-color:rgba(213,220,232,.42) !important;
+  box-shadow:
+    inset 4px 0 0 #cbd3df,
+    0 0 14px rgba(205,217,232,.07) !important;
+}
+.gs-premium-live-ranking .gs-premium-player[data-gs-rank="3"]{
+  border-color:rgba(205,128,67,.42) !important;
+  box-shadow:
+    inset 4px 0 0 #c77b43,
+    0 0 14px rgba(205,128,67,.07) !important;
+}
+
+/* Medal block */
+.gs-live-rank{
+  overflow:visible !important;
+}
+.gs-live-rank .gs-live-crown{
+  display:block;
+  transform-origin:center;
+}
+.gs-live-rank-1 .gs-live-crown{
+  font-size:25px !important;
+  filter:drop-shadow(0 0 7px rgba(255,210,10,.5));
+  animation:gsCrownFloat 2.4s ease-in-out infinite;
+}
+.gs-live-rank-2 .gs-live-crown,
+.gs-live-rank-3 .gs-live-crown{
+  font-size:19px !important;
+}
+.gs-live-rank strong{
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+}
+.gs-live-rank strong>b{
+  font:inherit;
+}
+.gs-live-rank-1 strong{
+  color:#ffd20a !important;
+  text-shadow:0 0 9px rgba(255,210,10,.28);
+}
+.gs-live-rank-2 strong{color:#dce3ed !important}
+.gs-live-rank-3 strong{color:#d89560 !important}
+
+/* When everybody is tied, retain medals but remove "leader" drama. */
+.gs-premium-live-ranking.gs-ranking-tied .gs-premium-player[data-gs-rank="1"]{
+  box-shadow:inset 4px 0 0 rgba(255,210,10,.7) !important;
+}
+
+/* Position-change feedback */
+.gs-premium-player.gs-rank-moving{
+  z-index:50 !important;
+  pointer-events:none;
+}
+.gs-premium-player.gs-rank-up:after,
+.gs-premium-player.gs-rank-down:after{
+  position:absolute;
+  z-index:80;
+  top:8px;
+  right:8px;
+  padding:4px 7px;
+  border-radius:999px;
+  font-size:7px;
+  font-weight:1000;
+  letter-spacing:.08em;
+  backdrop-filter:blur(8px);
+  animation:gsRankChangePop 1.05s ease both;
+}
+.gs-premium-player.gs-rank-up:after{
+  content:"▲ SALE";
+  color:#78f2a4;
+  border:1px solid rgba(120,242,164,.30);
+  background:rgba(19,86,49,.74);
+  box-shadow:0 0 12px rgba(120,242,164,.14);
+}
+.gs-premium-player.gs-rank-down:after{
+  content:"▼ SCENDE";
+  color:#ff8b9b;
+  border:1px solid rgba(255,92,115,.28);
+  background:rgba(94,24,39,.76);
+}
+
+/* Score emphasis stays readable during re-order */
+.gs-premium-player[data-gs-rank="1"] .gs-live-score>strong{
+  text-shadow:
+    0 0 16px color-mix(in srgb,var(--pc) 42%,transparent),
+    0 0 8px rgba(255,210,10,.18);
+}
+
+@keyframes gsLeaderGlow{
+  0%,100%{
+    box-shadow:
+      inset 4px 0 0 #ffd20a,
+      inset 0 0 24px rgba(255,210,10,.045),
+      0 0 0 1px rgba(255,210,10,.10),
+      0 0 17px rgba(255,210,10,.10)
+  }
+  50%{
+    box-shadow:
+      inset 4px 0 0 #ffd20a,
+      inset 0 0 30px rgba(255,210,10,.08),
+      0 0 0 1px rgba(255,210,10,.18),
+      0 0 29px rgba(255,210,10,.22)
+  }
+}
+@keyframes gsCrownFloat{
+  0%,100%{transform:translateY(0) rotate(-2deg)}
+  50%{transform:translateY(-3px) rotate(2deg)}
+}
+@keyframes gsRankChangePop{
+  0%{opacity:0;transform:translateY(-7px) scale(.8)}
+  22%{opacity:1;transform:translateY(0) scale(1.06)}
+  72%{opacity:1}
+  100%{opacity:0;transform:translateY(-5px) scale(.96)}
+}
+
+/* Respect users/devices that request reduced motion. */
+@media(prefers-reduced-motion:reduce){
+  .gs-premium-live-ranking .gs-premium-player,
+  .gs-live-rank-1 .gs-live-crown{
+    animation:none !important;
+    transition:none !important;
+  }
+}
+
+/* Mobile tuning */
+@media(max-width:700px){
+  .gs-live-rank-1 .gs-live-crown{font-size:21px !important}
+  .gs-live-rank-2 .gs-live-crown,
+  .gs-live-rank-3 .gs-live-crown{font-size:16px !important}
+
+  .gs-premium-player.gs-rank-up:after,
+  .gs-premium-player.gs-rank-down:after{
+    top:5px;
+    right:5px;
+    padding:3px 5px;
+    font-size:5.5px;
+  }
+}

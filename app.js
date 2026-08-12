@@ -2298,7 +2298,17 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     const last=s.rounds?.length ? s.rounds.at(-1) : Array((s.players||[]).length).fill(0);
     const allEqual=order.length ? order.every(x=>x.total===order[0].total) : true;
     const ranking=document.getElementById("gsSpectatorRanking");
-    ranking.className=`gs-spectator-ranking gs-premium-live-ranking gs-live-${game}`;
+
+    // V86 — FLIP animation: remember each player's on-screen position
+    // before the ranking order changes.
+    const gsOldRankRects=new Map(
+      [...ranking.querySelectorAll("[data-gs-player-key]")].map(el=>[
+        el.dataset.gsPlayerKey,
+        {rect:el.getBoundingClientRect(),rank:Number(el.dataset.gsRank||0)}
+      ])
+    );
+
+    ranking.className=`gs-spectator-ranking gs-premium-live-ranking gs-live-${game}${allEqual?" gs-ranking-tied":""}`;
 
     const colors=["#ffd20a","#a84cff","#159dff","#35d44f","#ff8d19","#28d6c4","#ff304f","#ef4cc8"];
 
@@ -2310,9 +2320,11 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     }
 
     function rankBlock(pos,c){
-      return `<div class="gs-live-rank" style="--pc:${c}">
-        <span class="gs-live-crown">${pos===0?"♛":"♕"}</span>
-        <strong>${pos+1}°</strong>
+      const icon=pos===0?"👑":pos===1?"🥈":pos===2?"🥉":"◆";
+      const medal=pos===0?"🥇":"";
+      return `<div class="gs-live-rank gs-live-rank-${Math.min(pos+1,4)}" style="--pc:${c}">
+        <span class="gs-live-crown">${icon}</span>
+        <strong>${medal}<b>${pos+1}°</b></strong>
       </div>`;
     }
 
@@ -2324,7 +2336,7 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
         const playerName=(typeof p.name==="object" && p.name!==null)
           ? String(p.name.name||p.name.label||p.name.playerName||`Giocatore ${p.i+1}`)
           : String(p.name ?? `Giocatore ${p.i+1}`);
-        return `<article class="gs-premium-player gs-flip-live-card gs-spectator-flip-fixed" style="--pc:${c};--flip-player:${c}">
+        return `<article class="gs-premium-player gs-flip-live-card gs-spectator-flip-fixed" data-gs-player-key="${p.i}" data-gs-rank="${pos+1}" style="--pc:${c};--flip-player:${c}">
           ${status?`<span class="gs-live-status">${status}</span>`:""}
           ${rankBlock(pos,c)}
           <div class="gs-live-art gs-spectator-flip-art">
@@ -2359,7 +2371,7 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
         const status=statusFor(pos);
         const missing=Math.max(0,target-p.total);
         const card=seaCards[p.i%seaCards.length];
-        return `<article class="gs-premium-player gs-sea-live-card" style="--pc:${c}">
+        return `<article class="gs-premium-player gs-sea-live-card" data-gs-player-key="${p.i}" data-gs-rank="${pos+1}" style="--pc:${c}">
           ${status?`<span class="gs-live-status">${status}</span>`:""}
           ${rankBlock(pos,c)}
           <div class="gs-live-art gs-live-sea-art">
@@ -2393,7 +2405,7 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
         const remaining=Math.max(0,66-p.total);
         const art=arts[p.i%arts.length];
         const cardNo=String(p.i+1).padStart(2,"0");
-        return `<article class="gs-premium-player gs-six-live-card" style="--pc:${c}">
+        return `<article class="gs-premium-player gs-six-live-card" data-gs-player-key="${p.i}" data-gs-rank="${pos+1}" style="--pc:${c}">
           ${status?`<span class="gs-live-status">${status}</span>`:""}
           ${rankBlock(pos,c)}
           <div class="gs-live-art gs-live-six-art">
@@ -2412,6 +2424,39 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
           </div>
         </article>`;
       }).join("");
+    }
+
+
+    // V86 — animate real ranking movement instead of simply swapping rows.
+    // This is the FLIP technique (First, Last, Invert, Play).
+    if(gsOldRankRects.size){
+      requestAnimationFrame(()=>{
+        [...ranking.querySelectorAll("[data-gs-player-key]")].forEach((el,newIndex)=>{
+          const prev=gsOldRankRects.get(el.dataset.gsPlayerKey);
+          if(!prev)return;
+          const now=el.getBoundingClientRect();
+          const dx=prev.rect.left-now.left;
+          const dy=prev.rect.top-now.top;
+          const newRank=Number(el.dataset.gsRank||0);
+
+          if(Math.abs(dx)>1 || Math.abs(dy)>1){
+            el.classList.add("gs-rank-moving");
+            el.animate(
+              [
+                {transform:`translate(${dx}px,${dy}px) scale(.985)`,filter:"brightness(.94)"},
+                {transform:"translate(0,0) scale(1.018)",offset:.72,filter:"brightness(1.13)"},
+                {transform:"translate(0,0) scale(1)",filter:"brightness(1)"}
+              ],
+              {duration:720,easing:"cubic-bezier(.2,.78,.22,1)",fill:"both"}
+            ).finished.finally(()=>el.classList.remove("gs-rank-moving"));
+
+            if(prev.rank!==newRank){
+              el.classList.add(newRank<prev.rank?"gs-rank-up":"gs-rank-down");
+              setTimeout(()=>el.classList.remove("gs-rank-up","gs-rank-down"),1100);
+            }
+          }
+        });
+      });
     }
 
     document.getElementById("gsSpectatorOffline").classList.add("hidden");
