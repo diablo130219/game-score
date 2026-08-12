@@ -1967,19 +1967,67 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     if(game==="sixnimmt")order.sort((a,b)=>a.total-b.total||a.i-b.i);
     else order.sort((a,b)=>b.total-a.total||a.i-b.i);
 
-    const colors=["#ffd20a","#a84cff","#159dff","#35d44f","#ff8d19","#28d6c4","#ff304f","#ef4cc8"];
-    document.getElementById("gsSpectatorRanking").innerHTML=order.map((p,pos)=>{
-      const c=colors[p.i%colors.length];
-      const last=s.rounds?.length ? Number(s.rounds.at(-1)?.[p.i]||0) : 0;
-      return `<article class="gs-spectator-player" style="--pc:${c}">
-        <div class="gs-spectator-pos">${pos+1}°</div>
-        <div class="gs-spectator-player-copy">
-          <strong>${esc(p.name)}</strong>
-          <span>Ultimo round <b>+${last}</b></span>
-        </div>
-        <div class="gs-spectator-score">${p.total}</div>
-      </article>`;
-    }).join("");
+    const ranking=document.getElementById("gsSpectatorRanking");
+
+    /* FLIP 7: stessa tessera premium dell'HOST, ma in sola lettura */
+    if(game==="flip7"){
+      const lr=s.rounds?.length ? s.rounds.at(-1) : Array((s.players||[]).length).fill(0);
+      const allEqual=order.length ? order.every(x=>x.total===order[0].total) : true;
+
+      ranking.className="gs-spectator-ranking gs-spectator-ranking-flip";
+      ranking.innerHTML=order.map((p,pos)=>{
+        const t=themes[p.i%themes.length];
+        const c=t.c;
+        const isLeader=pos===0&&!allEqual;
+        const isLast=pos===order.length-1&&order.length>1&&!allEqual;
+        const status=isLeader?"IN TESTA":(isLast?"ULTIMO":"");
+        const missing=Math.max(0,(s.target||200)-p.total);
+
+        return `<article class="gs-view-flip-card ${isLeader?"leader":""}" style="--c:${c}">
+          ${status?`<span class="gs-view-status ${isLast?"last":""}">${status}</span>`:""}
+
+          <div class="gs-view-rank">
+            <span class="gs-view-crown">♛</span>
+            <strong>${pos+1}°</strong>
+          </div>
+
+          <div class="gs-view-card-stage">
+            <div class="gs-view-card-back back-one"></div>
+            <div class="gs-view-card-back back-two"></div>
+            <div class="gs-view-card-front">${cardMarkup(p.i)}</div>
+          </div>
+
+          <div class="gs-view-player-copy">
+            <strong>${esc(p.name)}</strong>
+            <div class="gs-view-last">
+              <span>Ultimo round</span>
+              <b>+${Number(lr?.[p.i]||0)}</b>
+            </div>
+          </div>
+
+          <div class="gs-view-score">
+            <strong>${p.total}</strong>
+            <span>Mancano <b>${missing}</b></span>
+          </div>
+        </article>`;
+      }).join("");
+    }else{
+      /* Gli altri giochi mantengono per ora la vista online attuale. */
+      const colors=["#ffd20a","#a84cff","#159dff","#35d44f","#ff8d19","#28d6c4","#ff304f","#ef4cc8"];
+      ranking.className="gs-spectator-ranking";
+      ranking.innerHTML=order.map((p,pos)=>{
+        const c=colors[p.i%colors.length];
+        const last=s.rounds?.length ? Number(s.rounds.at(-1)?.[p.i]||0) : 0;
+        return `<article class="gs-spectator-player" style="--pc:${c}">
+          <div class="gs-spectator-pos">${pos+1}°</div>
+          <div class="gs-spectator-player-copy">
+            <strong>${esc(p.name)}</strong>
+            <span>Ultimo round <b>+${last}</b></span>
+          </div>
+          <div class="gs-spectator-score">${p.total}</div>
+        </article>`;
+      }).join("");
+    }
 
     document.getElementById("gsSpectatorOffline").classList.add("hidden");
     app.classList.remove("hidden");
