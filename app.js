@@ -1848,18 +1848,67 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     return payload;
   }
 
+  const HOST_RESUME_KEY="gs:host-resume-code-v1";
+
+  function normalizeHostCode(v){
+    const raw=String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,10);
+    return raw.length>8 ? `${raw.slice(0,4)}-${raw.slice(4,8)}-${raw.slice(8)}` :
+           raw.length>4 ? `${raw.slice(0,4)}-${raw.slice(4)}` : raw;
+  }
+  function hostCodeRaw(v){return String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,"")}
+  function randomHostCode(){
+    const alphabet="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    const b=new Uint8Array(10);crypto.getRandomValues(b);
+    return normalizeHostCode([...b].map(x=>alphabet[x%alphabet.length]).join(""));
+  }
+  function loadHostResumeCode(){
+    try{return normalizeHostCode(localStorage.getItem(HOST_RESUME_KEY)||"")}catch(e){return""}
+  }
+  function saveHostResumeCode(code){
+    code=normalizeHostCode(code);
+    if(hostCodeRaw(code).length<8)throw new Error("Il Codice Host deve contenere almeno 8 caratteri.");
+    localStorage.setItem(HOST_RESUME_KEY,code);
+    return code;
+  }
+  function ensureHostResumeCode(){
+    let code=loadHostResumeCode();
+    if(!code){code=randomHostCode();saveHostResumeCode(code)}
+    return code;
+  }
+
+  async function bindExistingRoom(game){
+    const sb=getClient(),room=loadRoom(game);
+    if(!sb||!room?.joinCode||!room?.hostSecret)return false;
+    const code=ensureHostResumeCode();
+    const {error}=await sb.rpc("gs_bind_host_resume",{
+      p_join_code:room.joinCode,
+      p_host_secret:room.hostSecret,
+      p_host_resume_code:code
+    });
+    if(error){
+      console.warn("Bind Codice Host:",error);
+      return false;
+    }
+    return true;
+  }
+
   async function createRoom(game){
     const sb=getClient();
     if(!sb)throw new Error("Supabase non configurato");
     const existing=loadRoom(game);
-    if(existing?.joinCode && existing?.hostSecret)return existing;
+    if(existing?.joinCode && existing?.hostSecret){
+      await bindExistingRoom(game).catch(()=>{});
+      return existing;
+    }
 
     const hostSecret=randomSecret();
+    const hostResumeCode=ensureHostResumeCode();
     const payload=gsOnlineState(game);
     const {data,error}=await sb.rpc("gs_create_room",{
       p_game_type:game,
       p_state:payload,
-      p_host_secret:hostSecret
+      p_host_secret:hostSecret,
+      p_host_resume_code:hostResumeCode
     });
     if(error)throw error;
     const joinCode=typeof data==="string"?data:data?.join_code||data?.joinCode;
@@ -1956,7 +2005,11 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
       const url=spectatorUrl(room.joinCode);
       document.getElementById("gsRoomCode").textContent=room.joinCode;
       document.getElementById("gsSpectatorUrl").value=url;
+      const hostCode=ensureHostResumeCode();
+      const hostCodeEl=document.getElementById("gsHostResumeCode");
+      if(hostCodeEl)hostCodeEl.textContent=hostCode;
       qrRender(url);
+      await bindExistingRoom(game).catch(()=>{});
       await pushRoom(game,false);
       setStatus("Online · giocatori possono entrare");
     }catch(e){
@@ -1974,6 +2027,182 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
     const spectator=new URLSearchParams(location.search).has("room");
     if(!btn)return;
     btn.classList.toggle("hidden",spectator || !game || !gameHasPlayers(game));
+  }
+
+
+  // -------- HOST MULTI-DISPOSITIVO --------
+  const hostGameNames={flip7:"Flip 7",seasalt:"Sea Salt & Paper",sixnimmt:"6... Le prendi!"};
+
+  function onlineStateIsActive(game,s,closed){
+    if(closed||!s||!Array.isArray(s.players)||!s.players.length)return false;
+    if(game==="flip7")return !s.resultRecorded;
+    return !s.finished;
+  }
+
+  function stripOnlineMeta(s){
+    const out=JSON.parse(JSON.stringify(s||{}));
+    delete out.__hall;
+    return out;
+  }
+
+  function restoreHallFromOnline(game,hall){
+    if(!hall||!Array.isArray(hall.players))return;
+    try{
+      const players={};
+      hall.players.forEach(p=>{
+        const key=String(p.name||"").trim().toLocaleLowerCase("it");
+        if(key)players[key]={name:p.name,wins:Number(p.wins||0),games:Number(p.games||0),lastWin:p.lastWin||null};
+      });
+      if(game==="flip7")saveHall({totalGames:Number(hall.games||0),players});
+      else if(game==="seasalt")seaHallSave({games:Number(hall.games||0),players});
+      else six39HallSave({games:Number(hall.games||0),players});
+    }catch(e){console.warn("Ripristino Hall:",e)}
+  }
+
+  async function findHostRooms(code){
+    const sb=getClient();
+    if(!sb)throw new Error("Supabase non configurato");
+    code=normalizeHostCode(code||loadHostResumeCode());
+    if(hostCodeRaw(code).length<8)return [];
+    const {data,error}=await sb.rpc("gs_find_host_rooms",{p_host_resume_code:code});
+    if(error)throw error;
+    return (Array.isArray(data)?data:[])
+      .filter(r=>onlineStateIsActive(r.game_type,r.state,!!r.closed))
+      .sort((a,b)=>new Date(b.updated_at)-new Date(a.updated_at));
+  }
+
+  function hostRoomCard(r,compact=false){
+    const s=r.state||{},players=Array.isArray(s.players)?s.players:[];
+    const rounds=Array.isArray(s.rounds)?s.rounds.length:0;
+    const game=String(r.game_type||"");
+    const accent=game==="seasalt"?"#72e2df":game==="sixnimmt"?"#ffb52b":"#a84cff";
+    return `<button class="gs-host-room-card" data-host-room="${esc(r.join_code)}" style="--host-accent:${accent}">
+      <div class="gs-host-room-icon">${game==="seasalt"?"⛵":game==="sixnimmt"?"🐂":"7"}</div>
+      <div class="gs-host-room-copy">
+        <strong>${esc(hostGameNames[game]||game)}</strong>
+        <span>Round ${rounds+1} · ${players.length} giocatori</span>
+        <small>${players.slice(0,4).map(esc).join(" · ")}${players.length>4?"…":""}</small>
+      </div>
+      <div class="gs-host-room-action">CONTINUA <b>›</b></div>
+    </button>`;
+  }
+
+  async function refreshHostCloudUI(){
+    const home=document.getElementById("gsCloudHostCenter");
+    const roomsBox=document.getElementById("gsCloudHostRooms");
+    const modalRooms=document.getElementById("gsHostResumeRooms");
+    const code=loadHostResumeCode();
+
+    if(!code){
+      if(home){
+        home.classList.remove("hidden");
+        document.getElementById("gsCloudHostTitle").textContent="Riprendi una partita da un altro dispositivo";
+        document.getElementById("gsCloudHostText").textContent="Collega una volta il tuo Codice Host personale.";
+        roomsBox.innerHTML='<button class="gs-cloud-connect" data-open-host-resume>COLLEGA HOST ONLINE <b>›</b></button>';
+      }
+      if(modalRooms)modalRooms.innerHTML="";
+      return [];
+    }
+
+    try{
+      const rooms=await findHostRooms(code);
+      if(home){
+        home.classList.remove("hidden");
+        document.getElementById("gsCloudHostTitle").textContent=rooms.length?"Partite online in corso":"Host online collegato";
+        document.getElementById("gsCloudHostText").textContent=rooms.length
+          ?"Puoi continuare anche se la partita è stata creata su un altro dispositivo."
+          :"Nessuna partita online in corso.";
+        roomsBox.innerHTML=rooms.length?rooms.slice(0,3).map(r=>hostRoomCard(r,true)).join("")
+          :'<div class="gs-cloud-empty">✓ Questo dispositivo è collegato al tuo Host personale.</div>';
+      }
+      if(modalRooms)modalRooms.innerHTML=rooms.length?rooms.map(r=>hostRoomCard(r)).join("")
+        :'<div class="gs-host-no-rooms">Nessuna partita online attiva trovata.</div>';
+      bindHostRoomButtons(rooms);
+      return rooms;
+    }catch(e){
+      console.warn("Ricerca partite Host:",e);
+      if(home){
+        home.classList.remove("hidden");
+        document.getElementById("gsCloudHostTitle").textContent="Host online";
+        document.getElementById("gsCloudHostText").textContent="Esegui prima l'aggiornamento SQL V84 su Supabase.";
+        roomsBox.innerHTML='<button class="gs-cloud-connect" data-open-host-resume>APRI HOST ONLINE <b>›</b></button>';
+      }
+      if(modalRooms)modalRooms.innerHTML=`<div class="gs-host-no-rooms">⚠ ${esc(e.message||String(e))}</div>`;
+      return [];
+    }
+  }
+
+  function bindHostRoomButtons(rooms){
+    const byCode=new Map((rooms||[]).map(r=>[String(r.join_code),r]));
+    document.querySelectorAll("[data-host-room]").forEach(btn=>{
+      btn.onclick=()=>claimHostRoom(byCode.get(btn.dataset.hostRoom));
+    });
+    document.querySelectorAll("[data-open-host-resume]").forEach(btn=>{
+      btn.onclick=()=>openHostResumeModal();
+    });
+  }
+
+  function openHostResumeModal(){
+    const modal=document.getElementById("gsHostResumeModal");
+    const input=document.getElementById("gsHostResumeInput");
+    if(input)input.value=loadHostResumeCode();
+    modal?.classList.remove("hidden");
+    refreshHostCloudUI();
+  }
+
+  async function claimHostRoom(row){
+    if(!row)return;
+    const sb=getClient();
+    const code=loadHostResumeCode();
+    if(!sb||!code)return;
+    const status=document.getElementById("gsHostResumeStatus");
+    if(status)status.textContent="Recupero della partita in corso…";
+    const newSecret=randomSecret();
+    try{
+      const {data,error}=await sb.rpc("gs_claim_host_room",{
+        p_join_code:row.join_code,
+        p_host_resume_code:code,
+        p_new_host_secret:newSecret
+      });
+      if(error)throw error;
+      const claimed=Array.isArray(data)?data[0]:data;
+      if(!claimed)throw new Error("Partita non trovata.");
+      const game=claimed.game_type;
+      const online=claimed.state||{};
+      restoreHallFromOnline(game,online.__hall);
+      const clean=stripOnlineMeta(online);
+
+      saveRoom(game,{joinCode:claimed.join_code,hostSecret:newSecret,game});
+
+      if(game==="flip7"){
+        state=clean; save();
+      }else if(game==="seasalt"){
+        seaState=clean; seaSave();
+      }else{
+        six39State=clean; six39Save();
+      }
+
+      document.getElementById("gsHostResumeModal")?.classList.add("hidden");
+      window.renderResumeCenter?.();
+      homeChooseGame(game);
+      setStatus("Host trasferito su questo dispositivo");
+    }catch(e){
+      console.error(e);
+      if(status)status.textContent="⚠ "+(e.message||String(e));
+    }
+  }
+
+  async function saveHostCodeFromModal(){
+    const input=document.getElementById("gsHostResumeInput");
+    const status=document.getElementById("gsHostResumeStatus");
+    try{
+      const code=saveHostResumeCode(input?.value||"");
+      if(input)input.value=code;
+      if(status)status.textContent="✓ Dispositivo collegato. Cerco le tue partite…";
+      await refreshHostCloudUI();
+    }catch(e){
+      if(status)status.textContent="⚠ "+(e.message||String(e));
+    }
   }
 
   // -------- SPECTATOR --------
@@ -2263,6 +2492,22 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
 
   // UI bindings.
   document.getElementById("gsShareRoomBtn")?.addEventListener("click",openShare);
+  document.getElementById("gsCloudHostManage")?.addEventListener("click",openHostResumeModal);
+  document.getElementById("gsHostResumeSaveBtn")?.addEventListener("click",saveHostCodeFromModal);
+  document.getElementById("gsHostResumeInput")?.addEventListener("input",e=>{e.target.value=normalizeHostCode(e.target.value)});
+  document.getElementById("gsHostResumeInput")?.addEventListener("keydown",e=>{if(e.key==="Enter")saveHostCodeFromModal()});
+  document.getElementById("gsForgetHostCodeBtn")?.addEventListener("click",()=>{
+    localStorage.removeItem(HOST_RESUME_KEY);
+    document.getElementById("gsHostResumeInput").value="";
+    document.getElementById("gsHostResumeStatus").textContent="Codice Host dimenticato su questo dispositivo.";
+    refreshHostCloudUI();
+  });
+  document.getElementById("gsCopyHostCodeBtn")?.addEventListener("click",async()=>{
+    const code=ensureHostResumeCode();
+    const el=document.getElementById("gsHostResumeCode");if(el)el.textContent=code;
+    try{await navigator.clipboard.writeText(code);setStatus("Codice Host copiato")}
+    catch(e){setStatus("Codice Host: "+code)}
+  });
   document.querySelectorAll("[data-online-close]").forEach(b=>
     b.addEventListener("click",()=>document.getElementById(b.dataset.onlineClose)?.classList.add("hidden"))
   );
@@ -2285,6 +2530,17 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
   new MutationObserver(()=>updateShareButton())
     .observe(document.body,{subtree:true,attributes:true,attributeFilter:["class"]});
   updateShareButton();
+
+  // Host multi-dispositivo: collega le eventuali stanze locali pre-V84 e
+  // cerca automaticamente partite attive associate al Codice Host.
+  setTimeout(async()=>{
+    if(!new URLSearchParams(location.search).has("room")){
+      for(const g of ["flip7","seasalt","sixnimmt"]){
+        if(loadRoom(g))await bindExistingRoom(g).catch(()=>{});
+      }
+      await refreshHostCloudUI();
+    }
+  },250);
 
   // Spectator deep-link.
   const roomParam=new URLSearchParams(location.search).get("room");

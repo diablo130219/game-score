@@ -98,3 +98,16 @@ Gli aggiornamenti al database passano dalla funzione `gs_update_room`, che contr
 ## Nota Hall of Fame
 
 La Hall of Fame della v59 rimane quella persistente dell'host già presente nella v58. La stanza online condivide la partita live. Un eventuale profilo/account host con Hall of Fame cloud potrà essere aggiunto in un secondo passaggio senza modificare il QR dei giocatori.
+
+
+## V84 — Host multi-dispositivo
+
+La V84 permette di iniziare una partita su PC e riprenderla come HOST su iPhone (o viceversa).
+
+1. Esegui **SUPABASE_V84_HOST_MULTI_DISPOSITIVO.sql** una sola volta nel SQL Editor di Supabase.
+2. Pubblica la V84.
+3. Sul dispositivo che crea la partita, apri **QR GIOCATORI**: troverai anche il **Codice Host personale**.
+4. Sul secondo dispositivo apri GAME SCORE normalmente, premi **GESTISCI / COLLEGA HOST ONLINE** e inserisci quel codice una sola volta.
+5. Da quel momento la Home mostrerà automaticamente le partite online in corso e potrai premere **CONTINUA** per diventare HOST su quel dispositivo.
+
+Il QR giocatori resta separato: chi lo scansiona entra solo come spettatore.

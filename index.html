@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#080816">
-<meta name="game-score-version" content="63">
+<meta name="game-score-version" content="84">
 <title>Flip 7 Score</title>
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="styles.css?v=83">
+<link rel="stylesheet" href="styles.css?v=84">
 </head>
 <body>
 
@@ -49,6 +49,19 @@
       <div class="resume-action">RIPRENDI <b>›</b></div>
     </button>
     <div class="resume-safe">✓ Salvataggio automatico attivo</div>
+  </section>
+
+
+  <section id="gsCloudHostCenter" class="gs-cloud-host-center hidden" aria-live="polite">
+    <div class="gs-cloud-host-head">
+      <div>
+        <span class="gs-cloud-host-kicker">☁ HOST ONLINE</span>
+        <strong id="gsCloudHostTitle">Le tue partite online</strong>
+        <small id="gsCloudHostText">Puoi continuare una partita iniziata su un altro dispositivo.</small>
+      </div>
+      <button id="gsCloudHostManage" type="button">GESTISCI</button>
+    </div>
+    <div id="gsCloudHostRooms" class="gs-cloud-host-rooms"></div>
   </section>
 
   <div class="home-section-head">
@@ -1006,11 +1019,47 @@
         <button id="gsRefreshQrBtn" class="btn dark">Rigenera QR</button>
       </div>
 
+
+      <div class="gs-host-transfer">
+        <div>
+          <span>CODICE HOST PERSONALE</span>
+          <strong id="gsHostResumeCode">----------</strong>
+          <small>Serve una sola volta per riprendere le tue partite come HOST su PC, iPhone o altri dispositivi. Non condividerlo con gli spettatori.</small>
+        </div>
+        <button id="gsCopyHostCodeBtn" class="btn dark" type="button">Copia codice host</button>
+      </div>
+
       <div class="gs-online-status">
         <i id="gsOnlineStatusDot"></i>
         <span id="gsOnlineStatusText">Pronto</span>
       </div>
     </div>
+  </div>
+</div>
+
+
+<div id="gsHostResumeModal" class="modal hidden">
+  <div class="sheet gs-host-resume-sheet">
+    <div class="sheet-head">
+      <div>
+        <div class="kicker">HOST MULTI-DISPOSITIVO</div>
+        <h2>☁ Riprendi come host</h2>
+      </div>
+      <button class="close" data-online-close="gsHostResumeModal">×</button>
+    </div>
+
+    <p class="helper">Inserisci il tuo <b>Codice Host personale</b>. Dopo la prima volta questo dispositivo lo ricorderà e troverà automaticamente le tue partite online.</p>
+
+    <div class="gs-host-code-entry">
+      <label for="gsHostResumeInput">CODICE HOST</label>
+      <input id="gsHostResumeInput" maxlength="14" autocomplete="off" autocapitalize="characters" placeholder="ABCD-EFGH-JK">
+      <button id="gsHostResumeSaveBtn" class="btn yellow" type="button">COLLEGA QUESTO DISPOSITIVO</button>
+    </div>
+
+    <div id="gsHostResumeStatus" class="gs-host-resume-status"></div>
+    <div id="gsHostResumeRooms" class="gs-host-resume-rooms"></div>
+
+    <button id="gsForgetHostCodeBtn" class="gs-forget-host-code" type="button">Dimentica Codice Host su questo dispositivo</button>
   </div>
 </div>
 
@@ -1092,7 +1141,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="online-config.js?v=83"></script>
-<script src="app.js?v=83"></script>
+<script src="online-config.js?v=84"></script>
+<script src="app.js?v=84"></script>
 </body>
 </html>

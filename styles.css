@@ -9742,3 +9742,27 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     transform:scale(.53) !important;
   }
 }
+
+
+/* =========================================================
+   V84 — HOST MULTI-DISPOSITIVO
+   ========================================================= */
+.gs-cloud-host-center{margin:18px 0 24px;padding:18px;border:1px solid rgba(111,226,223,.22);border-radius:22px;background:linear-gradient(145deg,rgba(10,18,42,.86),rgba(6,9,24,.95));box-shadow:0 18px 45px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.03)}
+.gs-cloud-host-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}
+.gs-cloud-host-head>div{display:grid;gap:4px;min-width:0}.gs-cloud-host-kicker{color:#72e2df;font-size:9px;font-weight:1000;letter-spacing:.16em}.gs-cloud-host-head strong{color:#fff;font-size:18px}.gs-cloud-host-head small{color:#8f91a2;font-size:9px;line-height:1.4}
+#gsCloudHostManage{flex:0 0 auto;border:1px solid rgba(114,226,223,.3);border-radius:12px;padding:9px 11px;background:rgba(114,226,223,.08);color:#72e2df;font-size:8px;font-weight:1000;letter-spacing:.08em}
+.gs-cloud-host-rooms,.gs-host-resume-rooms{display:grid;gap:9px}
+.gs-cloud-connect{width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 15px;border:1px solid rgba(168,76,255,.28);border-radius:15px;background:linear-gradient(90deg,rgba(168,76,255,.16),rgba(114,226,223,.07));color:#fff;font-weight:1000;font-size:11px}
+.gs-cloud-empty,.gs-host-no-rooms{padding:13px;border:1px solid rgba(255,255,255,.07);border-radius:13px;background:rgba(255,255,255,.025);color:#9799a7;font-size:10px;text-align:center}
+.gs-host-room-card{--host-accent:#a84cff;width:100%;display:grid;grid-template-columns:46px minmax(0,1fr) auto;align-items:center;gap:10px;padding:11px;border:1px solid color-mix(in srgb,var(--host-accent) 38%,transparent);border-radius:16px;background:linear-gradient(90deg,color-mix(in srgb,var(--host-accent) 10%,#090c19 90%),#080a15);color:#fff;text-align:left;box-shadow:inset 3px 0 0 var(--host-accent)}
+.gs-host-room-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--host-accent) 16%,#0d1020 84%);color:var(--host-accent);font-size:20px;font-weight:1000}
+.gs-host-room-copy{display:grid;gap:2px;min-width:0}.gs-host-room-copy strong{font-size:14px}.gs-host-room-copy span{color:#b8b9c4;font-size:9px}.gs-host-room-copy small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#747789;font-size:8px}.gs-host-room-action{color:var(--host-accent);font-size:8px;font-weight:1000;white-space:nowrap}
+.gs-host-resume-sheet{max-width:620px}.gs-host-code-entry{display:grid;gap:8px;margin:18px 0;padding:14px;border:1px solid rgba(114,226,223,.18);border-radius:16px;background:rgba(114,226,223,.035)}.gs-host-code-entry label{color:#72e2df;font-size:8px;font-weight:1000;letter-spacing:.14em}.gs-host-code-entry input{width:100%;box-sizing:border-box;padding:13px 14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:#070a16;color:#fff;font-size:22px;font-weight:1000;letter-spacing:.12em;text-align:center;text-transform:uppercase;outline:none}
+.gs-host-resume-status{min-height:20px;margin:7px 0;color:#a7a8b2;font-size:9px;text-align:center}.gs-forget-host-code{display:block;margin:18px auto 0;border:0;background:transparent;color:#747789;font-size:8px;text-decoration:underline}
+.gs-host-transfer{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;margin:16px 0 8px;padding:13px;border:1px solid rgba(255,210,10,.18);border-radius:15px;background:rgba(255,210,10,.035)}.gs-host-transfer>div{display:grid;gap:3px}.gs-host-transfer span{color:#ffd20a;font-size:7px;font-weight:1000;letter-spacing:.12em}.gs-host-transfer strong{color:#fff;font-size:18px;letter-spacing:.12em}.gs-host-transfer small{max-width:420px;color:#8e909e;font-size:7px;line-height:1.35}
+
+@media(max-width:700px){
+  .gs-cloud-host-center{margin:12px 12px 18px;padding:13px;border-radius:18px}.gs-cloud-host-head strong{font-size:14px}.gs-cloud-host-head small{font-size:8px}
+  .gs-host-room-card{grid-template-columns:40px minmax(0,1fr) auto;padding:9px}.gs-host-room-icon{width:36px;height:36px}.gs-host-room-copy strong{font-size:12px}.gs-host-room-action{font-size:7px}
+  .gs-host-transfer{grid-template-columns:1fr}.gs-host-transfer .btn{width:100%}
+}
