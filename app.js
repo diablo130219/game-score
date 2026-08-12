@@ -90,7 +90,7 @@ function gsTouchGame(game,data,active){
 const KEY="flip7-score-v5";
 
 /* =========================================================
-   V99 — SUONI DISCRETI
+   V101 — SUONI PIÙ PRESENTI (+40%)
    Generati via Web Audio: nessun file esterno.
    ========================================================= */
 const GS_SOUND_KEY="gs:sounds-enabled-v1";
@@ -148,19 +148,19 @@ function gsPlaySound(kind){
   const t=ctx.currentTime+.01;
   try{
     if(kind==="round"){
-      gsTone(ctx,520,t,.16,.028,"sine");
-      gsTone(ctx,660,t+.08,.19,.026,"sine");
+      gsTone(ctx,520,t,.16,.0392,"sine");
+      gsTone(ctx,660,t+.08,.19,.0364,"sine");
     }else if(kind==="rank"){
-      gsTone(ctx,440,t,.16,.022,"triangle");
-      gsTone(ctx,590,t+.10,.18,.026,"triangle");
-      gsTone(ctx,740,t+.20,.20,.022,"triangle");
+      gsTone(ctx,440,t,.16,.0308,"triangle");
+      gsTone(ctx,590,t+.10,.18,.0364,"triangle");
+      gsTone(ctx,740,t+.20,.20,.0308,"triangle");
     }else if(kind==="win"){
-      gsTone(ctx,523.25,t,.32,.032,"triangle");
-      gsTone(ctx,659.25,t+.16,.35,.034,"triangle");
-      gsTone(ctx,783.99,t+.32,.42,.037,"triangle");
-      gsTone(ctx,1046.5,t+.56,.52,.025,"sine");
+      gsTone(ctx,523.25,t,.32,.0448,"triangle");
+      gsTone(ctx,659.25,t+.16,.35,.0476,"triangle");
+      gsTone(ctx,783.99,t+.32,.42,.0518,"triangle");
+      gsTone(ctx,1046.5,t+.56,.52,.035,"sine");
     }else if(kind==="toggle"){
-      gsTone(ctx,620,t,.12,.018,"sine");
+      gsTone(ctx,620,t,.12,.0252,"sine");
     }
   }catch(e){}
 }
