@@ -10949,3 +10949,186 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
     font-size:31px !important;
   }
 }
+
+
+/* =========================================================
+   V95 — FIX DEFINITIVO IMPAGINAZIONE TESTATA OSPITI MOBILE
+   Corregge la disposizione reale di:
+   GAME SCORE | LIVE | HALL
+   titolo gioco e meta su righe separate.
+   ========================================================= */
+@media (max-width:700px){
+
+  #gsSpectatorApp .gs-spectator-hero{
+    position:relative !important;
+    display:grid !important;
+    grid-template-rows:44px auto auto !important;
+    align-content:start !important;
+    row-gap:5px !important;
+    min-height:150px !important;
+    height:auto !important;
+    padding:10px 12px 12px !important;
+    overflow:hidden !important;
+  }
+
+  /* Tutti i tre controlli superiori vengono tolti dal vecchio
+     posizionamento assoluto e messi in una griglia reale. */
+  #gsSpectatorApp .gs-spectator-logo,
+  #gsSpectatorApp .gs-live-pill,
+  #gsSpectatorApp .gs-spectator-hall-btn{
+    position:absolute !important;
+    top:10px !important;
+    transform:none !important;
+    margin:0 !important;
+    z-index:20 !important;
+  }
+
+  /* GAME SCORE a sinistra */
+  #gsSpectatorApp .gs-spectator-logo{
+    left:12px !important;
+    right:auto !important;
+    width:112px !important;
+    max-width:112px !important;
+    height:38px !important;
+    max-height:38px !important;
+    overflow:visible !important;
+    opacity:1 !important;
+  }
+  #gsSpectatorApp .gs-spectator-logo img{
+    display:block !important;
+    width:112px !important;
+    max-width:112px !important;
+    height:auto !important;
+    max-height:38px !important;
+    object-fit:contain !important;
+    object-position:left top !important;
+  }
+
+  /* LIVE realmente centrato nella testata */
+  #gsSpectatorApp .gs-live-pill{
+    left:50% !important;
+    right:auto !important;
+    top:11px !important;
+    transform:translateX(-50%) !important;
+    min-width:68px !important;
+    width:auto !important;
+    height:27px !important;
+    min-height:27px !important;
+    padding:4px 10px !important;
+    box-sizing:border-box !important;
+    white-space:nowrap !important;
+  }
+
+  /* HALL a destra */
+  #gsSpectatorApp .gs-spectator-hall-btn{
+    left:auto !important;
+    right:12px !important;
+    width:52px !important;
+    min-width:52px !important;
+    height:44px !important;
+    min-height:44px !important;
+    top:8px !important;
+  }
+
+  /* Titolo: sotto la fascia superiore, MAI sovrapposto */
+  #gsSpectatorApp .gs-spectator-game-title{
+    grid-row:2 !important;
+    position:relative !important;
+    top:auto !important;
+    left:auto !important;
+    right:auto !important;
+    bottom:auto !important;
+    transform:none !important;
+    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
+    margin:3px auto 0 !important;
+    padding:0 8px !important;
+    box-sizing:border-box !important;
+    text-align:center !important;
+    white-space:normal !important;
+    overflow:visible !important;
+    line-height:.95 !important;
+    z-index:5 !important;
+  }
+
+  #gsSpectatorApp[data-spectator-game="flip7"] .gs-spectator-game-title{
+    font-size:45px !important;
+  }
+  #gsSpectatorApp[data-spectator-game="seasalt"] .gs-spectator-game-title{
+    font-size:33px !important;
+  }
+  #gsSpectatorApp[data-spectator-game="sixnimmt"] .gs-spectator-game-title{
+    font-size:34px !important;
+  }
+
+  /* Meta: terza riga, centrata */
+  #gsSpectatorApp .gs-spectator-meta{
+    grid-row:3 !important;
+    position:relative !important;
+    top:auto !important;
+    left:auto !important;
+    right:auto !important;
+    bottom:auto !important;
+    transform:none !important;
+    display:block !important;
+    width:auto !important;
+    max-width:94% !important;
+    margin:1px auto 0 !important;
+    padding:2px 6px !important;
+    min-height:0 !important;
+    box-sizing:border-box !important;
+    text-align:center !important;
+    white-space:normal !important;
+    line-height:1.15 !important;
+    font-size:6.5px !important;
+    z-index:5 !important;
+  }
+
+  /* La sezione round resta subito sotto; niente margini eccessivi */
+  #gsSpectatorApp .gs-spectator-main,
+  #gsSpectatorApp .spectator-main,
+  #gsSpectatorApp .gs-spectator-content{
+    padding-top:7px !important;
+  }
+
+  /* Mantieni compatte le tessere: parte riuscita della V93/V94 */
+  #gsSpectatorRanking{
+    margin-top:4px !important;
+    gap:6px !important;
+  }
+  #gsSpectatorRanking .gs-premium-player{
+    min-height:88px !important;
+    padding-top:8px !important;
+    padding-bottom:8px !important;
+  }
+}
+
+/* telefoni più stretti */
+@media (max-width:390px){
+  #gsSpectatorApp .gs-spectator-hero{
+    min-height:146px !important;
+    padding-left:9px !important;
+    padding-right:9px !important;
+  }
+  #gsSpectatorApp .gs-spectator-logo{
+    left:9px !important;
+    width:100px !important;
+    max-width:100px !important;
+  }
+  #gsSpectatorApp .gs-spectator-logo img{
+    width:100px !important;
+    max-width:100px !important;
+  }
+  #gsSpectatorApp .gs-spectator-hall-btn{
+    right:9px !important;
+    width:48px !important;
+    min-width:48px !important;
+  }
+  #gsSpectatorApp[data-spectator-game="seasalt"] .gs-spectator-game-title{
+    font-size:30px !important;
+  }
+  #gsSpectatorApp[data-spectator-game="sixnimmt"] .gs-spectator-game-title{
+    font-size:31px !important;
+  }
+}
