@@ -1,4 +1,18 @@
 
+/* V77 — Static URL safety fix */
+(function(){
+  try{
+    window.GS_ONLINE_CONFIG = window.GS_ONLINE_CONFIG || {};
+    const oldUrl = "https://game-score-go9s.onrender.com";
+    const staticUrl = "https://game-score-static.onrender.com";
+    const current = String(window.GS_ONLINE_CONFIG.APP_PUBLIC_URL || "").trim();
+    if(!current || current === oldUrl){
+      window.GS_ONLINE_CONFIG.APP_PUBLIC_URL = staticUrl;
+    }
+  }catch(e){}
+})();
+
+
 /* =========================================================
    v56 — ROBUST PERSISTENCE CORE
    Primary + backup + session shadow, recovery, metadata.
