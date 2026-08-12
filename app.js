@@ -819,6 +819,20 @@ function hideAllGameWorlds(){
 function homeChooseGame(game){
   $("#homeScreen").classList.add("hidden");
   hideAllGameWorlds();
+
+  // v87: bonifica automatica anche delle partite concluse salvate
+  // dalle versioni precedenti.
+  if(game==="flip7" && state.resultRecorded){
+    state={players:[],rounds:[],target:200,gameId:null,resultRecorded:false};
+    save();
+  }else if(game==="seasalt" && seaState.finished){
+    seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false};
+    seaSave();
+  }else if((game==="sixnimmt" || game==="6nimmt") && six39State.finished){
+    six39State={players:[],rounds:[],finished:false,winner:null,recorded:false};
+    six39Save();
+  }
+
   if(game==="flip7"){
     $("#flip7App").classList.remove("hidden");
     render();
@@ -1697,13 +1711,47 @@ function gsHidePerfectWin(id){
   if(screen)screen.classList.add("hidden");
   document.documentElement.classList.remove("gs-modal-open");
 }
+/* =========================================================
+   v87 — CHIUSURA AUTOMATICA DELLA PARTITA CONCLUSA
+   Il risultato resta nei Trofei, ma la partita terminata non
+   resta più come partita corrente/riprendibile.
+   ========================================================= */
+function gsFinalizeCompletedGame(game){
+  if(game==="flip"){
+    // Il Trofeo è già stato registrato da recordResultIfNeeded().
+    state={players:[],rounds:[],target:200,gameId:null,resultRecorded:false};
+    save();
+  }else if(game==="sea"){
+    // Il Trofeo è già stato registrato da seaFinish().
+    seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false};
+    seaSave();
+  }else if(game==="six"){
+    // Il Trofeo è già stato registrato da six39RecordWin().
+    six39State={players:[],rounds:[],finished:false,winner:null,recorded:false};
+    six39Save();
+  }
+  window.renderResumeCenter?.();
+}
+
+function gsGameFromWinScreen(id){
+  if(id==="winScreen")return "flip";
+  if(id==="seaWinScreen")return "sea";
+  if(id==="six39WinScreen")return "six";
+  return null;
+}
+
 function gsHomeAfterWin(id){
+  const game=gsGameFromWinScreen(id);
   gsHidePerfectWin(id);
+  if(game)gsFinalizeCompletedGame(game);
   showHome();
   window.renderResumeCenter?.();
 }
 function gsHallAfterWin(id,game){
   gsHidePerfectWin(id);
+  // Prima chiudiamo definitivamente la partita; lo storico Trofei
+  // è separato e quindi non viene cancellato.
+  gsFinalizeCompletedGame(game);
   if(game==="flip"){
     renderHall();openModal("hallModal");
   }else if(game==="sea"){
@@ -1955,7 +2003,12 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
   window.gsOnlineMaybePush=function(game,data){
     const room=loadRoom(game);
     if(!room)return;
-    const closed=!(data?.players?.length);
+    const noPlayers=!(data?.players?.length);
+    const completed =
+      (game==="flip7" && data?.resultRecorded===true) ||
+      (game==="seasalt" && data?.finished===true) ||
+      (game==="sixnimmt" && data?.finished===true);
+    const closed=noPlayers || completed;
     clearTimeout(window.__gsOnlinePushTimer);
     window.__gsOnlinePushTimer=setTimeout(async()=>{
       await pushRoom(game,closed);
