@@ -11888,3 +11888,18 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
   55%{opacity:1;transform:scale(1.018)}
   100%{opacity:1;transform:scale(1)}
 }
+
+/* V104 — pulsanti schermata vittoria sempre cliccabili */
+#flipHomeAfterWin,#flipHallAfterWin,
+#seaHomeAfterWin,#seaHallAfterWin,
+#sixHomeAfterWin,#sixHallAfterWin{
+  position:relative !important;
+  z-index:120 !important;
+  pointer-events:auto !important;
+  cursor:pointer !important;
+  touch-action:manipulation !important;
+}
+.win-actions-final{
+  position:relative !important;
+  z-index:110 !important;
+}

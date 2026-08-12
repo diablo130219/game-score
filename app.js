@@ -2032,30 +2032,49 @@ function gsGameFromWinScreen(id){
 }
 
 function gsHomeAfterWin(id){
-  const game=gsGameFromWinScreen(id);
+  // V104: navigazione diretta e indipendente dallo stato partita già archiviato.
   gsHidePerfectWin(id);
-  // V89: la partita è già stata archiviata automaticamente alla conclusione.
-  showHome();
+  document.getElementById(id)?.classList.remove("showing","gs-win-enter");
+  document.getElementById("hallModal")?.classList.add("hidden");
+  document.getElementById("seaHallModal")?.classList.add("hidden");
+  document.getElementById("six39HallModal")?.classList.add("hidden");
+
+  document.getElementById("flip7App")?.classList.add("hidden");
+  document.getElementById("seaSaltWorld")?.classList.add("hidden");
+  document.getElementById("sixNimmtWorld")?.classList.add("hidden");
+  document.getElementById("homeScreen")?.classList.remove("hidden");
+
+  document.documentElement.classList.remove("gs-modal-open");
+  document.body.classList.remove("gs-modal-open");
   window.renderResumeCenter?.();
+  window.scrollTo({top:0,behavior:"smooth"});
 }
+
 function gsHallAfterWin(id,game){
+  // V104: prima chiude davvero la schermata vittoria, poi apre la Hall richiesta.
   gsHidePerfectWin(id);
-  // V89: la chiusura persistente è già avvenuta alla conclusione.
+  document.getElementById(id)?.classList.remove("showing","gs-win-enter");
+  document.documentElement.classList.remove("gs-modal-open");
+  document.body.classList.remove("gs-modal-open");
+
   if(game==="flip"){
-    renderHall();openModal("hallModal");
+    renderHall();
+    document.getElementById("hallModal")?.classList.remove("hidden");
   }else if(game==="sea"){
-    seaRenderHall();openModal("seaHallModal");
+    seaRenderHall();
+    document.getElementById("seaHallModal")?.classList.remove("hidden");
   }else{
-    six39RenderHall();openModal("six39HallModal");
+    six39RenderHall();
+    document.getElementById("six39HallModal")?.classList.remove("hidden");
   }
 }
 
-document.getElementById("flipHomeAfterWin")?.addEventListener("click",()=>gsHomeAfterWin("winScreen"));
-document.getElementById("flipHallAfterWin")?.addEventListener("click",()=>gsHallAfterWin("winScreen","flip"));
-document.getElementById("seaHomeAfterWin")?.addEventListener("click",()=>gsHomeAfterWin("seaWinScreen"));
-document.getElementById("seaHallAfterWin")?.addEventListener("click",()=>gsHallAfterWin("seaWinScreen","sea"));
-document.getElementById("sixHomeAfterWin")?.addEventListener("click",()=>gsHomeAfterWin("six39WinScreen"));
-document.getElementById("sixHallAfterWin")?.addEventListener("click",()=>gsHallAfterWin("six39WinScreen","six"));
+if(document.getElementById("flipHomeAfterWin"))document.getElementById("flipHomeAfterWin").onclick=()=>gsHomeAfterWin("winScreen");
+if(document.getElementById("flipHallAfterWin"))document.getElementById("flipHallAfterWin").onclick=()=>gsHallAfterWin("winScreen","flip");
+if(document.getElementById("seaHomeAfterWin"))document.getElementById("seaHomeAfterWin").onclick=()=>gsHomeAfterWin("seaWinScreen");
+if(document.getElementById("seaHallAfterWin"))document.getElementById("seaHallAfterWin").onclick=()=>gsHallAfterWin("seaWinScreen","sea");
+if(document.getElementById("sixHomeAfterWin"))document.getElementById("sixHomeAfterWin").onclick=()=>gsHomeAfterWin("six39WinScreen");
+if(document.getElementById("sixHallAfterWin"))document.getElementById("sixHallAfterWin").onclick=()=>gsHallAfterWin("six39WinScreen","six");
 
 // New game actions retain the same game world instead of bouncing to home.
 document.getElementById("seaNewGame")?.addEventListener("click",()=>{
