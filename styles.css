@@ -11724,3 +11724,111 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
 @media print{
   .gs-sound-toggle{display:none !important}
 }
+
+
+/* =========================================================
+   V100 — PROFILI STATISTICHE HALL PER GLI OSPITI
+   ========================================================= */
+.gs-hall-row-clickable{
+  width:100%;
+  appearance:none;
+  font:inherit;
+  color:inherit;
+  text-align:left;
+  cursor:pointer;
+  position:relative;
+  padding-right:34px !important;
+  transition:transform .18s ease,border-color .18s ease,background .18s ease;
+}
+.gs-hall-row-clickable:hover{transform:translateY(-1px)}
+.gs-hall-row-clickable:active{transform:scale(.985)}
+.gs-hall-open-profile{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#bfc0cc;
+  font-size:25px;
+  font-weight:900;
+}
+
+.gs-spectator-profile-card{
+  --profile-accent:#a84cff;
+  width:min(760px,94vw) !important;
+  max-height:min(86vh,760px);
+  overflow:auto;
+  padding:26px !important;
+  border-color:color-mix(in srgb,var(--profile-accent) 42%,rgba(255,255,255,.10)) !important;
+}
+.gs-spectator-profile-rank{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-top:14px;
+  padding:15px 16px;
+  border:1px solid color-mix(in srgb,var(--profile-accent) 25%,rgba(255,255,255,.08));
+  border-radius:18px;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--profile-accent) 8%,#10142b 92%),#0b0e20);
+}
+.gs-spectator-profile-medal{
+  flex:0 0 58px;
+  width:58px;height:58px;
+  display:grid;place-items:center;
+  border-radius:16px;
+  font-size:31px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.10);
+}
+.gs-spectator-profile-rank div:last-child{display:grid;gap:5px}
+.gs-spectator-profile-rank strong{color:#ffd933;font-size:20px;font-weight:1000}
+.gs-spectator-profile-rank span{color:#aeb2c2;font-size:11px}
+
+.gs-spectator-profile-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-top:14px;
+}
+.gs-spectator-profile-grid>div{
+  min-height:92px;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:17px;
+  background:linear-gradient(180deg,#10142b,#0a0d1d);
+}
+.gs-spectator-profile-grid>div.highlight{
+  border-color:rgba(255,210,10,.24);
+}
+.gs-spectator-profile-grid span,.gs-spectator-profile-last span{
+  color:#8f94a7;font-size:8px;font-weight:1000;letter-spacing:.08em;
+}
+.gs-spectator-profile-grid strong{color:#fff;font-size:26px;font-weight:1000;line-height:1}
+.gs-spectator-profile-grid .highlight strong{color:#ffd21a}
+#gsSpectatorProfileTopGame{font-size:15px !important;line-height:1.15 !important}
+
+.gs-spectator-profile-last{
+  margin-top:12px;padding:14px 16px;display:grid;gap:7px;
+  border:1px solid rgba(255,255,255,.09);border-radius:16px;background:#0d1022;
+}
+.gs-spectator-profile-last strong{color:#e4e5eb;font-size:13px}
+.gs-spectator-profile-back{
+  width:100%;min-height:48px;margin-top:13px;
+  border:1px solid color-mix(in srgb,var(--profile-accent) 32%,rgba(255,255,255,.10));
+  border-radius:15px;
+  background:color-mix(in srgb,var(--profile-accent) 9%,#101328 91%);
+  color:#fff;font-weight:900;cursor:pointer;
+}
+
+@media(max-width:700px){
+  .gs-spectator-profile-card{width:94vw !important;max-height:82vh;padding:19px 15px !important}
+  .gs-spectator-profile-rank{padding:12px;gap:10px}
+  .gs-spectator-profile-medal{flex-basis:50px;width:50px;height:50px;font-size:27px}
+  .gs-spectator-profile-rank strong{font-size:16px}
+  .gs-spectator-profile-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .gs-spectator-profile-grid>div{min-height:78px;padding:11px}
+  .gs-spectator-profile-grid strong{font-size:22px}
+  #gsSpectatorProfileTopGame{font-size:12px !important}
+}

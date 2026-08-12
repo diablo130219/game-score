@@ -2122,7 +2122,17 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
       else if(game==="sixnimmt"){const h=six39HallLoad()||{};games=Number(h.games||0);source=h.players||{}}
       const players=Object.values(source).map(p=>{
         const wins=Number(p?.wins||0),g=Number(p?.games||0);
-        return {name:String(p?.name||"Giocatore"),wins,games:g,rate:g?Math.round(wins/g*100):0,lastWin:p?.lastWin||null};
+        const best=game==="flip7"?(p?.bestScore??p?.best??null):(p?.best??p?.bestScore??null);
+        return {
+          name:String(p?.name||"Giocatore"),
+          wins,
+          games:g,
+          rate:g?Math.round(wins/g*100):0,
+          lastWin:p?.lastWin||null,
+          best,
+          podiums:Math.max(Number(p?.podiums||0),wins),
+          topGame:typeof gsTopGameForPlayer==="function"?gsTopGameForPlayer(p?.name):"—"
+        };
       }).sort((a,b)=>b.wins-a.wins||b.rate-a.rate||b.games-a.games||a.name.localeCompare(b.name,"it"));
       return {games,players,updatedAt:new Date().toISOString()};
     }catch(e){return {games:0,players:[],updatedAt:null}}
@@ -2343,7 +2353,11 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
       const players={};
       hall.players.forEach(p=>{
         const key=String(p.name||"").trim().toLocaleLowerCase("it");
-        if(key)players[key]={name:p.name,wins:Number(p.wins||0),games:Number(p.games||0),lastWin:p.lastWin||null};
+        if(key)players[key]={
+          name:p.name,wins:Number(p.wins||0),games:Number(p.games||0),lastWin:p.lastWin||null,
+          podiums:Math.max(Number(p.podiums||0),Number(p.wins||0)),
+          best:p.best??null,bestScore:p.best??null
+        };
       });
       if(game==="flip7")saveHall({totalGames:Number(hall.games||0),players});
       else if(game==="seasalt")seaHallSave({games:Number(hall.games||0),players});
@@ -2523,12 +2537,64 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
       <div><strong>${players.length}</strong><span>GIOCATORI</span></div>
       <div><strong>${players.reduce((n,p)=>n+Number(p.wins||0),0)}</strong><span>VITTORIE</span></div>`;
     document.getElementById("gsSpectatorHallRows").innerHTML=players.length?players.map((p,i)=>`
-      <div class="gs-hall-row ${i===0?"leader":""}">
+      <button class="gs-hall-row gs-hall-row-clickable ${i===0?"leader":""}" type="button" data-spectator-profile="${i}">
         <div class="gs-hall-pos">${i===0?"🥇":i===1?"🥈":i===2?"🥉":`${i+1}°`}</div>
-        <div class="gs-hall-name"><strong>${esc(p.name)}</strong><span>${p.games} partite · ${p.rate}% vittorie</span></div>
+        <div class="gs-hall-name">
+          <strong>${esc(p.name)}</strong>
+          <span>${p.games} partite · ${p.rate}% vittorie · ${Math.max(Number(p.podiums||0),Number(p.wins||0))} podi</span>
+        </div>
         <div class="gs-hall-wins"><strong>${p.wins}</strong><span>🏆</span></div>
-      </div>`).join(""):`<div class="gs-hall-empty">La prima vittoria comparirà qui automaticamente.</div>`;
+        <span class="gs-hall-open-profile">›</span>
+      </button>`).join(""):`<div class="gs-hall-empty">La prima vittoria comparirà qui automaticamente.</div>`;
+
+    document.querySelectorAll("#gsSpectatorHallRows [data-spectator-profile]").forEach(btn=>{
+      btn.onclick=()=>gsSpectatorOpenProfile(Number(btn.dataset.spectatorProfile));
+    });
   }
+
+  function gsSpectatorDate(iso){
+    if(!iso)return "Nessuna vittoria registrata";
+    try{
+      return new Intl.DateTimeFormat("it-IT",{day:"numeric",month:"long",year:"numeric"}).format(new Date(iso));
+    }catch(e){return "Data non disponibile"}
+  }
+
+  function gsSpectatorOpenProfile(index){
+    const hall=spectatorHallState?.hall||{};
+    const players=Array.isArray(hall.players)?hall.players:[];
+    const p=players[index];
+    if(!p)return;
+
+    const theme=spectatorTheme(spectatorHallState.game);
+    const rank=index+1;
+    const medal=rank===1?"🥇":rank===2?"🥈":rank===3?"🥉":"🏅";
+    const best=(p.best===null||p.best===undefined||p.best==="")?"—":p.best;
+    const podiums=Math.max(Number(p.podiums||0),Number(p.wins||0));
+
+    document.querySelector("#gsSpectatorProfileModal .gs-spectator-profile-card")
+      ?.style.setProperty("--profile-accent",theme.accent);
+
+    document.getElementById("gsSpectatorProfileName").textContent=String(p.name||"Giocatore").toUpperCase();
+    document.getElementById("gsSpectatorProfileMedal").textContent=medal;
+    document.getElementById("gsSpectatorProfileRank").textContent=`#${rank} nella Hall of Fame`;
+    document.getElementById("gsSpectatorProfileSubtitle").textContent=`Statistiche personali · ${theme.name}`;
+    document.getElementById("gsSpectatorProfileWins").textContent=Number(p.wins||0);
+    document.getElementById("gsSpectatorProfileGames").textContent=Number(p.games||0);
+    document.getElementById("gsSpectatorProfileRate").textContent=`${Number(p.rate||0)}%`;
+    document.getElementById("gsSpectatorProfileBest").textContent=best;
+    document.getElementById("gsSpectatorProfilePodiums").textContent=podiums;
+    document.getElementById("gsSpectatorProfileTopGame").textContent=p.topGame||theme.name||"—";
+    document.getElementById("gsSpectatorProfileLastWin").textContent=gsSpectatorDate(p.lastWin);
+
+    document.getElementById("gsSpectatorHallModal")?.classList.add("hidden");
+    document.getElementById("gsSpectatorProfileModal")?.classList.remove("hidden");
+  }
+
+  function gsSpectatorCloseProfile(backToHall=false){
+    document.getElementById("gsSpectatorProfileModal")?.classList.add("hidden");
+    if(backToHall)document.getElementById("gsSpectatorHallModal")?.classList.remove("hidden");
+  }
+
   function gsSpectatorWinner(game,s,totals,target){
     if(game==="seasalt"&&s.finished&&s.winner!==null&&s.winner!==undefined){
       const i=Number(s.winner); return {names:[s.players[i]],score:totals[i]||0,unit:"PUNTI"};
@@ -2612,7 +2678,10 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
       },10000);
     },1850);
   }
-  function gsSpectatorCloseHall(){document.getElementById("gsSpectatorHallModal")?.classList.add("hidden")}
+  function gsSpectatorCloseHall(){
+    document.getElementById("gsSpectatorHallModal")?.classList.add("hidden");
+    document.getElementById("gsSpectatorProfileModal")?.classList.add("hidden");
+  }
   function gsSpectatorCloseWin(){
     clearTimeout(spectatorWinTimer);
     const el=document.getElementById("gsSpectatorWinOverlay");
@@ -2962,6 +3031,9 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
   });
   document.getElementById("gsSpectatorHallClose")?.addEventListener("click",gsSpectatorCloseHall);
   document.getElementById("gsSpectatorHallModal")?.addEventListener("click",e=>{if(e.target===e.currentTarget)gsSpectatorCloseHall()});
+  document.getElementById("gsSpectatorProfileClose")?.addEventListener("click",()=>gsSpectatorCloseProfile(false));
+  document.getElementById("gsSpectatorProfileBack")?.addEventListener("click",()=>gsSpectatorCloseProfile(true));
+  document.getElementById("gsSpectatorProfileModal")?.addEventListener("click",e=>{if(e.target===e.currentTarget)gsSpectatorCloseProfile(false)});
   document.getElementById("gsSpectatorWinClose")?.addEventListener("click",gsSpectatorCloseWin);
   // Wrap the three existing persistence methods: local save stays source of truth for host,
   // then online room is updated when one exists.
