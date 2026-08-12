@@ -8408,3 +8408,230 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
 @keyframes gsTrophyBounce{0%{opacity:0;transform:scale(.3) rotate(-25deg)}55%{opacity:1;transform:scale(1.22) rotate(8deg)}75%{transform:scale(.92) rotate(-4deg)}100%{transform:scale(1)}}
 @keyframes gsWinSpin{to{transform:translateX(-50%) rotate(360deg)}}@keyframes gsConfettiFall{0%{opacity:0;transform:translate3d(0,-10vh,0) rotate(0)}10%{opacity:1}100%{opacity:.9;transform:translate3d(35px,118vh,0) rotate(720deg)}}@keyframes gsWinFadeOut{to{opacity:0;transform:scale(1.04)}}
 @media(max-width:600px){.gs-spectator-hall-btn{top:max(11px,env(safe-area-inset-top));right:10px;width:54px;height:54px;border-radius:16px}.gs-spectator-hall-btn span{font-size:21px}.gs-spectator-modal{padding:12px}.gs-spectator-modal-card{padding:23px 15px 20px;border-radius:22px}.gs-hall-card h2{font-size:24px}.gs-hall-row{grid-template-columns:34px minmax(0,1fr) auto;min-height:55px;padding:8px}.gs-spectator-win-card{padding:36px 16px 28px;border-radius:26px}.gs-spectator-win-trophy{font-size:67px}.gs-spectator-win-score strong{font-size:52px}}
+
+
+/* =========================================================
+   v73 — OSPITI: SFONDO SPECIFICO PER OGNI GIOCO
+   Sea Salt & Paper = mare
+   Flip 7 = viola/carte
+   6... Le prendi! = arancio/toro
+   Modifica solo la schermata spettatore.
+   ========================================================= */
+
+.gs-spectator{
+  position:relative;
+  min-height:100vh;
+  min-height:100dvh;
+  isolation:isolate;
+  overflow-x:hidden;
+  background:#050713 !important;
+}
+
+/* Background full-page */
+.gs-spectator::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-3;
+  pointer-events:none;
+  background-position:center top;
+  background-repeat:no-repeat;
+  background-size:cover;
+  filter:saturate(1.12) contrast(1.03);
+  transform:scale(1.02);
+}
+.gs-spectator::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+}
+
+/* ---------------- SEA SALT & PAPER ---------------- */
+.gs-spectator[data-spectator-game="seasalt"]::before{
+  background-image:
+    linear-gradient(180deg,rgba(0,65,104,.06),rgba(0,22,42,.38)),
+    url("assets/home-seasalt-approved.jpg");
+  background-position:center 12%;
+}
+.gs-spectator[data-spectator-game="seasalt"]::after{
+  background:
+    linear-gradient(180deg,rgba(0,43,68,.04) 0%,rgba(0,26,48,.18) 25%,rgba(1,12,27,.62) 54%,rgba(2,6,15,.94) 100%),
+    radial-gradient(circle at 50% 11%,rgba(64,226,231,.14),transparent 31%);
+}
+.gs-spectator[data-spectator-game="seasalt"] .gs-spectator-hero{
+  background:
+    linear-gradient(180deg,rgba(1,45,69,.24),rgba(1,20,35,.50)) !important;
+  border-bottom-color:rgba(76,229,232,.34) !important;
+}
+.gs-spectator[data-spectator-game="seasalt"] .gs-spectator-round{
+  background:rgba(4,24,39,.74) !important;
+  border-color:rgba(76,229,232,.34) !important;
+  box-shadow:0 12px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* ---------------- FLIP 7 ---------------- */
+.gs-spectator[data-spectator-game="flip7"]::before{
+  background-image:
+    linear-gradient(180deg,rgba(44,8,103,.04),rgba(9,4,29,.42)),
+    url("assets/home-flip7-approved.jpg");
+  background-position:center 9%;
+}
+.gs-spectator[data-spectator-game="flip7"]::after{
+  background:
+    linear-gradient(180deg,rgba(30,4,74,.05) 0%,rgba(20,5,51,.18) 26%,rgba(6,6,22,.62) 55%,rgba(2,4,13,.95) 100%),
+    radial-gradient(circle at 50% 11%,rgba(170,76,255,.16),transparent 33%);
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-spectator-hero{
+  background:
+    linear-gradient(180deg,rgba(35,9,79,.23),rgba(9,7,27,.52)) !important;
+  border-bottom-color:rgba(168,76,255,.34) !important;
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-spectator-round{
+  background:rgba(15,10,39,.76) !important;
+  border-color:rgba(168,76,255,.38) !important;
+  box-shadow:0 12px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* ---------------- 6... LE PRENDI! ---------------- */
+.gs-spectator[data-spectator-game="sixnimmt"]::before{
+  background-image:
+    linear-gradient(180deg,rgba(101,39,0,.05),rgba(38,12,3,.44)),
+    url("assets/home-sixnimmt-approved.jpg");
+  background-position:center 10%;
+}
+.gs-spectator[data-spectator-game="sixnimmt"]::after{
+  background:
+    linear-gradient(180deg,rgba(106,42,0,.04) 0%,rgba(68,24,3,.18) 26%,rgba(26,10,5,.64) 55%,rgba(7,5,8,.95) 100%),
+    radial-gradient(circle at 50% 11%,rgba(255,145,17,.15),transparent 33%);
+}
+.gs-spectator[data-spectator-game="sixnimmt"] .gs-spectator-hero{
+  background:
+    linear-gradient(180deg,rgba(92,34,4,.24),rgba(27,11,8,.54)) !important;
+  border-bottom-color:rgba(255,145,17,.34) !important;
+}
+.gs-spectator[data-spectator-game="sixnimmt"] .gs-spectator-round{
+  background:rgba(47,20,8,.77) !important;
+  border-color:rgba(255,145,17,.38) !important;
+  box-shadow:0 12px 34px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* Host-like top header composition */
+.gs-spectator-hero{
+  min-height:310px !important;
+  padding:20px 18px 34px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  position:relative !important;
+  overflow:hidden !important;
+  backdrop-filter:blur(1px);
+  -webkit-backdrop-filter:blur(1px);
+}
+
+/* The Game Score logo remains top-left like host, while live/title stay centered */
+.gs-spectator-logo{
+  position:absolute !important;
+  top:18px !important;
+  left:22px !important;
+  width:auto !important;
+  max-width:260px !important;
+  margin:0 !important;
+  justify-content:flex-start !important;
+  z-index:5 !important;
+}
+.gs-spectator-logo img{
+  max-width:250px !important;
+  max-height:72px !important;
+  object-fit:contain !important;
+}
+
+/* live pill + title block centered */
+.gs-spectator-hero .gs-live-pill{
+  margin-top:12px !important;
+}
+.gs-spectator-brand{
+  margin-top:76px !important;
+  text-shadow:0 0 14px rgba(255,255,255,.08);
+}
+.gs-spectator-game-title{
+  text-shadow:0 5px 16px rgba(0,0,0,.36);
+}
+.gs-spectator-meta{
+  text-shadow:0 2px 8px rgba(0,0,0,.42);
+}
+
+/* Trophy button keeps host-like top-right position */
+.gs-spectator-hall-btn{
+  top:18px !important;
+  right:22px !important;
+}
+
+/* Main becomes a readable glass area over theme art */
+.gs-spectator-main{
+  position:relative;
+  z-index:2;
+}
+.gs-premium-player{
+  backdrop-filter:blur(5px);
+  -webkit-backdrop-filter:blur(5px);
+}
+
+/* Add a subtle thematic light wash behind the live ranking */
+.gs-spectator[data-spectator-game="seasalt"] .gs-premium-player{
+  background:
+    linear-gradient(90deg,rgba(2,31,46,.88),rgba(3,8,17,.91)) !important;
+}
+.gs-spectator[data-spectator-game="flip7"] .gs-premium-player{
+  background:
+    linear-gradient(90deg,rgba(16,8,39,.88),rgba(3,6,15,.92)) !important;
+}
+.gs-spectator[data-spectator-game="sixnimmt"] .gs-premium-player{
+  background:
+    linear-gradient(90deg,rgba(43,18,7,.89),rgba(8,6,10,.92)) !important;
+}
+
+/* Mobile */
+@media(max-width:700px){
+  .gs-spectator-hero{
+    min-height:285px !important;
+    padding:16px 10px 28px !important;
+  }
+  .gs-spectator-logo{
+    top:14px !important;
+    left:12px !important;
+    max-width:188px !important;
+  }
+  .gs-spectator-logo img{
+    max-width:180px !important;
+    max-height:58px !important;
+  }
+  .gs-spectator-hall-btn{
+    top:12px !important;
+    right:10px !important;
+  }
+  .gs-spectator-brand{
+    margin-top:78px !important;
+  }
+  .gs-spectator::before{
+    background-size:auto 520px;
+    background-position:center top;
+  }
+}
+
+@media(max-width:430px){
+  .gs-spectator-logo{
+    max-width:150px !important;
+  }
+  .gs-spectator-logo img{
+    max-width:145px !important;
+  }
+  .gs-spectator-hero{
+    min-height:270px !important;
+  }
+  .gs-spectator-brand{
+    margin-top:74px !important;
+  }
+}
