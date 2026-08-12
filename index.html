@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#080816">
-<meta name="game-score-version" content="100">
+<meta name="game-score-version" content="102">
 <title>Flip 7 Score</title>
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="styles.css?v=100">
+<link rel="stylesheet" href="styles.css?v=102">
 </head>
 <body>
 
@@ -166,7 +166,12 @@
 
     <main id="six39GameView" class="six39-main hidden">
 
-      <section class="six39-round-panel">
+      <div id="sixTurnBox" class="gs-turn-box gs-turn-six">
+  <button id="sixTurnPrev" class="gs-turn-nav" type="button">‹</button>
+  <div class="gs-turn-copy"><span>🎴 GIOCATORE DI TURNO</span><strong id="sixTurnName">—</strong></div>
+  <button id="sixTurnNext" class="gs-turn-nav" type="button">›</button>
+</div>
+<section class="six39-round-panel">
         <div class="six39-round-icon">🐂</div>
         <div class="six39-round-copy">
           <div class="six39-round-title">ROUND <span id="six39RoundNo">1</span></div>
@@ -522,7 +527,12 @@
     </section>
 
     <main id="seaGameView" class="sea-main hidden">
-      <section class="sea-round-panel">
+      <div id="seaTurnBox" class="gs-turn-box gs-turn-sea">
+  <button id="seaTurnPrev" class="gs-turn-nav" type="button">‹</button>
+  <div class="gs-turn-copy"><span>🎴 GIOCATORE DI TURNO</span><strong id="seaTurnName">—</strong></div>
+  <button id="seaTurnNext" class="gs-turn-nav" type="button">›</button>
+</div>
+<section class="sea-round-panel">
         <div class="sea-round-symbol">🌊</div>
         <div class="sea-round-center">
           <div class="sea-round-title">ROUND <span id="seaRoundNo">1</span></div>
@@ -693,7 +703,12 @@
   </section>
 
   <main id="game" class="hidden">
-    <section class="round-panel panel">
+    <div id="flipTurnBox" class="gs-turn-box gs-turn-flip">
+  <button id="flipTurnPrev" class="gs-turn-nav" type="button">‹</button>
+  <div class="gs-turn-copy"><span>🎴 GIOCATORE DI TURNO</span><strong id="flipTurnName">—</strong></div>
+  <button id="flipTurnNext" class="gs-turn-nav" type="button">›</button>
+</div>
+<section class="round-panel panel">
       <div class="round-symbol">🃏</div>
       <div class="round-center">
         <div class="round-title">ROUND <span id="roundNumber">1</span></div>
@@ -1111,7 +1126,10 @@
   </header>
 
   <main class="gs-spectator-main">
-    <section class="gs-spectator-round">
+    <div id="gsSpectatorTurnBox" class="gs-spectator-turn-box">
+  <span>🎴 GIOCATORE DI TURNO</span><strong id="gsSpectatorTurnName">—</strong>
+</div>
+<section class="gs-spectator-round">
       <div>
         <span>ROUND</span>
         <strong id="gsSpectatorRound">1</strong>
@@ -1214,7 +1232,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="online-config.js?v=100"></script>
-<script src="app.js?v=100"></script>
+<script src="online-config.js?v=102"></script>
+<script src="app.js?v=102"></script>
 </body>
 </html>

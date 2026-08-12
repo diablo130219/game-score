@@ -11832,3 +11832,42 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
   .gs-spectator-profile-grid strong{font-size:22px}
   #gsSpectatorProfileTopGame{font-size:12px !important}
 }
+
+/* =========================================================
+   V102 — GIOCATORE DI TURNO
+   ========================================================= */
+.gs-turn-box{
+  --turn-accent:#a84cff;
+  margin:10px 0 9px;padding:8px 10px;min-height:60px;
+  display:grid;grid-template-columns:42px minmax(0,1fr) 42px;gap:9px;align-items:center;
+  border:1px solid color-mix(in srgb,var(--turn-accent) 34%,rgba(255,255,255,.08));
+  border-radius:18px;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--turn-accent) 9%,#10142b 91%),#0a0d1d);
+  box-shadow:0 9px 24px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.04);
+}
+.gs-turn-flip{--turn-accent:#a84cff}.gs-turn-sea{--turn-accent:#6fe2df}.gs-turn-six{--turn-accent:#ffb51b}
+.gs-turn-nav{
+  width:40px;height:40px;border:1px solid rgba(255,255,255,.12);border-radius:12px;
+  background:#11162d;color:#fff;font-size:24px;font-weight:1000;
+}
+.gs-turn-copy{min-width:0;display:grid;justify-items:center;gap:3px;text-align:center}
+.gs-turn-copy span{color:#9297a9;font-size:7px;font-weight:1000;letter-spacing:.12em}
+.gs-turn-copy strong{
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  color:#fff;font-size:18px;font-weight:1000;
+  text-shadow:0 0 12px color-mix(in srgb,var(--turn-accent) 32%,transparent);
+}
+.gs-spectator-turn-box{
+  margin:0 0 6px;padding:7px 9px;min-height:44px;display:grid;justify-items:center;align-content:center;gap:3px;
+  border:1px solid color-mix(in srgb,var(--spectator-accent) 34%,rgba(255,255,255,.08));
+  border-radius:15px;background:linear-gradient(145deg,color-mix(in srgb,var(--spectator-accent) 10%,#10142b 90%),#0b0e1f);
+}
+.gs-spectator-turn-box span{color:#989cad;font-size:6px;font-weight:1000;letter-spacing:.12em}
+.gs-spectator-turn-box strong{color:#fff;font-size:16px;font-weight:1000;text-shadow:0 0 12px color-mix(in srgb,var(--spectator-accent) 35%,transparent)}
+@media(max-width:700px){
+  .gs-turn-box{min-height:54px;grid-template-columns:36px minmax(0,1fr) 36px;padding:7px 8px;gap:7px;border-radius:15px}
+  .gs-turn-nav{width:34px;height:34px;font-size:21px}
+  .gs-turn-copy strong{font-size:15px}.gs-turn-copy span{font-size:5.7px}
+  .gs-spectator-turn-box{min-height:40px;padding:5px 7px;margin-bottom:5px}
+  .gs-spectator-turn-box strong{font-size:14px}.gs-spectator-turn-box span{font-size:5.2px}
+}

@@ -173,6 +173,27 @@ setTimeout(()=>{
   });
 },80);
 
+
+/* V102 — GIOCATORE DI TURNO */
+function gsNormTurn(i,n){if(!n)return 0;i=Number(i||0)%n;return i<0?i+n:i}
+function gsEnsureTurn(s){
+  if(!s)return 0;
+  const n=(s.players||[]).length;
+  if(!Number.isInteger(s.turnIndex))s.turnIndex=0;
+  s.turnIndex=gsNormTurn(s.turnIndex,n);
+  return s.turnIndex;
+}
+function gsTurnName(s){
+  const p=s?.players||[];
+  return p.length?String(p[gsEnsureTurn(s)]??"—"):"—";
+}
+function gsMoveTurn(s,step){
+  const n=(s?.players||[]).length;
+  if(!n){if(s)s.turnIndex=0;return}
+  s.turnIndex=gsNormTurn(gsEnsureTurn(s)+step,n);
+}
+function gsResetTurn(s){if(s)s.turnIndex=0}
+
 const HALL_KEY="flip7-score-hall-v1";
 
 const themes=[
@@ -194,7 +215,7 @@ const themes=[
   {c:"#8b96a8",asset:null,fallback:"0"}
 ];
 
-let state={players:[],rounds:[],target:200,gameId:null,resultRecorded:false};
+let state={players:[],rounds:[],target:200,gameId:null,resultRecorded:false,turnIndex:0};
 let setupCount=3;
 
 const $=s=>document.querySelector(s);
@@ -539,6 +560,7 @@ function render(){
 
   const ts=totals(),lr=lastRound();
   $("#roundNumber").textContent=state.rounds.length+1;
+  if($("#flipTurnName"))$("#flipTurnName").textContent=gsTurnName(state);
   $("#modalRound").textContent=state.rounds.length+1;
 
   const order=state.players.map((name,i)=>({name,i,total:ts[i]}))
@@ -724,6 +746,7 @@ function saveRound(){
     delete $("#saveRound").dataset.editRound;
   }else{
     state.rounds.push(vals);
+    gsMoveTurn(state,1);
     roundNumber=state.rounds.length;
   }
 
@@ -764,7 +787,7 @@ function deleteCurrentGame(){
   );
   if(!ok)return;
 
-  state={players:[],rounds:[],target:200,gameId:null,resultRecorded:false};
+  state={players:[],rounds:[],target:200,gameId:null,resultRecorded:false,turnIndex:0};
   previousRankingSnapshot=null;
   animateNextRanking=false;
   save();
@@ -803,7 +826,7 @@ function editPlayers(){
 
 function newGame(){
   previousRankingSnapshot=null;
-  state={players:[],rounds:[],target:200,gameId:null,resultRecorded:false};
+  state={players:[],rounds:[],target:200,gameId:null,resultRecorded:false,turnIndex:0};
   setupCount=3;
   setupDraftNames=[];
   save();
@@ -1019,13 +1042,13 @@ function homeChooseGame(game){
   // v87: bonifica automatica anche delle partite concluse salvate
   // dalle versioni precedenti.
   if(game==="flip7" && state.resultRecorded){
-    state={players:[],rounds:[],target:200,gameId:null,resultRecorded:false};
+    state={players:[],rounds:[],target:200,gameId:null,resultRecorded:false,turnIndex:0};
     save();
   }else if(game==="seasalt" && seaState.finished){
-    seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false};
+    seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false,turnIndex:0};
     seaSave();
   }else if((game==="sixnimmt" || game==="6nimmt") && six39State.finished){
-    six39State={players:[],rounds:[],finished:false,winner:null,recorded:false};
+    six39State={players:[],rounds:[],finished:false,winner:null,recorded:false,turnIndex:0};
     six39Save();
   }
 
@@ -1121,7 +1144,7 @@ showHome();
    ========================= */
 const SEA_KEY="gameScoreSeaSaltV1";
 const SEA_HALL_KEY="gameScoreSeaSaltHallV1";
-let seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false};
+let seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false,turnIndex:0};
 let seaSetupCount=2;
 let seaSetupDraftNames=[];
 
@@ -1202,13 +1225,14 @@ function seaStart(){
       return oldIndex===undefined?0:(Number(r[oldIndex])||0);
     }));
     seaState.players=names;
+  gsResetTurn(seaState);
     seaState.rounds=remappedRounds;
     seaState.target=seaTargetFor(names.length);
     seaState.finished=false;
     seaState.winner=null;
     seaState.recorded=false;
   }else{
-    seaState={players:names,rounds:[],target:seaTargetFor(names.length),finished:false,winner:null,recorded:false};
+    seaState={players:names,rounds:[],target:seaTargetFor(names.length),finished:false,winner:null,recorded:false,turnIndex:0};
   }
 
   seaSetupDraftNames=[];
@@ -1221,6 +1245,7 @@ function seaStart(){
   const totals=seaTotals();
   const order=seaState.players.map((name,i)=>({name,i,total:totals[i]})).sort((a,b)=>b.total-a.total||a.i-b.i);
   $("#seaRoundNo").textContent=seaState.rounds.length+1;
+  if($("#seaTurnName"))$("#seaTurnName").textContent=gsTurnName(seaState);
   $("#seaTarget").textContent=seaState.target; $("#seaTargetBox").textContent=seaState.target;
   const max=Math.max(0,...totals), pct=Math.min(100,max/seaState.target*100);
   $("#seaProgress").style.width=pct+"%";
@@ -1286,7 +1311,8 @@ function seaSaveRound(){
   const vals=$$(".sea-round-score").map(x=>Math.max(0,parseInt(x.value)||0));
   const e=$("#seaSaveRound").dataset.edit;
   let rn;
-  if(e!==""){rn=Number(e)+1;seaState.rounds[Number(e)]=vals}else{seaState.rounds.push(vals);rn=seaState.rounds.length}
+  if(e!==""){rn=Number(e)+1;seaState.rounds[Number(e)]=vals}else{seaState.rounds.push(vals);
+    gsMoveTurn(seaState,1);rn=seaState.rounds.length}
   seaSave();gsPlaySound("round");closeModal("seaRoundModal");seaRender();seaToast(`✓ Round ${rn} ${e!==""?"aggiornato":"registrato"}`);
   setTimeout(seaCheckWinner,250);
 }
@@ -1414,7 +1440,7 @@ function seaClearHall(){
   }catch(e){}
 }
 
-function seaDeleteGame(){if(confirm("Eliminare completamente questa partita Sea Salt & Paper?")){seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false};seaSave();$("#seaWinScreen").classList.add("hidden");showHome();window.renderResumeCenter?.()}}
+function seaDeleteGame(){if(confirm("Eliminare completamente questa partita Sea Salt & Paper?")){seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false,turnIndex:0};seaSave();$("#seaWinScreen").classList.add("hidden");showHome();window.renderResumeCenter?.()}}
 function seaRematch(){seaState.rounds=[];seaState.finished=false;seaState.winner=null;seaState.recorded=false;seaSave();$("#seaWinScreen").classList.add("hidden");seaRender()}
 function seaOpenMermaids(){
  $("#seaMermaidPlayers").innerHTML=seaState.players.map((n,i)=>`<button onclick="closeModal('seaMermaidModal');seaFinish(${i},true)">${esc(n)}</button>`).join("");
@@ -1438,7 +1464,7 @@ $("#seaMermaids").onclick=seaOpenMermaids;
 $("#seaTrophyBtn").onclick=()=>{seaRenderHall();openModal("seaHallModal")};
 $("#seaClearHall").onclick=seaClearHall;
 
-$("#seaNewGame").onclick=()=>{seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false};seaSave();$("#seaWinScreen").classList.add("hidden");seaOpenInlineSetup(false)};
+$("#seaNewGame").onclick=()=>{seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false,turnIndex:0};seaSave();$("#seaWinScreen").classList.add("hidden");seaOpenInlineSetup(false)};
 
 
 
@@ -1447,7 +1473,7 @@ $("#seaNewGame").onclick=()=>{seaState={players:[],rounds:[],target:40,finished:
    Layout gemello di Flip 7
    =========================== */
 const SIX39_KEY="gs_six39_game", SIX39_HALL="gs_six39_hall";
-let six39State={players:[],rounds:[],finished:false,winner:null,recorded:false};
+let six39State={players:[],rounds:[],finished:false,winner:null,recorded:false,turnIndex:0};
 let six39Count=3, six39Draft=[], six39EditDraft=[];
 const six39Colors=["#ffd20a","#b747ff","#1fa8ff","#31d25d","#ff6b35","#ff4c87","#4dd8d2","#8d7cff","#e9db51","#d88942"];
 
@@ -1496,7 +1522,7 @@ function six39Create(){
   const names=$$(".six39-name").map(x=>x.value.trim());
   if(names.some(n=>!n)) return alert("Inserisci il nome di tutti i giocatori.");
   if(new Set(names.map(six39Key)).size!==names.length) return alert("I nomi devono essere diversi.");
-  six39State={players:names,rounds:[],finished:false,winner:null,recorded:false};
+  six39State={players:names,rounds:[],finished:false,winner:null,recorded:false,turnIndex:0};
   six39Save();
   $("#six39SetupView").classList.add("hidden");
   $("#six39GameView").classList.remove("hidden");
@@ -1508,6 +1534,7 @@ function six39Render(){
     .sort((a,b)=>a.total-b.total || a.i-b.i);
   const last=six39State.rounds.at(-1)||[];
   $("#six39RoundNo").textContent=six39State.rounds.length+1;
+  if($("#sixTurnName"))$("#sixTurnName").textContent=gsTurnName(six39State);
   const max=Math.max(0,...totals);
   $("#six39Progress").style.width=Math.min(100,max/67*100)+"%";
   $("#six39ProgressText").textContent=six39State.rounds.length?`Punteggio più alto: ${max} teste di bue`:"Partita appena iniziata";
@@ -1573,7 +1600,8 @@ function six39SaveRound(){
   const vals=$$(".six39-round-score").map(x=>Math.max(0,parseInt(x.value)||0));
   const e=$("#six39SaveRound").dataset.edit;
   let rn;
-  if(e!==""){rn=Number(e)+1;six39State.rounds[Number(e)]=vals}else{six39State.rounds.push(vals);rn=six39State.rounds.length}
+  if(e!==""){rn=Number(e)+1;six39State.rounds[Number(e)]=vals}else{six39State.rounds.push(vals);
+    gsMoveTurn(six39State,1);rn=six39State.rounds.length}
   six39State.finished=false;six39State.winner=null;six39State.recorded=false;
   six39Save();gsPlaySound("round");closeModal("six39RoundModal");six39Render();
   const t=$("#six39Toast");t.textContent=`✓ Round ${rn} ${e!==""?"aggiornato":"registrato"}`;t.classList.remove("show");void t.offsetWidth;t.classList.add("show");
@@ -1622,12 +1650,13 @@ function six39SavePlayers(){
   if(new Set(names.map(six39Key)).size!==names.length)return alert("I nomi devono essere diversi.");
   const old=six39State.players,map=new Map(old.map((n,i)=>[six39Key(n),i]));
   six39State.rounds=six39State.rounds.map(r=>names.map(n=>map.has(six39Key(n))?(Number(r[map.get(six39Key(n))])||0):0));
-  six39State.players=names;six39State.finished=false;six39State.winner=null;six39State.recorded=false;six39Save();
+  six39State.players=names;
+  gsResetTurn(six39State);six39State.finished=false;six39State.winner=null;six39State.recorded=false;six39Save();
   closeModal("six39EditModal");six39Render();
 }
 function six39DeleteGame(){
   if(!confirm("Eliminare completamente questa partita?"))return;
-  six39State={players:[],rounds:[],finished:false,winner:null,recorded:false};
+  six39State={players:[],rounds:[],finished:false,winner:null,recorded:false,turnIndex:0};
   six39Save();six39OpenSetup(false);window.renderResumeCenter?.();
 }
 function six39ShowWin(i){
@@ -1683,7 +1712,7 @@ function six39RenderHall(){
 }
 function six39ResetHall(){if(confirm("Azzerare tutta la classifica generale?")){six39HallSave({games:0,players:{}});six39RenderHall()}}
 function six39Rematch(){six39State.rounds=[];six39State.finished=false;six39State.winner=null;six39State.recorded=false;six39Save();$("#six39WinScreen").classList.add("hidden");six39Render()}
-function six39NewGame(){six39State={players:[],rounds:[],finished:false,winner:null,recorded:false};six39Save();$("#six39WinScreen").classList.add("hidden");six39OpenSetup(false)}
+function six39NewGame(){six39State={players:[],rounds:[],finished:false,winner:null,recorded:false,turnIndex:0};six39Save();$("#six39WinScreen").classList.add("hidden");six39OpenSetup(false)}
 
 six39Load();
 $("#six39GamesBtn").onclick=showHome;
@@ -1960,15 +1989,15 @@ function gsAutoArchiveCompletedGame(game){
 function gsFinalizeCompletedGame(game){
   if(game==="flip"){
     // Il Trofeo è già stato registrato da recordResultIfNeeded().
-    state={players:[],rounds:[],target:200,gameId:null,resultRecorded:false};
+    state={players:[],rounds:[],target:200,gameId:null,resultRecorded:false,turnIndex:0};
     save();
   }else if(game==="sea"){
     // Il Trofeo è già stato registrato da seaFinish().
-    seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false};
+    seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false,turnIndex:0};
     seaSave();
   }else if(game==="six"){
     // Il Trofeo è già stato registrato da six39RecordWin().
-    six39State={players:[],rounds:[],finished:false,winner:null,recorded:false};
+    six39State={players:[],rounds:[],finished:false,winner:null,recorded:false,turnIndex:0};
     six39Save();
   }
   window.renderResumeCenter?.();
@@ -2009,7 +2038,7 @@ document.getElementById("sixHallAfterWin")?.addEventListener("click",()=>gsHallA
 
 // New game actions retain the same game world instead of bouncing to home.
 document.getElementById("seaNewGame")?.addEventListener("click",()=>{
-  seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false};
+  seaState={players:[],rounds:[],target:40,finished:false,winner:null,recorded:false,turnIndex:0};
   seaSave();
   gsHidePerfectWin("seaWinScreen");
   $("#homeScreen").classList.add("hidden");
@@ -2018,7 +2047,7 @@ document.getElementById("seaNewGame")?.addEventListener("click",()=>{
   seaOpenInlineSetup(false);
 });
 document.getElementById("six39NewGame")?.addEventListener("click",()=>{
-  six39State={players:[],rounds:[],finished:false,winner:null,recorded:false};
+  six39State={players:[],rounds:[],finished:false,winner:null,recorded:false,turnIndex:0};
   six39Save();
   gsHidePerfectWin("six39WinScreen");
   $("#homeScreen").classList.add("hidden");
@@ -2793,6 +2822,7 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
       game==="seasalt"?(s.target||40):67;
 
     document.getElementById("gsSpectatorRound").textContent=round;
+    const _stn=document.getElementById("gsSpectatorTurnName"); if(_stn)_stn.textContent=gsTurnName(s);
     document.getElementById("gsSpectatorGoal").textContent=
       game==="sixnimmt"?"66":target;
     document.getElementById("gsSpectatorMeta").textContent=
@@ -3161,3 +3191,11 @@ document.getElementById("six39NewGame")?.addEventListener("click",()=>{
 /* V90 — prima sincronizzazione dei contatori Trofeo */
 setTimeout(()=>{try{gsUpdateHistoricalTrophyButtons()}catch(e){}},120);
 window.addEventListener("pageshow",()=>setTimeout(()=>{try{gsUpdateHistoricalTrophyButtons()}catch(e){}},80));
+
+/* V102 — controlli manuali HOST */
+document.getElementById("flipTurnPrev")?.addEventListener("click",()=>{gsMoveTurn(state,-1);save();render()});
+document.getElementById("flipTurnNext")?.addEventListener("click",()=>{gsMoveTurn(state,1);save();render()});
+document.getElementById("seaTurnPrev")?.addEventListener("click",()=>{gsMoveTurn(seaState,-1);seaSave();seaRender()});
+document.getElementById("seaTurnNext")?.addEventListener("click",()=>{gsMoveTurn(seaState,1);seaSave();seaRender()});
+document.getElementById("sixTurnPrev")?.addEventListener("click",()=>{gsMoveTurn(six39State,-1);six39Save();six39Render()});
+document.getElementById("sixTurnNext")?.addEventListener("click",()=>{gsMoveTurn(six39State,1);six39Save();six39Render()});
