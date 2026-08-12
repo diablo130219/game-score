@@ -1955,6 +1955,12 @@ $("#six39NewGame").onclick=six39NewGame;
 function gsShowPerfectWin(id,theme){
   const screen=document.getElementById(id);
   if(!screen)return;
+  screen.classList.remove("gs-force-closed");
+  screen.hidden=false;
+  screen.style.removeProperty("display");
+  screen.style.removeProperty("visibility");
+  screen.style.removeProperty("opacity");
+  screen.style.removeProperty("pointer-events");
   screen.classList.remove("hidden");
   screen.classList.remove("showing","gs-win-enter");
   void screen.offsetWidth;
@@ -1983,8 +1989,19 @@ function gsShowPerfectWin(id,theme){
 }
 function gsHidePerfectWin(id){
   const screen=document.getElementById(id);
-  if(screen)screen.classList.add("hidden");
+  if(screen){
+    // V105: chiusura FORZATA. La schermata non può più restare sopra
+    // alla Home/Hall anche se una vecchia classe/animazione prova a riattivarla.
+    screen.classList.remove("showing","gs-win-enter");
+    screen.classList.add("hidden","gs-force-closed");
+    screen.hidden=true;
+    screen.style.setProperty("display","none","important");
+    screen.style.setProperty("visibility","hidden","important");
+    screen.style.setProperty("opacity","0","important");
+    screen.style.setProperty("pointer-events","none","important");
+  }
   document.documentElement.classList.remove("gs-modal-open");
+  document.body.classList.remove("gs-modal-open");
 }
 /* =========================================================
    v87 — CHIUSURA AUTOMATICA DELLA PARTITA CONCLUSA
@@ -2032,40 +2049,43 @@ function gsGameFromWinScreen(id){
 }
 
 function gsHomeAfterWin(id){
-  // V104: navigazione diretta e indipendente dallo stato partita già archiviato.
   gsHidePerfectWin(id);
-  document.getElementById(id)?.classList.remove("showing","gs-win-enter");
+
   document.getElementById("hallModal")?.classList.add("hidden");
   document.getElementById("seaHallModal")?.classList.add("hidden");
   document.getElementById("six39HallModal")?.classList.add("hidden");
 
-  document.getElementById("flip7App")?.classList.add("hidden");
-  document.getElementById("seaSaltWorld")?.classList.add("hidden");
-  document.getElementById("sixNimmtWorld")?.classList.add("hidden");
-  document.getElementById("homeScreen")?.classList.remove("hidden");
+  hideAllGameWorlds();
+  const home=document.getElementById("homeScreen");
+  if(home){
+    home.classList.remove("hidden");
+    home.hidden=false;
+    home.style.removeProperty("display");
+  }
 
-  document.documentElement.classList.remove("gs-modal-open");
-  document.body.classList.remove("gs-modal-open");
   window.renderResumeCenter?.();
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
 function gsHallAfterWin(id,game){
-  // V104: prima chiude davvero la schermata vittoria, poi apre la Hall richiesta.
   gsHidePerfectWin(id);
-  document.getElementById(id)?.classList.remove("showing","gs-win-enter");
-  document.documentElement.classList.remove("gs-modal-open");
-  document.body.classList.remove("gs-modal-open");
 
+  // Resta nel mondo del gioco e apre la Hall sopra di esso.
   if(game==="flip"){
+    document.getElementById("flip7App")?.classList.remove("hidden");
     renderHall();
-    document.getElementById("hallModal")?.classList.remove("hidden");
+    const m=document.getElementById("hallModal");
+    if(m){m.classList.remove("hidden");m.hidden=false}
   }else if(game==="sea"){
+    document.getElementById("seaSaltWorld")?.classList.remove("hidden");
     seaRenderHall();
-    document.getElementById("seaHallModal")?.classList.remove("hidden");
+    const m=document.getElementById("seaHallModal");
+    if(m){m.classList.remove("hidden");m.hidden=false}
   }else{
+    document.getElementById("sixNimmtWorld")?.classList.remove("hidden");
     six39RenderHall();
-    document.getElementById("six39HallModal")?.classList.remove("hidden");
+    const m=document.getElementById("six39HallModal");
+    if(m){m.classList.remove("hidden");m.hidden=false}
   }
 }
 

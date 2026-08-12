@@ -11903,3 +11903,19 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
   position:relative !important;
   z-index:110 !important;
 }
+
+/* =========================================================
+   V105 — CHIUSURA DEFINITIVA OVERLAY VITTORIA
+   Deve vincere anche contro le regole V103 con display:flex !important.
+   ========================================================= */
+#winScreen.gs-force-closed,
+#seaWinScreen.gs-force-closed,
+#six39WinScreen.gs-force-closed{
+  display:none !important;
+  visibility:hidden !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+  z-index:-1 !important;
+  animation:none !important;
+  transform:none !important;
+}
