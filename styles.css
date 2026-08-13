@@ -11927,3 +11927,97 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
   pointer-events:auto !important;
   touch-action:manipulation !important;
 }
+
+
+/* =========================================================
+   V108 — ALLINEAMENTO PULSANTI SUPERIORI
+   GIOCHI a sinistra e HALL/TROFEI a destra sulla stessa linea.
+   ========================================================= */
+
+/* Flip 7 */
+#flip7App > .hero{position:relative !important;}
+#flip7App > .hero #gameSelectorBtn,
+#flip7App > .hero #hallBtn{
+  top:max(14px, env(safe-area-inset-top)) !important;
+  bottom:auto !important;
+  transform:none !important;
+  margin-top:0 !important;
+}
+#flip7App > .hero #gameSelectorBtn{left:18px !important;}
+#flip7App > .hero #hallBtn{right:18px !important; left:auto !important;}
+
+/* Sea Salt & Paper */
+#seaSaltWorld .sea-brand-hero{position:relative !important;}
+#seaSaltWorld .sea-brand-hero #seaGamesBtn,
+#seaSaltWorld .sea-brand-hero #seaTrophyBtn{
+  top:max(14px, env(safe-area-inset-top)) !important;
+  bottom:auto !important;
+  transform:none !important;
+  margin-top:0 !important;
+}
+#seaSaltWorld .sea-brand-hero #seaGamesBtn{left:18px !important;}
+#seaSaltWorld .sea-brand-hero #seaTrophyBtn{right:18px !important; left:auto !important;}
+
+/* 6... Le prendi! */
+#sixNimmtWorld .six39-hero{position:relative !important;}
+#sixNimmtWorld .six39-hero #six39GamesBtn,
+#sixNimmtWorld .six39-hero #six39HallBtn{
+  top:max(14px, env(safe-area-inset-top)) !important;
+  bottom:auto !important;
+  transform:none !important;
+  margin-top:0 !important;
+}
+#sixNimmtWorld .six39-hero #six39GamesBtn{left:18px !important;}
+#sixNimmtWorld .six39-hero #six39HallBtn{right:18px !important; left:auto !important;}
+
+/* Mobile: stessa quota e stessa distanza laterale */
+@media(max-width:700px){
+  #flip7App > .hero #gameSelectorBtn,
+  #flip7App > .hero #hallBtn,
+  #seaSaltWorld .sea-brand-hero #seaGamesBtn,
+  #seaSaltWorld .sea-brand-hero #seaTrophyBtn,
+  #sixNimmtWorld .six39-hero #six39GamesBtn,
+  #sixNimmtWorld .six39-hero #six39HallBtn{
+    top:max(10px, env(safe-area-inset-top)) !important;
+  }
+
+  #flip7App > .hero #gameSelectorBtn,
+  #seaSaltWorld .sea-brand-hero #seaGamesBtn,
+  #sixNimmtWorld .six39-hero #six39GamesBtn{
+    left:10px !important;
+  }
+
+  #flip7App > .hero #hallBtn,
+  #seaSaltWorld .sea-brand-hero #seaTrophyBtn,
+  #sixNimmtWorld .six39-hero #six39HallBtn{
+    right:10px !important;
+  }
+}
+
+/* Centra graficamente coppa, contatore e label nel box */
+#hallBtn,
+#seaTrophyBtn,
+#six39HallBtn{
+  display:grid !important;
+  justify-items:center !important;
+  align-content:center !important;
+}
+#hallBtn .top-icon,
+#seaTrophyBtn .sea-top-icon,
+#six39HallBtn .six39-top-icon,
+#hallBtn .gs-trophy-smart-icon,
+#seaTrophyBtn .gs-trophy-smart-icon,
+#six39HallBtn .gs-trophy-smart-icon{
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+#flipHallLeaderWins,
+#seaHallLeaderWins,
+#six39HallLeaderWins{
+  position:relative !important;
+  left:auto !important;
+  right:auto !important;
+  transform:none !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
