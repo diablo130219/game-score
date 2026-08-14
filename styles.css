@@ -12021,3 +12021,261 @@ body:has(.game-card[data-game="flip7"].active) .player-card .player-avatar img{
   margin-left:auto !important;
   margin-right:auto !important;
 }
+
+
+/* =========================================================
+   V109 — INSERIMENTO PUNTEGGI MOBILE PULITO
+   Niente sovrapposizioni con SUONI / QR.
+   ========================================================= */
+
+/* Quando si inseriscono i punti, i controlli flottanti spariscono */
+body.gs-score-entry-open #gsSoundToggle,
+body.gs-score-entry-open #gsShareRoomBtn{
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+  transform:translateY(18px) scale(.92) !important;
+}
+
+/* Desktop resta sostanzialmente invariato */
+.gs-score-entry-modal .gs-score-entry-sheet{
+  position:relative;
+}
+
+/* MOBILE */
+@media(max-width:700px){
+
+  /* La modale usa davvero lo spazio disponibile del telefono */
+  .gs-score-entry-modal{
+    align-items:flex-end !important;
+    justify-content:center !important;
+    padding:
+      max(10px, env(safe-area-inset-top))
+      8px
+      max(8px, env(safe-area-inset-bottom)) !important;
+    overflow:hidden !important;
+  }
+
+  .gs-score-entry-modal .gs-score-entry-sheet{
+    width:min(100%, 680px) !important;
+    max-width:none !important;
+    height:auto !important;
+    max-height:calc(100dvh - max(18px, env(safe-area-inset-top)) - max(12px, env(safe-area-inset-bottom))) !important;
+    margin:0 !important;
+    padding:16px 14px 12px !important;
+    border-radius:24px 24px 18px 18px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    overflow:hidden !important;
+    box-sizing:border-box !important;
+  }
+
+  /* Testata più compatta */
+  .gs-score-entry-modal .sheet-head{
+    flex:0 0 auto !important;
+    margin-bottom:4px !important;
+    align-items:flex-start !important;
+  }
+  .gs-score-entry-modal .sheet-head h2{
+    margin-top:3px !important;
+    font-size:clamp(24px,7vw,34px) !important;
+    line-height:1 !important;
+  }
+  .gs-score-entry-modal .sheet-head .close{
+    flex:0 0 44px !important;
+    width:44px !important;
+    height:44px !important;
+    min-width:44px !important;
+    min-height:44px !important;
+  }
+
+  .gs-score-entry-modal .helper{
+    flex:0 0 auto !important;
+    margin:8px 0 12px !important;
+    font-size:13px !important;
+    line-height:1.35 !important;
+  }
+
+  /* Area giocatori scorre internamente con la tastiera aperta */
+  #roundInputs,
+  #seaRoundInputs,
+  #six39RoundInputs{
+    flex:1 1 auto !important;
+    min-height:0 !important;
+    overflow-y:auto !important;
+    overscroll-behavior:contain !important;
+    -webkit-overflow-scrolling:touch !important;
+    padding:2px 2px 8px !important;
+    margin:0 !important;
+    scrollbar-width:thin;
+  }
+
+  /* ---------- FLIP 7 ---------- */
+  #roundModal .flip98-round-row,
+  #roundModal .round-input-row{
+    grid-template-columns:minmax(0,1fr) 94px !important;
+    column-gap:12px !important;
+    min-height:78px !important;
+    margin:0 0 9px !important;
+    padding:10px 10px !important;
+    border-radius:17px !important;
+  }
+  #roundModal .flip98-player-mini{
+    grid-template-columns:48px minmax(0,1fr) !important;
+    gap:10px !important;
+  }
+  #roundModal .flip98-mini-card{
+    width:46px !important;
+    min-width:46px !important;
+    height:54px !important;
+  }
+  #roundModal .flip98-player-copy strong{
+    font-size:15px !important;
+  }
+  #roundModal .flip98-player-copy .player-last{
+    font-size:10px !important;
+  }
+  #roundModal .flip98-round-score,
+  #roundModal .round-score{
+    width:94px !important;
+    min-width:94px !important;
+    height:54px !important;
+    font-size:21px !important;
+  }
+
+  #roundModal .round-confirm-box{
+    flex:0 0 auto !important;
+    position:sticky !important;
+    bottom:0 !important;
+    z-index:20 !important;
+    margin:4px -4px -2px !important;
+    padding:9px 4px 2px !important;
+    background:linear-gradient(180deg,rgba(8,10,25,0),#080a19 25%) !important;
+  }
+  #roundModal .confirm-round-btn{
+    min-height:54px !important;
+    font-size:16px !important;
+  }
+
+  /* ---------- SEA SALT & PAPER ---------- */
+  #seaRoundInputs{
+    display:grid !important;
+    gap:9px !important;
+  }
+  #seaRoundModal .sea-input-row{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) 94px !important;
+    gap:10px !important;
+    align-items:center !important;
+    min-height:66px !important;
+    padding:8px 9px !important;
+    margin:0 !important;
+    border:1px solid rgba(111,226,223,.18) !important;
+    border-radius:17px !important;
+    background:rgba(5,20,32,.55) !important;
+  }
+  #seaRoundModal .sea-input-row input{
+    min-width:0 !important;
+    margin:0 !important;
+  }
+  #seaRoundModal .sea-input-row input:disabled{
+    width:100% !important;
+    height:50px !important;
+    padding:0 12px !important;
+    border-radius:14px !important;
+    font-size:15px !important;
+    font-weight:850 !important;
+    opacity:1 !important;
+    color:#f2f5f7 !important;
+  }
+  #seaRoundModal .sea-round-score{
+    width:94px !important;
+    height:50px !important;
+    padding:0 8px !important;
+    text-align:center !important;
+    font-size:21px !important;
+    font-weight:1000 !important;
+    border-radius:14px !important;
+  }
+  #seaSaveRound{
+    flex:0 0 auto !important;
+    position:sticky !important;
+    bottom:0 !important;
+    z-index:20 !important;
+    width:100% !important;
+    min-height:56px !important;
+    margin:7px 0 0 !important;
+    font-size:16px !important;
+    box-shadow:0 -12px 24px rgba(5,20,32,.70),0 10px 28px rgba(0,0,0,.22) !important;
+  }
+
+  /* ---------- 6... LE PRENDI! ---------- */
+  #six39RoundInputs{
+    display:grid !important;
+    gap:9px !important;
+  }
+  #six39RoundModal .six39-input-row{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) 94px !important;
+    gap:10px !important;
+    align-items:center !important;
+    min-height:66px !important;
+    padding:8px 9px !important;
+    margin:0 !important;
+    border:1px solid rgba(255,181,27,.20) !important;
+    border-radius:17px !important;
+    background:rgba(25,13,8,.58) !important;
+  }
+  #six39RoundModal .six39-input-row input{
+    min-width:0 !important;
+    margin:0 !important;
+  }
+  #six39RoundModal .six39-input-row input:disabled{
+    width:100% !important;
+    height:50px !important;
+    padding:0 12px !important;
+    border-radius:14px !important;
+    font-size:15px !important;
+    font-weight:850 !important;
+    opacity:1 !important;
+    color:#f6f3ef !important;
+  }
+  #six39RoundModal .six39-round-score{
+    width:94px !important;
+    height:50px !important;
+    padding:0 8px !important;
+    text-align:center !important;
+    font-size:21px !important;
+    font-weight:1000 !important;
+    border-radius:14px !important;
+  }
+  #six39SaveRound{
+    flex:0 0 auto !important;
+    position:sticky !important;
+    bottom:0 !important;
+    z-index:20 !important;
+    width:100% !important;
+    min-height:56px !important;
+    margin:7px 0 0 !important;
+    font-size:16px !important;
+    box-shadow:0 -12px 24px rgba(25,13,8,.72),0 10px 28px rgba(0,0,0,.22) !important;
+  }
+}
+
+/* Telefoni molto stretti */
+@media(max-width:390px){
+  #roundModal .flip98-round-row,
+  #roundModal .round-input-row,
+  #seaRoundModal .sea-input-row,
+  #six39RoundModal .six39-input-row{
+    grid-template-columns:minmax(0,1fr) 82px !important;
+    gap:8px !important;
+  }
+  #roundModal .flip98-round-score,
+  #roundModal .round-score,
+  #seaRoundModal .sea-round-score,
+  #six39RoundModal .six39-round-score{
+    width:82px !important;
+    min-width:82px !important;
+  }
+}

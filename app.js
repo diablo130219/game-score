@@ -714,8 +714,18 @@ function editHistoryRound(roundIndex){
   openModal("roundModal");
 }
 
-function openModal(id){$("#"+id).classList.remove("hidden")}
-function closeModal(id){$("#"+id).classList.add("hidden")}
+function gsScoreEntryBodyState(id,isOpen){
+  if(!["roundModal","seaRoundModal","six39RoundModal"].includes(id))return;
+  document.body.classList.toggle("gs-score-entry-open",!!isOpen);
+}
+function openModal(id){
+  $("#"+id).classList.remove("hidden");
+  gsScoreEntryBodyState(id,true);
+}
+function closeModal(id){
+  $("#"+id).classList.add("hidden");
+  gsScoreEntryBodyState(id,false);
+}
 
 
 function showRoundSavedFeedback(roundNumber){
@@ -747,6 +757,7 @@ function closeRoundModalAnimated(callback){
   setTimeout(()=>{
     modal.classList.remove("closing");
     modal.classList.add("hidden");
+    gsScoreEntryBodyState("roundModal",false);
     if(callback)callback();
   },280);
 }
