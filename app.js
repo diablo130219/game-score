@@ -295,6 +295,12 @@ function gsHallMaxWinsFromPlayers(players){
   return list.reduce((max,p)=>Math.max(max,Number(p?.wins||0)),0);
 }
 
+function gsHallTotalWinsFromPlayers(players){
+  if(!players)return 0;
+  const list=Array.isArray(players)?players:Object.values(players);
+  return list.reduce((sum,p)=>sum+Math.max(0,Number(p?.wins||0)),0);
+}
+
 function gsGlobalHistoricalLeaderWins(){
   // V118: badge HALL della HOME = totale vittorie/coppe registrate
   // nei tre giochi, non vittorie del singolo leader.
@@ -320,13 +326,16 @@ function gsSetTrophyCount(id,value){
 
 function gsUpdateHistoricalTrophyButtons(){
   try{
-    gsSetTrophyCount("flipHallLeaderWins",gsHallMaxWinsFromPlayers(loadHall()?.players));
+    // V119: dentro Flip 7 mostra il totale vittorie di Flip 7.
+    gsSetTrophyCount("flipHallLeaderWins",gsHallTotalWinsFromPlayers(loadHall()?.players));
   }catch(e){}
   try{
-    gsSetTrophyCount("seaHallLeaderWins",gsHallMaxWinsFromPlayers(seaHallLoad()?.players));
+    // V119: dentro Sea Salt & Paper mostra il totale vittorie di Sea Salt & Paper.
+    gsSetTrophyCount("seaHallLeaderWins",gsHallTotalWinsFromPlayers(seaHallLoad()?.players));
   }catch(e){}
   try{
-    gsSetTrophyCount("six39HallLeaderWins",gsHallMaxWinsFromPlayers(six39HallLoad()?.players));
+    // V119: dentro 6... Le prendi! mostra il totale vittorie di quel gioco.
+    gsSetTrophyCount("six39HallLeaderWins",gsHallTotalWinsFromPlayers(six39HallLoad()?.players));
   }catch(e){}
   try{
     gsSetTrophyCount("homeHallLeaderWins",gsGlobalHistoricalLeaderWins());
@@ -2666,10 +2675,9 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
     const players=Array.isArray(hall?.players)?hall.players:[];
     // V113: anche gli ospiti vedono il totale GENERALE delle coppe di GAME SCORE.
     // Fallback per vecchie room: somma delle vittorie ricevute nel gioco corrente.
-    const guestGeneralWins = Number.isFinite(Number(hall?.globalTotalWins))
-      ? Number(hall.globalTotalWins)
-      : players.reduce((n,p)=>n+Math.max(0,Number(p?.wins||0)),0);
-    gsSetTrophyCount("gsSpectatorHallLeaderWins",guestGeneralWins);
+    // V119: l'ospite vede il totale vittorie del gioco che sta guardando.
+    const guestGameWins=players.reduce((n,p)=>n+Math.max(0,Number(p?.wins||0)),0);
+    gsSetTrophyCount("gsSpectatorHallLeaderWins",guestGameWins);
     document.getElementById("gsSpectatorHallTitle").textContent=`Classifica generale · ${theme.name}`;
     document.getElementById("gsSpectatorHallSubtitle").textContent="Vittorie accumulate nel tempo dal gruppo";
     document.getElementById("gsSpectatorHallSummary").innerHTML=`
