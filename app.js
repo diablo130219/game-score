@@ -3377,9 +3377,25 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
     }
   },250);
 
+  // V116 — CONTA PUNTI OSPITI: binding nello scope corretto.
+  document.getElementById("gsSpectatorCalcBtn")?.addEventListener("click",gsOpenSpectatorCalc);
+  document.getElementById("gsSpectatorCalcClose")?.addEventListener("click",gsCloseSpectatorCalc);
+  document.getElementById("gsCalcDone")?.addEventListener("click",gsCloseSpectatorCalc);
+  document.getElementById("gsCalcReset")?.addEventListener("click",gsCalcResetAll);
+  document.getElementById("gsSpectatorCalcModal")?.addEventListener("click",e=>{
+    if(e.target===e.currentTarget)gsCloseSpectatorCalc();
+  });
+  document.getElementById("gsCalcKeypad")?.addEventListener("click",e=>{
+    const btn=e.target.closest("[data-calc]");
+    if(btn)gsCalcPress(btn.dataset.calc);
+  });
+
   // Spectator deep-link.
   const roomParam=new URLSearchParams(location.search).get("room");
   if(roomParam){
+    document.body.classList.add("gs-spectator-mode");
+    // Il pulsante viene reso disponibile subito sul telefono ospite.
+    document.getElementById("gsSpectatorCalcBtn")?.classList.remove("hidden");
     setTimeout(()=>startSpectator(roomParam),0);
   }
 })();
@@ -3440,21 +3456,3 @@ document.getElementById("sixTurnPrev")?.addEventListener("click",()=>{gsMoveTurn
 document.getElementById("sixTurnNext")?.addEventListener("click",()=>{gsMoveTurn(six39State,1);six39Save();six39Render()});
 
 
-/* V115 — eventi CONTA PUNTI ospiti */
-document.getElementById("gsSpectatorCalcBtn")?.addEventListener("click",gsOpenSpectatorCalc);
-document.getElementById("gsSpectatorCalcClose")?.addEventListener("click",gsCloseSpectatorCalc);
-document.getElementById("gsCalcDone")?.addEventListener("click",gsCloseSpectatorCalc);
-document.getElementById("gsCalcReset")?.addEventListener("click",gsCalcResetAll);
-
-document.getElementById("gsSpectatorCalcModal")?.addEventListener("click",e=>{
-  if(e.target===e.currentTarget)gsCloseSpectatorCalc();
-});
-
-document.getElementById("gsCalcKeypad")?.addEventListener("click",e=>{
-  const btn=e.target.closest("[data-calc]");
-  if(btn)gsCalcPress(btn.dataset.calc);
-});
-
-if(new URLSearchParams(location.search).get("room")){
-  document.body.classList.add("gs-spectator-mode");
-}
