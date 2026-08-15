@@ -125,10 +125,36 @@ function gsUnlockAudio(){
   try{
     const AC=window.AudioContext||window.webkitAudioContext;
     if(!AC)return null;
-    if(!gsAudioCtx)gsAudioCtx=new AC();
-    if(gsAudioCtx.state==="suspended")gsAudioCtx.resume().catch(()=>{});
+    // iOS/PWA può chiudere o interrompere il contesto dopo cambio schermata/background.
+    if(!gsAudioCtx || gsAudioCtx.state==="closed")gsAudioCtx=new AC();
+    if(gsAudioCtx.state==="suspended" || gsAudioCtx.state==="interrupted"){
+      gsAudioCtx.resume().catch(()=>{});
+    }
     return gsAudioCtx;
   }catch(e){return null}
+}
+
+function gsPrimeAudio(){
+  if(!gsSoundsEnabled())return;
+  const ctx=gsUnlockAudio();
+  if(!ctx)return;
+  const warm=()=>{
+    try{
+      // Buffer silenzioso: sblocca davvero l'uscita audio di Safari/iOS
+      // durante un gesto dell'utente, senza produrre un suono udibile.
+      const buffer=ctx.createBuffer(1,1,22050);
+      const src=ctx.createBufferSource();
+      const gain=ctx.createGain();
+      gain.gain.value=0.00001;
+      src.buffer=buffer;
+      src.connect(gain);
+      gain.connect(ctx.destination);
+      src.start(0);
+    }catch(e){}
+  };
+  if(ctx.state==="suspended" || ctx.state==="interrupted"){
+    ctx.resume().then(warm).catch(()=>{});
+  }else warm();
 }
 let gsMasterAudio=null;
 function gsAudioDestination(ctx){
@@ -186,7 +212,15 @@ function gsPlaySound(kind){
   }else play();
 }
 
-document.addEventListener("pointerdown",()=>gsUnlockAudio(),{passive:true});
+// V114 — iPhone/iPad/PWA: riattiva automaticamente l'audio al primo gesto utile.
+["pointerdown","touchstart","click"].forEach(evt=>{
+  document.addEventListener(evt,gsPrimeAudio,{passive:true,capture:true});
+});
+document.addEventListener("keydown",gsPrimeAudio,{capture:true});
+window.addEventListener("pageshow",()=>{ if(gsSoundsEnabled())gsUnlockAudio(); });
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible" && gsSoundsEnabled())gsUnlockAudio();
+});
 setTimeout(()=>{
   gsUpdateSoundToggle();
   document.getElementById("gsSoundToggle")?.addEventListener("click",()=>{
