@@ -2660,7 +2660,9 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
   let spectatorWinTimer=null;
 
   function gsSpectatorRenderHall(game,hall){
+    window.gsSpectatorCurrentGame=game;
     spectatorHallState={game,hall:hall||{games:0,players:[]}};
+    window.gsSpectatorCurrentGame=game;
     const theme=spectatorTheme(game);
     const players=Array.isArray(hall?.players)?hall.players:[];
     // V113: anche gli ospiti vedono il totale GENERALE delle coppe di GAME SCORE.
@@ -2734,6 +2736,104 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
     if(backToHall)document.getElementById("gsSpectatorHallModal")?.classList.remove("hidden");
   }
 
+
+  /* =========================================================
+     V115 — CALCOLATRICE / CONTA PUNTI SOLO OSPITI
+     Locale al dispositivo: non modifica e non sincronizza la partita.
+     ========================================================= */
+  const GS_CALC_STORAGE="gs:spectator-calc-v1";
+  let gsCalcExpr="";
+  let gsCalcCurrent="0";
+  let gsCalcLastRoundKey="";
+
+  function gsCalcLoad(){
+    try{
+      const x=JSON.parse(sessionStorage.getItem(GS_CALC_STORAGE)||"null");
+      if(x){
+        gsCalcExpr=String(x.expr||"");
+        gsCalcCurrent=String(x.current??"0");
+      }
+    }catch(e){}
+  }
+  function gsCalcSave(){
+    try{sessionStorage.setItem(GS_CALC_STORAGE,JSON.stringify({expr:gsCalcExpr,current:gsCalcCurrent}))}catch(e){}
+  }
+  function gsCalcFormat(v){
+    const n=Number(v);
+    if(!Number.isFinite(n))return "0";
+    if(Number.isInteger(n))return String(n);
+    return String(Math.round(n*100)/100).replace(".",",");
+  }
+  function gsCalcRender(){
+    const d=document.getElementById("gsCalcDisplay");
+    const e=document.getElementById("gsCalcExpression");
+    if(d)d.textContent=gsCalcFormat(gsCalcCurrent);
+    if(e)e.textContent=(gsCalcExpr||" ").replace(/\*/g,"×").replace(/\//g,"÷").replace(/\./g,",");
+  }
+  function gsCalcSafeEval(expr){
+    if(!/^[0-9+\-*/. ()]+$/.test(expr))return null;
+    try{
+      const value=Function('"use strict";return ('+expr+')')();
+      return Number.isFinite(Number(value))?Number(value):null;
+    }catch(e){return null}
+  }
+  function gsCalcResetAll(){
+    gsCalcExpr="";
+    gsCalcCurrent="0";
+    gsCalcSave();
+    gsCalcRender();
+  }
+  function gsCalcPress(key){
+    if(/^\d$/.test(key)){
+      gsCalcCurrent=gsCalcCurrent==="0"?key:gsCalcCurrent+key;
+    }else if(key==="."){
+      if(!gsCalcCurrent.includes("."))gsCalcCurrent+=".";
+    }else if(["+","-","*","/"].includes(key)){
+      const clean=gsCalcCurrent.endsWith(".")?gsCalcCurrent.slice(0,-1):gsCalcCurrent;
+      if(gsCalcExpr && /[+\-*/]\s*$/.test(gsCalcExpr)){
+        gsCalcExpr=gsCalcExpr.replace(/[+\-*/]\s*$/,key+" ");
+      }else{
+        gsCalcExpr+=(gsCalcExpr?"":"")+clean+" "+key+" ";
+      }
+      gsCalcCurrent="0";
+    }else if(key==="back"){
+      gsCalcCurrent=gsCalcCurrent.length>1?gsCalcCurrent.slice(0,-1):"0";
+    }else if(key==="clear"){
+      gsCalcResetAll();
+      return;
+    }else if(key==="equals"){
+      const full=(gsCalcExpr+gsCalcCurrent).trim();
+      const result=gsCalcSafeEval(full);
+      if(result!==null){
+        gsCalcExpr=full+" =";
+        gsCalcCurrent=String(result);
+      }
+    }
+    gsCalcSave();
+    gsCalcRender();
+  }
+
+  function gsCalcTheme(){
+    const game=spectatorHallState?.game || window.gsSpectatorCurrentGame || "flip7";
+    if(game==="seasalt")return {accent:"#6fe2df",hint:"Sea Salt & Paper · somma qui i punti del round prima di comunicarli all'host."};
+    if(game==="sixnimmt")return {accent:"#ffb51b",hint:"6… Le prendi! · conta qui le teste di bue prima di comunicarle all'host."};
+    return {accent:"#a84cff",hint:"Flip 7 · somma qui le carte del tuo turno e decidi in autonomia se fermarti o continuare."};
+  }
+  function gsOpenSpectatorCalc(){
+    const modal=document.getElementById("gsSpectatorCalcModal");
+    if(!modal)return;
+    const theme=gsCalcTheme();
+    modal.querySelector(".gs-calc-card")?.style.setProperty("--calc-accent",theme.accent);
+    const hint=document.getElementById("gsCalcGameHint");
+    if(hint)hint.textContent=theme.hint;
+    gsCalcLoad();
+    gsCalcRender();
+    modal.classList.remove("hidden");
+  }
+  function gsCloseSpectatorCalc(){
+    document.getElementById("gsSpectatorCalcModal")?.classList.add("hidden");
+  }
+
   function gsSpectatorWinner(game,s,totals,target){
     if(game==="seasalt"&&s.finished&&s.winner!==null&&s.winner!==undefined){
       const i=Number(s.winner); return {names:[s.players[i]],score:totals[i]||0,unit:"PUNTI"};
@@ -2769,6 +2869,7 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
     spectatorWinShownKey=key;
 
     const overlay=document.getElementById("gsSpectatorWinOverlay");
+    window.gsSpectatorCurrentGame=game;
     const theme=spectatorTheme(game);
     const hist=gsSpectatorWinnerHistory(winner);
     const gameNames={flip7:"FLIP 7",seasalt:"SEA SALT & PAPER",sixnimmt:"6… LE PRENDI!"};
@@ -2919,6 +3020,7 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
   }
 
   function renderSpectator(game,s,closed=false){
+    window.gsSpectatorCurrentGame=game;
     const theme=spectatorTheme(game);
     const app=document.getElementById("gsSpectatorApp");
     app.style.setProperty("--spectator-accent",theme.accent);
@@ -3145,6 +3247,7 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
       await fetchSpectator(spectatorCode);
     }catch(e){
       document.getElementById("gsSpectatorApp")?.classList.remove("hidden");
+    document.body.classList.add("gs-spectator-mode");
       offline?.classList.remove("hidden");
       document.getElementById("gsSpectatorOfflineText").textContent=e.message||String(e);
       return;
@@ -3309,3 +3412,17 @@ document.getElementById("seaTurnPrev")?.addEventListener("click",()=>{gsMoveTurn
 document.getElementById("seaTurnNext")?.addEventListener("click",()=>{gsMoveTurn(seaState,1);seaSave();seaRender()});
 document.getElementById("sixTurnPrev")?.addEventListener("click",()=>{gsMoveTurn(six39State,-1);six39Save();six39Render()});
 document.getElementById("sixTurnNext")?.addEventListener("click",()=>{gsMoveTurn(six39State,1);six39Save();six39Render()});
+
+
+/* V115 — collegamenti CALCOLATRICE OSPITI */
+document.getElementById("gsSpectatorCalcBtn")?.addEventListener("click",gsOpenSpectatorCalc);
+document.getElementById("gsSpectatorCalcClose")?.addEventListener("click",gsCloseSpectatorCalc);
+document.getElementById("gsCalcDone")?.addEventListener("click",gsCloseSpectatorCalc);
+document.getElementById("gsCalcReset")?.addEventListener("click",gsCalcResetAll);
+document.getElementById("gsSpectatorCalcModal")?.addEventListener("click",e=>{
+  if(e.target===e.currentTarget)gsCloseSpectatorCalc();
+});
+document.getElementById("gsCalcKeypad")?.addEventListener("click",e=>{
+  const btn=e.target.closest("[data-calc]");
+  if(btn)gsCalcPress(btn.dataset.calc);
+});

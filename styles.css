@@ -12279,3 +12279,195 @@ body.gs-score-entry-open #gsShareRoomBtn{
     min-width:82px !important;
   }
 }
+
+
+/* =========================================================
+   V115 — CONTA PUNTI / CALCOLATRICE OSPITI
+   ========================================================= */
+.gs-spectator-calc-btn{
+  position:fixed;
+  right:14px;
+  bottom:calc(16px + env(safe-area-inset-bottom));
+  z-index:22000;
+  min-width:126px;
+  height:54px;
+  padding:0 16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:19px;
+  background:linear-gradient(145deg,#171a34,#090c1c);
+  color:#fff;
+  box-shadow:0 12px 30px rgba(0,0,0,.38),0 0 22px rgba(168,76,255,.14);
+  font:inherit;
+  cursor:pointer;
+  backdrop-filter:blur(12px);
+}
+.gs-spectator-calc-btn span{font-size:21px}
+.gs-spectator-calc-btn b{
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:.05em;
+}
+.gs-spectator-calc-btn:active{transform:scale(.96)}
+
+.gs-calc-card{
+  --calc-accent:#a84cff;
+  width:min(430px,94vw) !important;
+  max-height:min(88vh,760px);
+  overflow:auto;
+  padding:22px !important;
+  border-color:color-mix(in srgb,var(--calc-accent) 42%,rgba(255,255,255,.10)) !important;
+  background:
+    radial-gradient(circle at 50% 0%,color-mix(in srgb,var(--calc-accent) 16%,transparent),transparent 36%),
+    linear-gradient(180deg,#12162f,#090c1d) !important;
+}
+.gs-calc-kicker{
+  color:var(--calc-accent);
+  font-size:9px;
+  font-weight:1000;
+  letter-spacing:.15em;
+}
+.gs-calc-card h2{
+  margin:5px 0 6px;
+  color:#fff;
+  font-size:31px;
+  font-weight:1000;
+}
+.gs-calc-hint{
+  margin:0 0 14px;
+  color:#afb4c5;
+  font-size:12px;
+  line-height:1.4;
+}
+
+.gs-calc-display-wrap{
+  min-height:112px;
+  padding:14px 16px;
+  margin-bottom:12px;
+  display:grid;
+  align-content:center;
+  justify-items:end;
+  border:1px solid color-mix(in srgb,var(--calc-accent) 28%,rgba(255,255,255,.08));
+  border-radius:20px;
+  background:linear-gradient(145deg,#070b19,#11172c);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+.gs-calc-display-wrap span{
+  justify-self:start;
+  color:#858ba0;
+  font-size:8px;
+  font-weight:1000;
+  letter-spacing:.12em;
+}
+.gs-calc-display-wrap strong{
+  color:#fff;
+  font-size:46px;
+  line-height:1;
+  font-weight:1000;
+  text-shadow:0 0 20px color-mix(in srgb,var(--calc-accent) 35%,transparent);
+}
+.gs-calc-display-wrap small{
+  min-height:16px;
+  color:#8e94a8;
+  font-size:10px;
+}
+
+.gs-calc-keypad{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+.gs-calc-keypad button{
+  min-height:57px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  background:#11162b;
+  color:#fff;
+  font-size:20px;
+  font-weight:900;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+.gs-calc-keypad button:active{transform:scale(.95)}
+.gs-calc-keypad .utility{
+  color:#b9bfd2;
+  background:#191d31;
+}
+.gs-calc-keypad .operator{
+  color:var(--calc-accent);
+  border-color:color-mix(in srgb,var(--calc-accent) 32%,rgba(255,255,255,.06));
+  background:color-mix(in srgb,var(--calc-accent) 9%,#101428 91%);
+}
+.gs-calc-keypad .equals{
+  grid-row:span 2;
+  background:linear-gradient(145deg,var(--calc-accent),color-mix(in srgb,var(--calc-accent) 72%,#091020 28%));
+  color:#07101a;
+  font-size:26px;
+}
+.gs-calc-keypad .zero{grid-column:span 2}
+
+.gs-calc-actions{
+  display:grid;
+  grid-template-columns:1fr 1.35fr;
+  gap:8px;
+  margin-top:11px;
+}
+.gs-calc-actions button{
+  min-height:49px;
+  border-radius:15px;
+  border:1px solid rgba(255,255,255,.10);
+  font-weight:1000;
+}
+#gsCalcReset{
+  background:#12172b;
+  color:#ff9aa9;
+}
+#gsCalcDone{
+  background:linear-gradient(135deg,var(--calc-accent),color-mix(in srgb,var(--calc-accent) 72%,#fff 28%));
+  color:#08101c;
+}
+.gs-calc-private-note{
+  margin-top:11px;
+  color:#7f8599;
+  font-size:9px;
+  line-height:1.35;
+  text-align:center;
+}
+
+@media(max-width:700px){
+  .gs-spectator-calc-btn{
+    right:10px;
+    bottom:calc(10px + env(safe-area-inset-bottom));
+    min-width:112px;
+    height:48px;
+    border-radius:16px;
+    padding:0 12px;
+  }
+  .gs-spectator-calc-btn span{font-size:18px}
+  .gs-spectator-calc-btn b{font-size:8.5px}
+
+  .gs-calc-card{
+    width:94vw !important;
+    padding:18px 14px 14px !important;
+    max-height:84vh;
+  }
+  .gs-calc-card h2{font-size:27px}
+  .gs-calc-display-wrap{
+    min-height:94px;
+    padding:12px 14px;
+  }
+  .gs-calc-display-wrap strong{font-size:40px}
+  .gs-calc-keypad{gap:7px}
+  .gs-calc-keypad button{
+    min-height:52px;
+    border-radius:14px;
+    font-size:18px;
+  }
+}
+
+/* La calcolatrice è esclusivamente ospite */
+body:not(.gs-spectator-mode) #gsSpectatorCalcBtn{
+  display:none !important;
+}
