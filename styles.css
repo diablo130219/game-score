@@ -12284,6 +12284,7 @@ body.gs-score-entry-open #gsShareRoomBtn{
 /* =========================================================
    V115 — CONTA PUNTI / CALCOLATRICE OSPITI
    ========================================================= */
+
 .gs-spectator-calc-btn{
   position:fixed;
   right:14px;
@@ -12342,7 +12343,6 @@ body.gs-score-entry-open #gsShareRoomBtn{
   font-size:12px;
   line-height:1.4;
 }
-
 .gs-calc-display-wrap{
   min-height:112px;
   padding:14px 16px;
@@ -12374,7 +12374,6 @@ body.gs-score-entry-open #gsShareRoomBtn{
   color:#8e94a8;
   font-size:10px;
 }
-
 .gs-calc-keypad{
   display:grid;
   grid-template-columns:repeat(4,1fr);
@@ -12407,7 +12406,6 @@ body.gs-score-entry-open #gsShareRoomBtn{
   font-size:26px;
 }
 .gs-calc-keypad .zero{grid-column:span 2}
-
 .gs-calc-actions{
   display:grid;
   grid-template-columns:1fr 1.35fr;
@@ -12447,7 +12445,6 @@ body.gs-score-entry-open #gsShareRoomBtn{
   }
   .gs-spectator-calc-btn span{font-size:18px}
   .gs-spectator-calc-btn b{font-size:8.5px}
-
   .gs-calc-card{
     width:94vw !important;
     padding:18px 14px 14px !important;
@@ -12467,7 +12464,7 @@ body.gs-score-entry-open #gsShareRoomBtn{
   }
 }
 
-/* La calcolatrice è esclusivamente ospite */
+/* Mai visibile all'host */
 body:not(.gs-spectator-mode) #gsSpectatorCalcBtn{
   display:none !important;
 }

@@ -2738,13 +2738,12 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
 
 
   /* =========================================================
-     V115 — CALCOLATRICE / CONTA PUNTI SOLO OSPITI
+     V115 — CONTA PUNTI SOLO OSPITI
      Locale al dispositivo: non modifica e non sincronizza la partita.
      ========================================================= */
   const GS_CALC_STORAGE="gs:spectator-calc-v1";
   let gsCalcExpr="";
   let gsCalcCurrent="0";
-  let gsCalcLastRoundKey="";
 
   function gsCalcLoad(){
     try{
@@ -2755,34 +2754,47 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
       }
     }catch(e){}
   }
+
   function gsCalcSave(){
-    try{sessionStorage.setItem(GS_CALC_STORAGE,JSON.stringify({expr:gsCalcExpr,current:gsCalcCurrent}))}catch(e){}
+    try{
+      sessionStorage.setItem(GS_CALC_STORAGE,JSON.stringify({
+        expr:gsCalcExpr,current:gsCalcCurrent
+      }));
+    }catch(e){}
   }
+
   function gsCalcFormat(v){
     const n=Number(v);
     if(!Number.isFinite(n))return "0";
     if(Number.isInteger(n))return String(n);
     return String(Math.round(n*100)/100).replace(".",",");
   }
+
   function gsCalcRender(){
     const d=document.getElementById("gsCalcDisplay");
     const e=document.getElementById("gsCalcExpression");
     if(d)d.textContent=gsCalcFormat(gsCalcCurrent);
-    if(e)e.textContent=(gsCalcExpr||" ").replace(/\*/g,"×").replace(/\//g,"÷").replace(/\./g,",");
+    if(e)e.textContent=(gsCalcExpr||" ")
+      .replace(/\*/g,"×").replace(/\//g,"÷").replace(/\./g,",");
   }
+
   function gsCalcSafeEval(expr){
     if(!/^[0-9+\-*/. ()]+$/.test(expr))return null;
     try{
       const value=Function('"use strict";return ('+expr+')')();
       return Number.isFinite(Number(value))?Number(value):null;
-    }catch(e){return null}
+    }catch(e){
+      return null;
+    }
   }
+
   function gsCalcResetAll(){
     gsCalcExpr="";
     gsCalcCurrent="0";
     gsCalcSave();
     gsCalcRender();
   }
+
   function gsCalcPress(key){
     if(/^\d$/.test(key)){
       gsCalcCurrent=gsCalcCurrent==="0"?key:gsCalcCurrent+key;
@@ -2793,7 +2805,7 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
       if(gsCalcExpr && /[+\-*/]\s*$/.test(gsCalcExpr)){
         gsCalcExpr=gsCalcExpr.replace(/[+\-*/]\s*$/,key+" ");
       }else{
-        gsCalcExpr+=(gsCalcExpr?"":"")+clean+" "+key+" ";
+        gsCalcExpr+=clean+" "+key+" ";
       }
       gsCalcCurrent="0";
     }else if(key==="back"){
@@ -2814,11 +2826,25 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
   }
 
   function gsCalcTheme(){
-    const game=spectatorHallState?.game || window.gsSpectatorCurrentGame || "flip7";
-    if(game==="seasalt")return {accent:"#6fe2df",hint:"Sea Salt & Paper · somma qui i punti del round prima di comunicarli all'host."};
-    if(game==="sixnimmt")return {accent:"#ffb51b",hint:"6… Le prendi! · conta qui le teste di bue prima di comunicarle all'host."};
-    return {accent:"#a84cff",hint:"Flip 7 · somma qui le carte del tuo turno e decidi in autonomia se fermarti o continuare."};
+    const game=window.gsSpectatorCurrentGame || spectatorHallState?.game || "flip7";
+    if(game==="seasalt"){
+      return {
+        accent:"#6fe2df",
+        hint:"Sea Salt & Paper · somma qui i punti del round prima di comunicarli all'host."
+      };
+    }
+    if(game==="sixnimmt"){
+      return {
+        accent:"#ffb51b",
+        hint:"6… Le prendi! · conta qui le teste di bue prima di comunicarle all'host."
+      };
+    }
+    return {
+      accent:"#a84cff",
+      hint:"Flip 7 · somma qui le carte del tuo turno e decidi in autonomia se fermarti o continuare."
+    };
   }
+
   function gsOpenSpectatorCalc(){
     const modal=document.getElementById("gsSpectatorCalcModal");
     if(!modal)return;
@@ -2830,6 +2856,7 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
     gsCalcRender();
     modal.classList.remove("hidden");
   }
+
   function gsCloseSpectatorCalc(){
     document.getElementById("gsSpectatorCalcModal")?.classList.add("hidden");
   }
@@ -3247,7 +3274,6 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
       await fetchSpectator(spectatorCode);
     }catch(e){
       document.getElementById("gsSpectatorApp")?.classList.remove("hidden");
-    document.body.classList.add("gs-spectator-mode");
       offline?.classList.remove("hidden");
       document.getElementById("gsSpectatorOfflineText").textContent=e.message||String(e);
       return;
@@ -3414,15 +3440,21 @@ document.getElementById("sixTurnPrev")?.addEventListener("click",()=>{gsMoveTurn
 document.getElementById("sixTurnNext")?.addEventListener("click",()=>{gsMoveTurn(six39State,1);six39Save();six39Render()});
 
 
-/* V115 — collegamenti CALCOLATRICE OSPITI */
+/* V115 — eventi CONTA PUNTI ospiti */
 document.getElementById("gsSpectatorCalcBtn")?.addEventListener("click",gsOpenSpectatorCalc);
 document.getElementById("gsSpectatorCalcClose")?.addEventListener("click",gsCloseSpectatorCalc);
 document.getElementById("gsCalcDone")?.addEventListener("click",gsCloseSpectatorCalc);
 document.getElementById("gsCalcReset")?.addEventListener("click",gsCalcResetAll);
+
 document.getElementById("gsSpectatorCalcModal")?.addEventListener("click",e=>{
   if(e.target===e.currentTarget)gsCloseSpectatorCalc();
 });
+
 document.getElementById("gsCalcKeypad")?.addEventListener("click",e=>{
   const btn=e.target.closest("[data-calc]");
   if(btn)gsCalcPress(btn.dataset.calc);
 });
+
+if(new URLSearchParams(location.search).get("room")){
+  document.body.classList.add("gs-spectator-mode");
+}
