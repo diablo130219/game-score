@@ -262,23 +262,18 @@ function gsHallMaxWinsFromPlayers(players){
 }
 
 function gsGlobalHistoricalLeaderWins(){
-  // "Generale" = somma le vittorie della stessa persona nei tre giochi.
-  // In questo modo il numero sulla Home rappresenta davvero il leader
-  // storico di tutto GAME SCORE, non di un singolo gioco.
-  const totals={};
+  // V112: il numero sulla HOME rappresenta il TOTALE delle coppe/vittorie
+  // registrate in GAME SCORE, non le sole vittorie del leader storico.
+  // Esempio: Giulia 2 + Martina 1 = 3 coppe generali.
+  let total=0;
   const add=(players)=>{
     const list=Array.isArray(players)?players:Object.values(players||{});
-    list.forEach(p=>{
-      const name=String(p?.name||"").trim();
-      if(!name)return;
-      const key=name.toLocaleLowerCase("it");
-      totals[key]=(totals[key]||0)+Number(p?.wins||0);
-    });
+    list.forEach(p=>{ total += Math.max(0,Number(p?.wins||0)); });
   };
   try{ add(loadHall()?.players); }catch(e){}
   try{ add(seaHallLoad()?.players); }catch(e){}
   try{ add(six39HallLoad()?.players); }catch(e){}
-  return Object.values(totals).reduce((m,v)=>Math.max(m,Number(v||0)),0);
+  return total;
 }
 
 function gsSetTrophyCount(id,value){
@@ -1335,7 +1330,7 @@ function seaOpenRound(editIndex=null){
   $("#seaRoundModalTitle").textContent=editIndex===null?`Round ${seaState.rounds.length+1}`:`Modifica Round ${editIndex+1}`;
   $("#seaSaveRound").dataset.edit=editIndex===null?"":String(editIndex);
   const vals=editIndex===null?[]:seaState.rounds[editIndex];
-  $("#seaRoundInputs").innerHTML=seaState.players.map((n,i)=>`<div class="sea-input-row"><input value="${esc(n)}" disabled><input class="sea-round-score" type="number" min="0" inputmode="numeric" value="${vals?.[i]??0}"></div>`).join("");
+  $("#seaRoundInputs").innerHTML=seaState.players.map((n,i)=>`<div class="sea-input-row"><input value="${esc(n)}" disabled><input class="sea-round-score" type="number" min="0" inputmode="numeric" value="${vals?.[i]??""}"></div>`).join("");
   openModal("seaRoundModal");
 }
 function seaToast(msg){const t=$("#seaToast");t.textContent=msg;t.classList.remove("show");void t.offsetWidth;t.classList.add("show");try{navigator.vibrate?.([30,20,45])}catch(e){}}
@@ -1624,7 +1619,7 @@ function six39OpenRound(editIndex=null){
   $("#six39RoundInputs").innerHTML=six39State.players.map((n,i)=>`
     <div class="six39-input-row">
       <input value="${esc(n)}" disabled>
-      <input class="six39-round-score" type="number" min="0" inputmode="numeric" value="${vals?.[i]??0}">
+      <input class="six39-round-score" type="number" min="0" inputmode="numeric" value="${vals?.[i]??""}">
     </div>`).join("");
   openModal("six39RoundModal");
 }
