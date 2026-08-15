@@ -2229,8 +2229,13 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
           topGame:typeof gsTopGameForPlayer==="function"?gsTopGameForPlayer(p?.name):"—"
         };
       }).sort((a,b)=>b.wins-a.wins||b.rate-a.rate||b.games-a.games||a.name.localeCompare(b.name,"it"));
-      return {games,players,updatedAt:new Date().toISOString()};
-    }catch(e){return {games:0,players:[],updatedAt:null}}
+      return {
+        games,
+        players,
+        globalTotalWins:gsGlobalHistoricalLeaderWins(),
+        updatedAt:new Date().toISOString()
+      };
+    }catch(e){return {games:0,players:[],globalTotalWins:0,updatedAt:null}}
   }
   function gsOnlineState(game){
     const src=currentState(game)||{};
@@ -2624,7 +2629,12 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
     spectatorHallState={game,hall:hall||{games:0,players:[]}};
     const theme=spectatorTheme(game);
     const players=Array.isArray(hall?.players)?hall.players:[];
-    gsSetTrophyCount("gsSpectatorHallLeaderWins",gsHallMaxWinsFromPlayers(players));
+    // V113: anche gli ospiti vedono il totale GENERALE delle coppe di GAME SCORE.
+    // Fallback per vecchie room: somma delle vittorie ricevute nel gioco corrente.
+    const guestGeneralWins = Number.isFinite(Number(hall?.globalTotalWins))
+      ? Number(hall.globalTotalWins)
+      : players.reduce((n,p)=>n+Math.max(0,Number(p?.wins||0)),0);
+    gsSetTrophyCount("gsSpectatorHallLeaderWins",guestGeneralWins);
     document.getElementById("gsSpectatorHallTitle").textContent=`Classifica generale · ${theme.name}`;
     document.getElementById("gsSpectatorHallSubtitle").textContent="Vittorie accumulate nel tempo dal gruppo";
     document.getElementById("gsSpectatorHallSummary").innerHTML=`
