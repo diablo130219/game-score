@@ -639,7 +639,7 @@ function render(){
           <div class="player-last">Totale attuale: ${ts[i]}</div>
         </div>
       </div>
-      <input class="input round-score flip98-round-score" type="number" min="0" inputmode="numeric" value="0" data-i="${i}">
+      <input class="input round-score flip98-round-score" type="number" min="0" inputmode="numeric" value="" data-i="${i}">
     </div>`;
   }).join("");
   bindRoundInputTotals();
