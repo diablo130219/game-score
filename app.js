@@ -296,17 +296,16 @@ function gsHallMaxWinsFromPlayers(players){
 }
 
 function gsGlobalHistoricalLeaderWins(){
-  // V112: il numero sulla HOME rappresenta il TOTALE delle coppe/vittorie
-  // registrate in GAME SCORE, non le sole vittorie del leader storico.
-  // Esempio: Giulia 2 + Martina 1 = 3 coppe generali.
+  // V118: badge HALL della HOME = totale vittorie/coppe registrate
+  // nei tre giochi, non vittorie del singolo leader.
   let total=0;
   const add=(players)=>{
     const list=Array.isArray(players)?players:Object.values(players||{});
-    list.forEach(p=>{ total += Math.max(0,Number(p?.wins||0)); });
+    list.forEach(p=>{ total+=Math.max(0,Number(p?.wins||0)); });
   };
-  try{ add(loadHall()?.players); }catch(e){}
-  try{ add(seaHallLoad()?.players); }catch(e){}
-  try{ add(six39HallLoad()?.players); }catch(e){}
+  try{add(loadHall()?.players)}catch(e){}
+  try{add(seaHallLoad()?.players)}catch(e){}
+  try{add(six39HallLoad()?.players)}catch(e){}
   return total;
 }
 
