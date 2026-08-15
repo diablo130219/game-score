@@ -2797,23 +2797,50 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
 
   function gsCalcPress(key){
     if(/^\d$/.test(key)){
-      gsCalcCurrent=gsCalcCurrent==="0"?key:gsCalcCurrent+key;
-    }else if(key==="."){
-      if(!gsCalcCurrent.includes("."))gsCalcCurrent+=".";
-    }else if(["+","-","*","/"].includes(key)){
-      const clean=gsCalcCurrent.endsWith(".")?gsCalcCurrent.slice(0,-1):gsCalcCurrent;
-      if(gsCalcExpr && /[+\-*/]\s*$/.test(gsCalcExpr)){
-        gsCalcExpr=gsCalcExpr.replace(/[+\-*/]\s*$/,key+" ");
+      // Dopo "=" una nuova cifra avvia un nuovo conteggio.
+      if(gsCalcExpr.trim().endsWith("=")){
+        gsCalcExpr="";
+        gsCalcCurrent=key;
       }else{
-        gsCalcExpr+=clean+" "+key+" ";
+        gsCalcCurrent=gsCalcCurrent==="0"?key:gsCalcCurrent+key;
       }
-      gsCalcCurrent="0";
+
+    }else if(key==="."){
+      if(gsCalcExpr.trim().endsWith("=")){
+        gsCalcExpr="";
+        gsCalcCurrent="0.";
+      }else if(!gsCalcCurrent.includes(".")){
+        gsCalcCurrent+=".";
+      }
+
+    }else if(["+","-","*","/"].includes(key)){
+      // Dopo "=" puoi continuare dal risultato ottenuto.
+      if(gsCalcExpr.trim().endsWith("=")){
+        gsCalcExpr=gsCalcCurrent+" "+key+" ";
+        gsCalcCurrent="0";
+      }else{
+        const clean=gsCalcCurrent.endsWith(".")?gsCalcCurrent.slice(0,-1):gsCalcCurrent;
+
+        // Sostituisce l'operatore solo se non è ancora stato digitato
+        // un nuovo valore. Altrimenti accoda correttamente:
+        // 4 + 5 + 2
+        if(gsCalcExpr && /[+\-*/]\s*$/.test(gsCalcExpr) && gsCalcCurrent==="0"){
+          gsCalcExpr=gsCalcExpr.replace(/[+\-*/]\s*$/,key+" ");
+        }else{
+          gsCalcExpr+=clean+" "+key+" ";
+          gsCalcCurrent="0";
+        }
+      }
+
     }else if(key==="back"){
       gsCalcCurrent=gsCalcCurrent.length>1?gsCalcCurrent.slice(0,-1):"0";
+
     }else if(key==="clear"){
       gsCalcResetAll();
       return;
+
     }else if(key==="equals"){
+      // Il risultato viene calcolato soltanto alla pressione di "=".
       const full=(gsCalcExpr+gsCalcCurrent).trim();
       const result=gsCalcSafeEval(full);
       if(result!==null){
@@ -2821,6 +2848,7 @@ if(document.getElementById("six39NewGame"))document.getElementById("six39NewGame
         gsCalcCurrent=String(result);
       }
     }
+
     gsCalcSave();
     gsCalcRender();
   }
